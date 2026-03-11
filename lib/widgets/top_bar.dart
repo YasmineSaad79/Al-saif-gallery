@@ -2,32 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../utils/app_colors.dart';
+import '../utils/responsive.dart';
 
 class TopBar extends StatelessWidget {
   const TopBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    // للشاشات الصغيرة، نخفي بعض العناصر أو نستخدم نسب مئوية
-    final leftStart = screenWidth > 1200 ? screenWidth * 0.505 : 20.0;
-    final showAllItems = screenWidth > 1200;
+    final horizontalPadding = Responsive.getHorizontalPadding(context);
+    final showAllItems = !Responsive.isMobile(context);
     
     return Container(
       width: double.infinity,
       height: 37,
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
       decoration: const BoxDecoration(
         color: AppColors.backgroundLight,
         border: Border(
           bottom: BorderSide(width: 1, color: AppColors.border),
         ),
       ),
-      child: Stack(
+      child: Row(
         children: [
-          if (showAllItems)
-            Positioned(
-              left: leftStart,
-              top: 8,
+          // مسافة فارغة بنفس عرض اللوجو
+          const SizedBox(width: 144),
+          const Spacer(),
+          // Top bar items
+          if (showAllItems) ...[
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
               child: Row(
                 children: [
                   _TopBarItem(iconPath: 'assets/images/document.svg', text: 'Documents Library', onTap: () => context.go('/documents-library')),
@@ -41,12 +44,10 @@ class TopBar extends StatelessWidget {
                   const _TopBarItem(iconPath: 'assets/images/language.svg', text: 'عربي'),
                 ],
               ),
-            )
-          else
-            // للشاشات الصغيرة، نعرض أيقونات فقط أو menu
-            Positioned(
-              right: 20,
-              top: 8,
+            ),
+          ] else
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
               child: Row(
                 children: const [
                   _TopBarItem(iconPath: 'assets/images/search.svg', text: ''),
