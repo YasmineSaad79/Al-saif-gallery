@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../utils/app_colors.dart';
 import '../utils/responsive.dart';
 
@@ -7,23 +8,91 @@ class FooterSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Red CTA Section
+        Container(
+          width: double.infinity,
+          color: AppColors.primary,
+          padding: const EdgeInsets.symmetric(vertical: 28),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                'assets/images/bag.svg',
+                width: 28,
+                height: 28,
+                colorFilter: const ColorFilter.mode(
+                  Colors.white,
+                  BlendMode.srcIn,
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Looking to shop our full range of 15,000+ products?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'Visit the Al Saif Gallery online store for fast delivery across the Kingdom and the GCC.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 9),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(3),
+                ),
+                child: const Text(
+                  'Visit the Online Store',
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 12,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        // Black Footer Section
+        _BlackFooter(),
+      ],
+    );
+  }
+}
+
+class _BlackFooter extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     final horizontalPadding = Responsive.getHorizontalPadding(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final availableWidth = screenWidth - (horizontalPadding * 2);
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 24),
-      decoration: const BoxDecoration(
-        color: AppColors.backgroundLight,
-        border: Border(
-          top: BorderSide(color: AppColors.border, width: 1),
-        ),
-      ),
+      color: const Color(0xFF1A1A1A),
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 28),
       child: Column(
         children: [
+          // Footer Columns
           LayoutBuilder(
             builder: (context, constraints) {
               if (constraints.maxWidth > 900) {
-                // نفس توزيع Services Section
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
@@ -41,28 +110,23 @@ class FooterSection extends StatelessWidget {
                     Expanded(
                       child: _FooterColumn(
                         title: 'Investors',
-                        items: [
-                          'Financial Reports',
-                          'Governance',
-                          'Shareholder Info'
-                        ],
+                        items: ['Annual Reports', 'Governance', 'Reports & Filings'],
                       ),
                     ),
                     SizedBox(width: 24),
                     Expanded(
                       child: _FooterColumn(
-                        title: 'Resources',
+                        title: 'Contact',
                         items: [
-                          'Documents Library',
-                          'Whistleblowing',
-                          'Contact Us'
+                          'Investor Relations',
+                          'ir@alsaifgallery.com',
+                          '+966 11 406 4444'
                         ],
                       ),
                     ),
                   ],
                 );
               } else {
-                // للشاشات الصغيرة
                 return Wrap(
                   spacing: 40,
                   runSpacing: 32,
@@ -82,21 +146,17 @@ class FooterSection extends StatelessWidget {
                       width: 150,
                       child: _FooterColumn(
                         title: 'Investors',
-                        items: [
-                          'Financial Reports',
-                          'Governance',
-                          'Shareholder Info'
-                        ],
+                        items: ['Annual Reports', 'Governance', 'Reports & Filings'],
                       ),
                     ),
                     SizedBox(
                       width: 150,
                       child: _FooterColumn(
-                        title: 'Resources',
+                        title: 'Contact',
                         items: [
-                          'Documents Library',
-                          'Whistleblowing',
-                          'Contact Us'
+                          'Investor Relations',
+                          'ir@alsaifgallery.com',
+                          '+966 11 406 4444'
                         ],
                       ),
                     ),
@@ -105,7 +165,14 @@ class FooterSection extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 28),
+          // Divider Line
+          Container(
+            height: 1,
+            color: const Color(0xFF374151),
+          ),
+          const SizedBox(height: 20),
+          // Copyright Section
           const _FooterCopyright(),
         ],
       ),
@@ -124,22 +191,30 @@ class _FooterAbout extends StatelessWidget {
         Text(
           'Al Saif Gallery',
           style: TextStyle(
-            color: Color(0xFF101727),
-            fontSize: 15.8,
+            color: Colors.white,
+            fontSize: 14,
             fontFamily: 'Inter',
-            fontWeight: FontWeight.w700,
-            height: 1.52,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        SizedBox(height: 19),
+        SizedBox(height: 8),
         Text(
-          'A Saudi-born retail organization focused on dependable quality, operational excellence, and long-term value.',
+          'Established in 1989',
           style: TextStyle(
-            color: Color(0xFF495565),
-            fontSize: 13,
+            color: Color(0xFF9CA3AF),
+            fontSize: 11,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w400,
-            height: 1.54,
+          ),
+        ),
+        SizedBox(height: 2),
+        Text(
+          'Tadawul: 4240',
+          style: TextStyle(
+            color: Color(0xFF9CA3AF),
+            fontSize: 11,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
           ),
         ),
       ],
@@ -164,25 +239,23 @@ class _FooterColumn extends StatelessWidget {
         Text(
           title,
           style: const TextStyle(
-            color: Color(0xFF101727),
-            fontSize: 15.1,
+            color: Colors.white,
+            fontSize: 12,
             fontFamily: 'Inter',
-            fontWeight: FontWeight.w400,
-            height: 1.59,
+            fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         ...items.map(
           (item) => Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: Text(
               item,
               style: const TextStyle(
-                color: Color(0xFF495565),
-                fontSize: 13,
+                color: Color(0xFF9CA3AF),
+                fontSize: 11,
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
-                height: 1.54,
               ),
             ),
           ),
@@ -197,41 +270,102 @@ class _FooterCopyright extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.only(top: 16),
-      decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(color: Color(0xFFE5E7EB), width: 1),
-        ),
-      ),
-      child: Column(
-        children: const [
-          Text(
-            '© 2025 Al Saif Gallery. All rights reserved.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF697282),
-              fontSize: 13.1,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
-              height: 1.53,
-            ),
-          ),
-          SizedBox(height: 8),
-          Text(
-            'Looking to shop? Visit our eCommerce site.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xFF99A1AE),
-              fontSize: 11.3,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w400,
-              height: 1.42,
-            ),
-          ),
-        ],
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > 900) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                '© 2025 Al Saif Gallery. All rights reserved.',
+                style: TextStyle(
+                  color: Color(0xFF6B7280),
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              Wrap(
+                spacing: 24,
+                children: const [
+                  Text(
+                    'Privacy Policy',
+                    style: TextStyle(
+                      color: Color(0xFF6B7280),
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text(
+                    'Terms of Service',
+                    style: TextStyle(
+                      color: Color(0xFF6B7280),
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text(
+                    'Corporate Governance',
+                    style: TextStyle(
+                      color: Color(0xFF6B7280),
+                      fontSize: 12,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        } else {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                '© 2025 Al Saif Gallery. All rights reserved.',
+                style: TextStyle(
+                  color: Color(0xFF6B7280),
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              SizedBox(height: 12),
+              Text(
+                'Privacy Policy',
+                style: TextStyle(
+                  color: Color(0xFF6B7280),
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Terms of Service',
+                style: TextStyle(
+                  color: Color(0xFF6B7280),
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Corporate Governance',
+                style: TextStyle(
+                  color: Color(0xFF6B7280),
+                  fontSize: 12,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 }

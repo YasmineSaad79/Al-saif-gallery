@@ -37,7 +37,6 @@ class CustomNavigationBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Logo
           SizedBox(
             width: 144,
             height: 59,
@@ -46,26 +45,23 @@ class CustomNavigationBar extends StatelessWidget {
               fit: BoxFit.contain,
             ),
           ),
-          const Spacer(), // يدفع navigation items لليمين
-          // Navigation items
+          const SizedBox(width: 280), // مسافة كافية بين اللوجو والـ tabs
           if (!isMobile) ...[
-            _NavItem(text: 'Home', isActive: true, width: 42, onTap: () => context.go('/')),
-            const SizedBox(width: 31.47),
-            _NavItem(text: 'About Us', width: 89.64, onTap: () => context.go('/about-us')),
-            const SizedBox(width: 4),
-            _NavItem(text: 'Strategy & Operations', width: 168.83, onTap: () => context.go('/strategy-operations')),
-            const SizedBox(width: 4),
-            _NavItem(text: 'Investors & Governance', width: 181.13, onTap: () => context.go('/investors-governance')),
-            const SizedBox(width: 4),
-            _NavItem(text: 'News & Careers', width: 133.44, onTap: () => context.go('/news-careers')),
+            _NavItem(text: 'Home', isActive: true, onTap: () => context.go('/')),
+            const SizedBox(width: 32),
+            _NavItem(text: 'About Us', onTap: () => context.go('/about-us')),
+            const SizedBox(width: 32),
+            _NavItem(text: 'Strategy & Operations', onTap: () => context.go('/strategy-operations')),
+            const SizedBox(width: 32),
+            _NavItem(text: 'Investors & Governance', onTap: () => context.go('/investors-governance')),
+            const SizedBox(width: 32),
+            _NavItem(text: 'Newsroom & Careers', onTap: () => context.go('/news-careers')),
           ] else
-            // للموبايل: menu icon
             IconButton(
               icon: const Icon(Icons.menu),
-              onPressed: () {
-                // TODO: فتح drawer أو menu
-              },
+              onPressed: () {},
             ),
+          const Spacer(),
         ],
       ),
     );
@@ -75,13 +71,11 @@ class CustomNavigationBar extends StatelessWidget {
 class _NavItem extends StatelessWidget {
   final String text;
   final bool isActive;
-  final double width;
   final VoidCallback? onTap;
 
   const _NavItem({
     required this.text,
     this.isActive = false,
-    required this.width,
     this.onTap,
   });
 
@@ -105,8 +99,8 @@ class _NavItem extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Container(
-            width: width,
             height: 2,
+            width: 40,
             color: isActive ? AppColors.primary : Colors.transparent,
           ),
         ],

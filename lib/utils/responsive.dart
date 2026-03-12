@@ -22,13 +22,13 @@ class Responsive {
   static double getHorizontalPadding(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     if (width >= largeDesktop) {
-      return 200.0; // للشاشات الكبيرة جداً
+      return 192.0; // للشاشات الكبيرة جداً (202 - 10)
     } else if (width >= desktop) {
-      return width * 0.1; // 10% من عرض الشاشة
+      return (width * 0.1) - 8; // 10% من عرض الشاشة - 8
     } else if (width >= tablet) {
-      return 60.0;
+      return 52.0; // (62 - 10)
     } else {
-      return 20.0; // للموبايل
+      return 12.0; // للموبايل (22 - 10)
     }
   }
 

@@ -3,8 +3,7 @@ import '../widgets/top_bar.dart';
 import '../widgets/navigation_bar.dart';
 import '../widgets/hero_section.dart';
 import '../widgets/stats_section.dart';
-import '../widgets/what_we_do_section.dart';
-import '../widgets/services_section.dart';
+import '../widgets/brands_section.dart';
 import '../widgets/footer_section.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,26 +17,27 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // تحميل الصور مسبقاً
-    precacheImage(const AssetImage('assets/images/Background_HorizontalBorder.png'), context);
+    precacheImage(const AssetImage('assets/images/modern kitchen.jpeg'), context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Center(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 1920),
+      backgroundColor: Colors.white, // خلفية بيضاء
+      body: Center(
+        child: Container(
+          margin: const EdgeInsets.all(20), // مسافة بيضاء من جميع الجهات
+          constraints: const BoxConstraints(maxWidth: 1880), // 1920 - 40 للـ margin
+          color: const Color(0xFFF8FAFB),
+          child: SingleChildScrollView(
             child: Column(
               children: const [
+                SizedBox(height: 20),
                 TopBar(),
                 CustomNavigationBar(),
                 HeroSection(),
                 StatsSection(),
-                WhatWeDoSection(),
-                ServicesSection(),
+                BrandsSection(),
                 FooterSection(),
               ],
             ),

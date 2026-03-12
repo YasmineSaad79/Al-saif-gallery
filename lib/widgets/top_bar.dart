@@ -10,107 +10,111 @@ class TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final horizontalPadding = Responsive.getHorizontalPadding(context);
-    final showAllItems = !Responsive.isMobile(context);
+    final isMobile = Responsive.isMobile(context);
     
     return Container(
       width: double.infinity,
-      height: 37,
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-      decoration: const BoxDecoration(
-        color: AppColors.backgroundLight,
-        border: Border(
-          bottom: BorderSide(width: 1, color: AppColors.border),
-        ),
-      ),
-      child: Row(
+      height: 15,
+      color: AppColors.backgroundLight,
+      child: Column(
         children: [
-          // مسافة فارغة بنفس عرض اللوجو
-          const SizedBox(width: 144),
-          const Spacer(),
-          // Top bar items
-          if (showAllItems) ...[
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
               child: Row(
                 children: [
-                  _TopBarItem(iconPath: 'assets/images/document.svg', text: 'Documents Library', onTap: () => context.go('/documents-library')),
-                  const SizedBox(width: 24),
-                  _TopBarItem(iconPath: 'assets/images/Whistleblowing.svg', text: 'Whistleblowing', onTap: () => context.go('/whistleblowing')),
-                  const SizedBox(width: 24),
-                  _TopBarItem(iconPath: 'assets/images/contact.svg', text: 'Contact', onTap: () => context.go('/contact')),
-                  const SizedBox(width: 24),
-                  const _TopBarItem(iconPath: 'assets/images/search.svg', text: 'Search'),
-                  const SizedBox(width: 24),
-                  const _TopBarItem(iconPath: 'assets/images/language.svg', text: 'عربي'),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.49), // 40% من عرض الشاشة
+
+                  
+                  if (!isMobile) ...[
+                    _buildItem(
+                      context,
+                      'assets/images/document.svg',
+                      'Documents Library',
+                      () => context.go('/documents-library'),
+                    ),
+                    const SizedBox(width: 24),
+                    _buildItem(
+                      context,
+                      'assets/images/contact.svg',
+                      'Contact',
+                      () => context.go('/contact'),
+                    ),
+                    const SizedBox(width: 24),
+                    _buildItem(
+                      context,
+                      'assets/images/search.svg',
+                      'Search',
+                      null,
+                    ),
+                    const SizedBox(width: 24),
+                    _buildItem(
+                      context,
+                      'assets/images/language.svg',
+                      'العربية',
+                      null,
+                    ),
+                  ] else ...[
+                    _buildItem(context, 'assets/images/search.svg', '', null),
+                    const SizedBox(width: 16),
+                    _buildItem(context, 'assets/images/language.svg', 'العربية', null),
+                  ],
                 ],
               ),
             ),
-          ] else
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Row(
-                children: const [
-                  _TopBarItem(iconPath: 'assets/images/search.svg', text: ''),
-                  SizedBox(width: 16),
-                  _TopBarItem(iconPath: 'assets/images/language.svg', text: 'عربي'),
-                ],
-              ),
-            ),
+          ),
+          Container(
+            height: 1,
+            color: AppColors.border,
+          ),
         ],
       ),
     );
   }
-}
 
-class _TopBarItem extends StatelessWidget {
-  final String iconPath;
-  final String text;
-  final VoidCallback? onTap;
-
-  const _TopBarItem({
-    required this.iconPath,
-    required this.text,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildItem(
+    BuildContext context,
+    String iconPath,
+    String text,
+    VoidCallback? onTap,
+  ) {
     return InkWell(
       onTap: onTap,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 16,
-            height: 16,
-            margin: const EdgeInsets.only(top: 2),
-            child: SvgPicture.asset(
-              iconPath,
-              width: 16,
-              height: 16,
-              fit: BoxFit.contain,
-              colorFilter: const ColorFilter.mode(
-                AppColors.textSecondary,
-                BlendMode.srcIn,
+      child: Transform.translate(
+        offset: const Offset(0, -8),
+        child: SizedBox(
+          height: 20,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                iconPath,
+                width: 14,
+                height: 14,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.textSecondary,
+                  BlendMode.srcIn,
+                ),
               ),
-            ),
+              if (text.isNotEmpty) ...[
+                const SizedBox(width: 6),
+                Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 12,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                    height: 1.0,
+                    leadingDistribution: TextLeadingDistribution.even,
+                  ),
+                ),
+              ],
+            ],
           ),
-          const SizedBox(width: 6),
-          Padding(
-            padding: const EdgeInsets.only(top: 3),
-            child: Text(
-              text,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 13,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                height: 1.53,
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

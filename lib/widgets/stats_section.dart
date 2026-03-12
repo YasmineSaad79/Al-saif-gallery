@@ -9,43 +9,59 @@ class StatsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final horizontalPadding = Responsive.getHorizontalPadding(context);
 
-    return Padding(
+    return Container(
+      width: double.infinity,
       padding: EdgeInsets.only(
         left: horizontalPadding,
         right: horizontalPadding,
-        top: 32,
-        bottom: 32,
+        top: 35,
+        bottom: 35,
+      ),
+      decoration: const BoxDecoration(
+        color: Color(0xFFF8FAFB),
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth > 900) {
+            final availableWidth = constraints.maxWidth - 14; // نقص 14 بكسل (7 من كل جهة)
+            final cardWidth = (availableWidth - (3 * 24)) / 4;
+            
             return Row(
-              children: const [
-                Expanded(
-                  child: _StatCard(
-                    title: 'Founded 1993',
-                    subtitle: 'Over 30 years of heritage',
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: cardWidth,
+                  child: const _StatCard(
+                    number: '18',
+                    title: 'Showrooms',
+                    subtitle: 'Across 5 GCC markets',
                   ),
                 ),
-                SizedBox(width: 24),
-                Expanded(
-                  child: _StatCard(
-                    title: 'KSA + GCC footprint',
-                    subtitle: 'Regional retail presence',
+                const SizedBox(width: 24),
+                SizedBox(
+                  width: cardWidth,
+                  child: const _StatCard(
+                    number: 'SAR 189.7M',
+                    title: 'SAR 758.8M Revenue',
+                    subtitle: 'FY 2025 performance',
                   ),
                 ),
-                SizedBox(width: 24),
-                Expanded(
-                  child: _StatCard(
-                    title: 'Store-led, omni-connected',
-                    subtitle: 'Integrated shopping model',
+                const SizedBox(width: 24),
+                SizedBox(
+                  width: cardWidth,
+                  child: const _StatCard(
+                    number: '22%',
+                    title: '~88% Proprietary Revenue',
+                    subtitle: 'Owned & exclusive brands',
                   ),
                 ),
-                SizedBox(width: 24),
-                Expanded(
-                  child: _StatCard(
-                    title: 'Service & governance',
-                    subtitle: 'Commitment to excellence',
+                const SizedBox(width: 24),
+                SizedBox(
+                  width: cardWidth,
+                  child: const _StatCard(
+                    number: '9%',
+                    title: '37% E-Commerce Growth',
+                    subtitle: 'SAR 94M digital sales',
                   ),
                 ),
               ],
@@ -54,23 +70,27 @@ class StatsSection extends StatelessWidget {
             return Column(
               children: const [
                 _StatCard(
-                  title: 'Founded 1993',
-                  subtitle: 'Over 30 years of heritage',
+                  number: '18',
+                  title: 'Showrooms',
+                  subtitle: 'Across 5 GCC markets',
                 ),
                 SizedBox(height: 24),
                 _StatCard(
-                  title: 'KSA + GCC footprint',
-                  subtitle: 'Regional retail presence',
+                  number: 'SAR 189.7M',
+                  title: 'SAR 758.8M Revenue',
+                  subtitle: 'FY 2025 performance',
                 ),
                 SizedBox(height: 24),
                 _StatCard(
-                  title: 'Store-led, omni-connected',
-                  subtitle: 'Integrated shopping model',
+                  number: '22%',
+                  title: '~88% Proprietary Revenue',
+                  subtitle: 'Owned & exclusive brands',
                 ),
                 SizedBox(height: 24),
                 _StatCard(
-                  title: 'Service & governance',
-                  subtitle: 'Commitment to excellence',
+                  number: '9%',
+                  title: '37% E-Commerce Growth',
+                  subtitle: 'SAR 94M digital sales',
                 ),
               ],
             );
@@ -82,10 +102,12 @@ class StatsSection extends StatelessWidget {
 }
 
 class _StatCard extends StatelessWidget {
+  final String number;
   final String title;
   final String subtitle;
 
   const _StatCard({
+    required this.number,
     required this.title,
     required this.subtitle,
   });
@@ -93,36 +115,66 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 85,  // غيرت من 102 لـ 85
-      padding: const EdgeInsets.all(18),  // غيرت من 24 لـ 18
+      width: double.infinity,
+      height: 100,
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: AppColors.border),
+        border: Border.all(
+          width: 1,
+          color: const Color(0xFFE5E7EB),
+        ),
         borderRadius: BorderRadius.circular(10),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x19000000),
+            blurRadius: 2,
+            offset: Offset(0, 1),
+            spreadRadius: -1,
+          ),
+          BoxShadow(
+            color: Color(0x19000000),
+            blurRadius: 3,
+            offset: Offset(0, 1),
+            spreadRadius: 0,
+          ),
+        ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            title,
+            number,
+            textAlign: TextAlign.center,
             style: const TextStyle(
-              color: AppColors.primary,
-              fontSize: 14,  // غيرت من 15.4 لـ 14
+              color: Color(0xFFC62030),
+              fontSize: 27,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w700,
-              height: 1.4,  // غيرت من 1.56 لـ 1.4
+              height: 1.15,
             ),
           ),
-          const SizedBox(height: 4),  // غيرت من 6 لـ 4
+          const SizedBox(height: 6),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Color(0xFF101727),
+              fontSize: 10,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w700,
+              height: 1.48,
+            ),
+          ),
+          const SizedBox(height: 3),
           Text(
             subtitle,
+            textAlign: TextAlign.center,
             style: const TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 12,  // غيرت من 13 لـ 12
+              color: Color(0xFF495565),
+              fontSize: 8,
               fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
-              height: 1.4,  // غيرت من 1.54 لـ 1.4
+              height: 1.40,
             ),
           ),
         ],
