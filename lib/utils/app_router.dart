@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/home_screen.dart';
+import '../screens/about_us_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
@@ -13,7 +14,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/about-us',
       name: 'about-us',
-      builder: (context, state) => const PlaceholderScreen(title: 'About Us'),
+      builder: (context, state) => const AboutUsScreen(),
     ),
     GoRoute(
       path: '/strategy-operations',

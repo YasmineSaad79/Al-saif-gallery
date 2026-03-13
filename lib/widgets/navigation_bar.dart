@@ -11,6 +11,7 @@ class CustomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final horizontalPadding = Responsive.getHorizontalPadding(context);
     final isMobile = Responsive.isMobile(context);
+    final currentRoute = GoRouterState.of(context).uri.path;
 
     return Container(
       height: 70,
@@ -47,15 +48,15 @@ class CustomNavigationBar extends StatelessWidget {
           ),
           const SizedBox(width: 280), // مسافة كافية بين اللوجو والـ tabs
           if (!isMobile) ...[
-            _NavItem(text: 'Home', isActive: true, onTap: () => context.go('/')),
+            _NavItem(text: 'Home', isActive: currentRoute == '/', onTap: () => context.go('/')),
             const SizedBox(width: 32),
-            _NavItem(text: 'About Us', onTap: () => context.go('/about-us')),
+            _NavItem(text: 'About Us', isActive: currentRoute == '/about-us', onTap: () => context.go('/about-us')),
             const SizedBox(width: 32),
-            _NavItem(text: 'Strategy & Operations', onTap: () => context.go('/strategy-operations')),
+            _NavItem(text: 'Strategy & Operations', isActive: currentRoute == '/strategy-operations', onTap: () => context.go('/strategy-operations')),
             const SizedBox(width: 32),
-            _NavItem(text: 'Investors & Governance', onTap: () => context.go('/investors-governance')),
+            _NavItem(text: 'Investors & Governance', isActive: currentRoute == '/investors-governance', onTap: () => context.go('/investors-governance')),
             const SizedBox(width: 32),
-            _NavItem(text: 'Newsroom & Careers', onTap: () => context.go('/news-careers')),
+            _NavItem(text: 'Newsroom & Careers', isActive: currentRoute == '/news-careers', onTap: () => context.go('/news-careers')),
           ] else
             IconButton(
               icon: const Icon(Icons.menu),
