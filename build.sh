@@ -7,4 +7,4 @@ export PATH="$PATH:/tmp/flutter/bin"
 
 # Build
 flutter pub get
-flutter build web --web-renderer html --release
+flutter build web --release
