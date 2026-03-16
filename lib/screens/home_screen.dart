@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    precacheImage(const AssetImage('assets/images/modern kitchen.jpeg'), context);
+    precacheImage(const AssetImage('assets/images/modern_kitchen.jpeg'), context);
   }
 
   @override

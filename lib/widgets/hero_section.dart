@@ -12,19 +12,18 @@ class HeroSection extends StatelessWidget {
       aspectRatio: 1920 / 800,
       child: Stack(
         children: [
-          // الصورة مع شفافية حمراء خفيفة
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/modern kitchen.jpeg'),
-                fit: BoxFit.cover, // تملأ السكشن
-                alignment: Alignment.topCenter, // يظهر الجزء العلوي من الصورة
-                colorFilter: ColorFilter.mode(
-                  Colors.red.withOpacity(0.66),
-                  BlendMode.srcOver,
-                ),
-              ),
+          // الصورة
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/modern_kitchen.jpeg',
+              fit: BoxFit.cover,
+              alignment: Alignment.topCenter,
+            ),
+          ),
+          // طبقة اللون الأحمر
+          Positioned.fill(
+            child: Container(
+              color: Colors.red.withOpacity(0.66),
             ),
           ),
           // المحتوى
@@ -52,7 +51,7 @@ class HeroSection extends StatelessWidget {
                   child: Text(
                     'Thirty years of serving Saudi households. One purpose: trusted quality, every day.',
                     style: TextStyle(
-                    color: Colors.white,
+                      color: Colors.white,
                       fontSize: 16,
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w400,
@@ -91,46 +90,52 @@ class HeroSection extends StatelessWidget {
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    InkWell(
-                      onTap: () => context.go('/about-us'),
-                      child: Container(
-                        height: 48,
-                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'Explore Our Story',
-                            style: TextStyle(
-                              color: AppColors.primary, // نفس لون العنوان
-                              fontSize: 16,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w700,
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () => context.go('/about-us'),
+                        child: Container(
+                          height: 48,
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'Explore Our Story',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 16,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 16),
-                    InkWell(
-                      onTap: () => context.go('/investors-governance'),
-                      child: Container(
-                        height: 48,
-                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary, // نفس لون العنوان
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'Investor Relations',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w700,
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () => context.go('/investors-governance'),
+                        child: Container(
+                          height: 48,
+                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'Investor Relations',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ),
                         ),

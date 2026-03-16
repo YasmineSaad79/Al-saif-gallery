@@ -40,6 +40,9 @@
   <script src="flutter.js" defer></script>
 </head>
 <body>
+  <!-- Investor Relations widget loader -->
+  <script src="https://irp.atnmo.com/v2/widget/widget-loader.js"></script>
+
   <script>
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
@@ -48,7 +51,7 @@
           serviceWorkerVersion: serviceWorkerVersion,
         },
         onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
+          engineInitializer.initializeEngine({renderer: "html"}).then(function(appRunner) {
             appRunner.runApp();
           });
         }
