@@ -27,17 +27,19 @@ class OurValuesSection extends StatelessWidget {
           LayoutBuilder(
             builder: (context, constraints) {
               if (constraints.maxWidth > 900) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: _ValueCard(iconPath: 'assets/images/Quality.svg', title: l.valueQualityTitle, description: l.valueQualityDesc)),
-                    const SizedBox(width: 20),
-                    Expanded(child: _ValueCard(iconPath: 'assets/images/Customer.svg', title: l.valueCustomerTitle, description: l.valueCustomerDesc)),
-                    const SizedBox(width: 20),
-                    Expanded(child: _ValueCard(iconPath: 'assets/images/Integrity.svg', title: l.valueIntegrityTitle, description: l.valueIntegrityDesc)),
-                    const SizedBox(width: 20),
-                    Expanded(child: _ValueCard(iconPath: 'assets/images/strategy.svg', title: l.valueImprovementTitle, description: l.valueImprovementDesc)),
-                  ],
+                return IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: _ValueCard(iconPath: 'assets/images/Quality.svg', title: l.valueQualityTitle, description: l.valueQualityDesc)),
+                      const SizedBox(width: 20),
+                      Expanded(child: _ValueCard(iconPath: 'assets/images/Customer.svg', title: l.valueCustomerTitle, description: l.valueCustomerDesc)),
+                      const SizedBox(width: 20),
+                      Expanded(child: _ValueCard(iconPath: 'assets/images/Integrity.svg', title: l.valueIntegrityTitle, description: l.valueIntegrityDesc)),
+                      const SizedBox(width: 20),
+                      Expanded(child: _ValueCard(iconPath: 'assets/images/strategy.svg', title: l.valueImprovementTitle, description: l.valueImprovementDesc)),
+                    ],
+                  ),
                 );
               } else {
                 return Column(
@@ -74,8 +76,7 @@ class _ValueCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 280, // تقليل الارتفاع
-      padding: const EdgeInsets.all(16), // تقليل الـ padding
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -107,8 +108,7 @@ class _ValueCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Expanded(
-            child: Text(
+          Text(
               description,
               textAlign: TextAlign.center,
               style: const TextStyle(
@@ -118,10 +118,7 @@ class _ValueCard extends StatelessWidget {
                 fontWeight: FontWeight.w400,
                 height: 1.4,
               ),
-              maxLines: 12,
-              overflow: TextOverflow.ellipsis,
             ),
-          ),
         ],
       ),
     );

@@ -173,7 +173,7 @@ class _ServiceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 240,
+      constraints: const BoxConstraints(minHeight: 240),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -214,18 +214,14 @@ class _ServiceCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Expanded(
-            child: Text(
-              description,
-              style: const TextStyle(
-                color: Color(0xFF6B7280),
-                fontSize: 12,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                height: 1.5,
-              ),
-              maxLines: 5,
-              overflow: TextOverflow.ellipsis,
+          Text(
+            description,
+            style: const TextStyle(
+              color: Color(0xFF6B7280),
+              fontSize: 12,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+              height: 1.5,
             ),
           ),
           const SizedBox(height: 12),

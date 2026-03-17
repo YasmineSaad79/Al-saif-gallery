@@ -81,7 +81,7 @@ class _HeritageMilestonesSectionState extends State<HeritageMilestonesSection> {
           ),
           const SizedBox(height: 20),
           SizedBox(
-            height: 180,
+            height: 260,
             child: ListView.separated(
               controller: _scrollController,
               scrollDirection: Axis.horizontal,
@@ -149,8 +149,6 @@ class _MilestoneCard extends StatelessWidget {
               textAlign: isArabic ? TextAlign.right : TextAlign.left,
               textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
               style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontFamily: 'Inter', fontWeight: FontWeight.w400, height: 1.4),
-              maxLines: 7,
-              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

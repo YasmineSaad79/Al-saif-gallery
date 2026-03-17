@@ -30,15 +30,17 @@ class IGInvestmentCaseSection extends StatelessWidget {
           LayoutBuilder(
             builder: (context, constraints) {
               if (constraints.maxWidth > 900) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: _IGInvestmentCard(number: '1', title: l.igInvest1Title, description: l.igInvest1Desc)),
-                    const SizedBox(width: 16),
-                    Expanded(child: _IGInvestmentCard(number: '2', title: l.igInvest2Title, description: l.igInvest2Desc)),
-                    const SizedBox(width: 16),
-                    Expanded(child: _IGInvestmentCard(number: '3', title: l.igInvest3Title, description: l.igInvest3Desc)),
-                  ],
+                return IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: _IGInvestmentCard(number: '1', title: l.igInvest1Title, description: l.igInvest1Desc)),
+                      const SizedBox(width: 16),
+                      Expanded(child: _IGInvestmentCard(number: '2', title: l.igInvest2Title, description: l.igInvest2Desc)),
+                      const SizedBox(width: 16),
+                      Expanded(child: _IGInvestmentCard(number: '3', title: l.igInvest3Title, description: l.igInvest3Desc)),
+                    ],
+                  ),
                 );
               } else {
                 return Column(
@@ -57,15 +59,17 @@ class IGInvestmentCaseSection extends StatelessWidget {
           LayoutBuilder(
             builder: (context, constraints) {
               if (constraints.maxWidth > 900) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: _IGInvestmentCard(number: '4', title: l.igInvest4Title, description: l.igInvest4Desc)),
-                    const SizedBox(width: 16),
-                    Expanded(child: _IGInvestmentCard(number: '5', title: l.igInvest5Title, description: l.igInvest5Desc)),
-                    const SizedBox(width: 16),
-                    Expanded(child: _IGInvestmentCard(number: '6', title: l.igInvest6Title, description: l.igInvest6Desc)),
-                  ],
+                return IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: _IGInvestmentCard(number: '4', title: l.igInvest4Title, description: l.igInvest4Desc)),
+                      const SizedBox(width: 16),
+                      Expanded(child: _IGInvestmentCard(number: '5', title: l.igInvest5Title, description: l.igInvest5Desc)),
+                      const SizedBox(width: 16),
+                      Expanded(child: _IGInvestmentCard(number: '6', title: l.igInvest6Title, description: l.igInvest6Desc)),
+                    ],
+                  ),
                 );
               } else {
                 return Column(
@@ -101,7 +105,6 @@ class _IGInvestmentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isArabic = AppLocalizations.of(context).isArabic;
     return Container(
-      height: 200,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -164,8 +167,7 @@ class _IGInvestmentCard extends StatelessWidget {
             ),
           ],
           const SizedBox(height: 6),
-          Expanded(
-            child: Text(
+          Text(
               description,
               textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
               textAlign: isArabic ? TextAlign.right : TextAlign.left,
@@ -176,10 +178,7 @@ class _IGInvestmentCard extends StatelessWidget {
                 fontWeight: FontWeight.w400,
                 height: 1.4,
               ),
-              maxLines: 8,
-              overflow: TextOverflow.ellipsis,
             ),
-          ),
         ],
       ),
     );
