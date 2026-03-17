@@ -130,17 +130,24 @@ class _MilestoneCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          Text(
-            year,
-            textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-            style: const TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: 'Inter', fontWeight: FontWeight.w700),
+          SizedBox(
+            width: double.infinity,
+            child: Text(
+              year,
+              textAlign: isArabic ? TextAlign.right : TextAlign.left,
+              textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+              style: const TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: 'Inter', fontWeight: FontWeight.w700),
+            ),
           ),
           const SizedBox(height: 6),
-          Text(
-            title,
-            textAlign: isArabic ? TextAlign.right : TextAlign.left,
-            textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-            style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontFamily: 'Inter', fontWeight: FontWeight.w700),
+          SizedBox(
+            width: double.infinity,
+            child: Text(
+              title,
+              textAlign: isArabic ? TextAlign.right : TextAlign.left,
+              textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+              style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontFamily: 'Inter', fontWeight: FontWeight.w700),
+            ),
           ),
           const SizedBox(height: 4),
           Expanded(
