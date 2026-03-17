@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
+import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
 
 class IGIntroSection extends StatelessWidget {
@@ -8,42 +9,27 @@ class IGIntroSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final horizontalPadding = Responsive.getHorizontalPadding(context);
+    final l = AppLocalizations.of(context);
 
     return Container(
       width: double.infinity,
       color: Colors.white,
-      padding: EdgeInsets.symmetric(
-        horizontal: horizontalPadding,
-        vertical: 60,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 60),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
-          child: const Column(
+          child: Column(
+            crossAxisAlignment: l.isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.center,
             children: [
-              Text(
-                'Al Saif Gallery is committed to the highest standards of disclosure and communication for the investors who have placed their trust in our company. This section provides full access to our financial results, governance structure, regulatory filings, shareholder services, and corporate policies, in both Arabic and English, consistent with our obligations as a company listed on the Saudi Exchange.',
-                textAlign: TextAlign.justify,
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 15,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w400,
-                  height: 1.4,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'We understand that trust between a listed company and its shareholders is earned through consistency, clarity, and accountability, not promises. Our goal is to make every piece of information an investor needs readily accessible, clearly presented, and fully compliant with CMA requirements.',
-                textAlign: TextAlign.justify,
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 15,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w400,
-                  height: 1.4,
-                ),
-              ),
+              Text(l.igIntroDesc1,
+                textAlign: l.isArabic ? TextAlign.right : TextAlign.justify,
+                textDirection: l.isArabic ? TextDirection.rtl : TextDirection.ltr,
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w400, height: 1.8)),
+              const SizedBox(height: 16),
+              Text(l.igIntroDesc2,
+                textAlign: l.isArabic ? TextAlign.right : TextAlign.justify,
+                textDirection: l.isArabic ? TextDirection.rtl : TextDirection.ltr,
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w400, height: 1.8)),
             ],
           ),
         ),

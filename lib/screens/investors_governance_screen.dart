@@ -38,7 +38,6 @@ class InvestorsGovernanceScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
-                SizedBox(height: 20),
                 TopBar(),
                 CustomNavigationBar(),
                 IGHeroSection(),
@@ -73,31 +72,34 @@ class _StockTickerSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(hp, 16, hp, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Stock Ticker', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 66,
-            child: Container(
-              clipBehavior: Clip.hardEdge,
-              decoration: const BoxDecoration(
-                color: Color(0xFFF8F9FA),
-                border: Border(
-                  top: BorderSide(color: Color(0xFFE53935), width: 2),
-                  bottom: BorderSide(color: Color(0xFFE53935), width: 2),
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.fromLTRB(hp, 16, hp, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Stock Ticker', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 66,
+              child: Container(
+                clipBehavior: Clip.hardEdge,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF8F9FA),
+                  border: Border(
+                    top: BorderSide(color: Color(0xFFE53935), width: 2),
+                    bottom: BorderSide(color: Color(0xFFE53935), width: 2),
+                  ),
                 ),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: const StockTickerWidget(),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: const StockTickerWidget(),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -109,17 +111,20 @@ class _CompanySnapshotSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Company Snapshot', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-          SizedBox(height: 8),
-          CompanySnapshotWidget(),
-        ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Company Snapshot', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            SizedBox(height: 8),
+            CompanySnapshotWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -137,26 +142,29 @@ class _FactSheetSectionState extends State<_FactSheetSection> {
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Fact Sheet', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              _TabButton(label: 'Table', selected: _tab == 0, onTap: () => setState(() => _tab = 0)),
-              const SizedBox(width: 8),
-              _TabButton(label: 'Chart', selected: _tab == 1, onTap: () => setState(() => _tab = 1)),
-            ],
-          ),
-          const SizedBox(height: 16),
-          if (_tab == 0) const FactSheetTableWidget(),
-          if (_tab == 1) const FactSheetChartsWidget(),
-        ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Fact Sheet', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                _TabButton(label: 'Table', selected: _tab == 0, onTap: () => setState(() => _tab = 0)),
+                const SizedBox(width: 8),
+                _TabButton(label: 'Chart', selected: _tab == 1, onTap: () => setState(() => _tab = 1)),
+              ],
+            ),
+            const SizedBox(height: 16),
+            if (_tab == 0) const FactSheetTableWidget(),
+            if (_tab == 1) const FactSheetChartsWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -174,26 +182,29 @@ class _StockActivitySectionState extends State<_StockActivitySection> {
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Stock Activity', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              _TabButton(label: 'Simple', selected: _tab == 0, onTap: () => setState(() => _tab = 0)),
-              const SizedBox(width: 8),
-              _TabButton(label: 'Advanced', selected: _tab == 1, onTap: () => setState(() => _tab = 1)),
-            ],
-          ),
-          const SizedBox(height: 16),
-          if (_tab == 0) const StockActivitySimpleWidget(),
-          if (_tab == 1) const StockActivityAdvancedWidget(),
-        ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Stock Activity', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                _TabButton(label: 'Simple', selected: _tab == 0, onTap: () => setState(() => _tab = 0)),
+                const SizedBox(width: 8),
+                _TabButton(label: 'Advanced', selected: _tab == 1, onTap: () => setState(() => _tab = 1)),
+              ],
+            ),
+            const SizedBox(height: 16),
+            if (_tab == 0) const StockActivitySimpleWidget(),
+            if (_tab == 1) const StockActivityAdvancedWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -205,17 +216,20 @@ class _CorporateActionsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Corporate Actions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-          SizedBox(height: 8),
-          CorporateActionsWidget(),
-        ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Corporate Actions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            SizedBox(height: 8),
+            CorporateActionsWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -227,17 +241,20 @@ class _CorporateNewsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Corporate News', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-          SizedBox(height: 8),
-          CorporateNewsWidget(),
-        ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Corporate News', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            SizedBox(height: 8),
+            CorporateNewsWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -249,17 +266,20 @@ class _CompanyFinancialsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Company Financials', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-          SizedBox(height: 8),
-          CompanyFinancialsWidget(),
-        ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Company Financials', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            SizedBox(height: 8),
+            CompanyFinancialsWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -271,17 +291,20 @@ class _InvestmentCalculatorSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Investment Calculator', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-          SizedBox(height: 8),
-          InvestmentCalculatorWidget(),
-        ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Investment Calculator', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            SizedBox(height: 8),
+            InvestmentCalculatorWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -293,17 +316,20 @@ class _SharePriceSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Share Price', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-          SizedBox(height: 8),
-          SharePriceWidget(),
-        ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Share Price', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            SizedBox(height: 8),
+            SharePriceWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -315,17 +341,20 @@ class _EmailSubscriptionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Email Subscription', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-          SizedBox(height: 8),
-          EmailSubscriptionWidget(),
-        ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Email Subscription', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            SizedBox(height: 8),
+            EmailSubscriptionWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -337,17 +366,20 @@ class _ShareSeriesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Share Series', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-          SizedBox(height: 8),
-          ShareSeriesWidget(),
-        ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Share Series', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            SizedBox(height: 8),
+            ShareSeriesWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -359,17 +391,20 @@ class _PerformanceSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Performance', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-          SizedBox(height: 8),
-          PerformanceWidget(),
-        ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Performance', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            SizedBox(height: 8),
+            PerformanceWidget(),
+          ],
+        ),
       ),
     );
   }
@@ -381,17 +416,20 @@ class _PeerGroupAnalysisSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Peer Group Analysis', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-          SizedBox(height: 8),
-          PeerGroupAnalysisWidget(),
-        ],
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Container(
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Peer Group Analysis', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            SizedBox(height: 8),
+            PeerGroupAnalysisWidget(),
+          ],
+        ),
       ),
     );
   }

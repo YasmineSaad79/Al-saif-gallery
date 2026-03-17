@@ -32,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: const [
-                SizedBox(height: 20),
                 TopBar(),
                 CustomNavigationBar(),
                 HeroSection(),

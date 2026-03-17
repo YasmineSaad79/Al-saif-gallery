@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../utils/app_colors.dart';
+import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
 
 class HeroSection extends StatelessWidget {
@@ -8,11 +9,13 @@ class HeroSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final isArabic = l.isArabic;
+    final hPad = Responsive.getHorizontalPadding(context);
     return AspectRatio(
       aspectRatio: 1920 / 800,
       child: Stack(
         children: [
-          // الصورة
           Positioned.fill(
             child: Image.asset(
               'assets/images/modern_kitchen.jpeg',
@@ -20,76 +23,93 @@ class HeroSection extends StatelessWidget {
               alignment: Alignment.topCenter,
             ),
           ),
-          // طبقة اللون الأحمر
           Positioned.fill(
-            child: Container(
-              color: Colors.red.withOpacity(0.66),
-            ),
+            child: Container(color: Colors.red.withOpacity(0.66)),
           ),
-          // المحتوى
-          Padding(
-            padding: EdgeInsets.only(
-              left: Responsive.getHorizontalPadding(context),
-              top: 80,
-            ),
+          Positioned(
+            top: 80,
+            left: hPad,
+            right: hPad,
+            bottom: 0,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  "Saudi Arabia's Home\nSince 1993.",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 38,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w700,
-                    height: 1.2,
+                Align(
+                  alignment: isArabic ? Alignment.centerRight : Alignment.centerLeft,
+                  child: Text(
+                    l.heroTitle,
+                    textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 38,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w700,
+                      height: 1.2,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 14),
-                const SizedBox(
-                  width: 700,
-                  child: Text(
-                    'Thirty years of serving Saudi households. One purpose: trusted quality, every day.',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      height: 1.5,
+                Align(
+                  alignment: isArabic ? Alignment.centerRight : Alignment.centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 700),
+                    child: Text(
+                      l.heroSubtitle,
+                      textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        height: 1.5,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 18),
-                const SizedBox(
-                  width: 750,
-                  child: Text(
-                    "Al Saif Gallery is Saudi Arabia's specialist in household essentials and kitchen appliances, built from a single Riyadh showroom into a national retail platform of 73 locations across the Kingdom and the GCC. Listed on Tadawul since 2022, we combine the scale of a public company with the discipline of an operator that has earned household trust for three decades.",
-                    style: TextStyle(
-                      color: Color(0xFFDAEAFE),
-                      fontSize: 13,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      height: 1.6,
+                Align(
+                  alignment: isArabic ? Alignment.centerRight : Alignment.centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 750),
+                    child: Text(
+                      l.heroDesc1,
+                      textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                      style: const TextStyle(
+                        color: Color(0xFFDAEAFE),
+                        fontSize: 13,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        height: 1.6,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 18),
-                const SizedBox(
-                  width: 750,
-                  child: Text(
-                    'Our model is powered by proprietary and exclusive brands, including Edison, Tornado, Robust, and Rocky, designed and specified for Saudi homes, Saudi kitchens, and Saudi hospitality traditions. Every product we carry reflects a deliberate choice: quality that earns loyalty, value that respects the customer.',
-                    style: TextStyle(
-                      color: Color(0xFFDAEAFE),
-                      fontSize: 13,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      height: 1.6,
+                Align(
+                  alignment: isArabic ? Alignment.centerRight : Alignment.centerLeft,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 750),
+                    child: Text(
+                      l.heroDesc2,
+                      textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                      style: const TextStyle(
+                        color: Color(0xFFDAEAFE),
+                        fontSize: 13,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        height: 1.6,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
-                Row(
-                  children: [
+                Align(
+                  alignment: isArabic ? Alignment.centerRight : Alignment.centerLeft,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                     MouseRegion(
                       cursor: SystemMouseCursors.click,
                       child: GestureDetector(
@@ -101,10 +121,10 @@ class HeroSection extends StatelessWidget {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Text(
-                              'Explore Our Story',
-                              style: TextStyle(
+                              l.heroExploreStory,
+                              style: const TextStyle(
                                 color: AppColors.primary,
                                 fontSize: 16,
                                 fontFamily: 'Inter',
@@ -127,10 +147,10 @@ class HeroSection extends StatelessWidget {
                             color: AppColors.primary,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Text(
-                              'Investor Relations',
-                              style: TextStyle(
+                              l.heroInvestorRelations,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
                                 fontFamily: 'Inter',
@@ -142,6 +162,7 @@ class HeroSection extends StatelessWidget {
                       ),
                     ),
                   ],
+                  ),
                 ),
               ],
             ),

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import '../utils/app_colors.dart';
+﻿import 'package:flutter/material.dart';
+import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
 
 class StatsSection extends StatelessWidget {
@@ -8,6 +8,7 @@ class StatsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final horizontalPadding = Responsive.getHorizontalPadding(context);
+    final l = AppLocalizations.of(context);
 
     return Container(
       width: double.infinity,
@@ -17,81 +18,33 @@ class StatsSection extends StatelessWidget {
         top: 35,
         bottom: 35,
       ),
-      decoration: const BoxDecoration(
-        color: Color(0xFFF8FAFB),
-      ),
+      decoration: const BoxDecoration(color: Color(0xFFF8FAFB)),
       child: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth > 900) {
-            final availableWidth = constraints.maxWidth - 14; // نقص 14 بكسل (7 من كل جهة)
-            final cardWidth = (availableWidth - (3 * 24)) / 4;
-            
+            final cardWidth = (constraints.maxWidth - 14 - (3 * 24)) / 4;
             return Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: cardWidth,
-                  child: const _StatCard(
-                    number: '18',
-                    title: 'Showrooms',
-                    subtitle: 'Across 5 GCC markets',
-                  ),
-                ),
+                SizedBox(width: cardWidth, child: _StatCard(number: '73', title: l.statsShowrooms, subtitle: l.statsShowroomsSubtitle)),
                 const SizedBox(width: 24),
-                SizedBox(
-                  width: cardWidth,
-                  child: const _StatCard(
-                    number: 'SAR 189.7M',
-                    title: 'SAR 758.8M Revenue',
-                    subtitle: 'FY 2025 performance',
-                  ),
-                ),
+                SizedBox(width: cardWidth, child: _StatCard(number: 'SAR 758.8M', title: l.statsRevenue, subtitle: l.statsRevenueSubtitle)),
                 const SizedBox(width: 24),
-                SizedBox(
-                  width: cardWidth,
-                  child: const _StatCard(
-                    number: '22%',
-                    title: '~88% Proprietary Revenue',
-                    subtitle: 'Owned & exclusive brands',
-                  ),
-                ),
+                SizedBox(width: cardWidth, child: _StatCard(number: '~88%', title: l.statsPropRevenue, subtitle: l.statsPropRevenueSubtitle)),
                 const SizedBox(width: 24),
-                SizedBox(
-                  width: cardWidth,
-                  child: const _StatCard(
-                    number: '9%',
-                    title: '37% E-Commerce Growth',
-                    subtitle: 'SAR 94M digital sales',
-                  ),
-                ),
+                SizedBox(width: cardWidth, child: _StatCard(number: '37%', title: l.statsEcommerce, subtitle: l.statsEcommerceSubtitle)),
               ],
             );
           } else {
             return Column(
-              children: const [
-                _StatCard(
-                  number: '18',
-                  title: 'Showrooms',
-                  subtitle: 'Across 5 GCC markets',
-                ),
-                SizedBox(height: 24),
-                _StatCard(
-                  number: 'SAR 189.7M',
-                  title: 'SAR 758.8M Revenue',
-                  subtitle: 'FY 2025 performance',
-                ),
-                SizedBox(height: 24),
-                _StatCard(
-                  number: '22%',
-                  title: '~88% Proprietary Revenue',
-                  subtitle: 'Owned & exclusive brands',
-                ),
-                SizedBox(height: 24),
-                _StatCard(
-                  number: '9%',
-                  title: '37% E-Commerce Growth',
-                  subtitle: 'SAR 94M digital sales',
-                ),
+              children: [
+                _StatCard(number: '73', title: l.statsShowrooms, subtitle: l.statsShowroomsSubtitle),
+                const SizedBox(height: 24),
+                _StatCard(number: 'SAR 758.8M', title: l.statsRevenue, subtitle: l.statsRevenueSubtitle),
+                const SizedBox(height: 24),
+                _StatCard(number: '~88%', title: l.statsPropRevenue, subtitle: l.statsPropRevenueSubtitle),
+                const SizedBox(height: 24),
+                _StatCard(number: '37%', title: l.statsEcommerce, subtitle: l.statsEcommerceSubtitle),
               ],
             );
           }

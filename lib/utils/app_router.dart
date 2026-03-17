@@ -4,48 +4,58 @@ import '../screens/home_screen.dart';
 import '../screens/about_us_screen.dart';
 import '../screens/investors_governance_screen.dart';
 
+CustomTransitionPage _fadePage(BuildContext context, GoRouterState state, Widget child) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionDuration: const Duration(milliseconds: 200),
+    transitionsBuilder: (context, animation, _, child) =>
+        FadeTransition(opacity: animation, child: child),
+  );
+}
+
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
   routes: [
     GoRoute(
       path: '/',
       name: 'home',
-      builder: (context, state) => const HomeScreen(),
+      pageBuilder: (context, state) => _fadePage(context, state, const HomeScreen()),
     ),
     GoRoute(
       path: '/about-us',
       name: 'about-us',
-      builder: (context, state) => const AboutUsScreen(),
+      pageBuilder: (context, state) => _fadePage(context, state, const AboutUsScreen()),
     ),
     GoRoute(
       path: '/strategy-operations',
       name: 'strategy-operations',
-      builder: (context, state) => const PlaceholderScreen(title: 'Strategy & Operations'),
+      pageBuilder: (context, state) => _fadePage(context, state, const PlaceholderScreen(title: 'Strategy & Operations')),
     ),
     GoRoute(
       path: '/investors-governance',
       name: 'investors-governance',
-      builder: (context, state) => const InvestorsGovernanceScreen(),
+      pageBuilder: (context, state) => _fadePage(context, state, const InvestorsGovernanceScreen()),
     ),
     GoRoute(
       path: '/news-careers',
       name: 'news-careers',
-      builder: (context, state) => const PlaceholderScreen(title: 'News & Careers'),
+      pageBuilder: (context, state) => _fadePage(context, state, const PlaceholderScreen(title: 'News & Careers')),
     ),
     GoRoute(
       path: '/documents-library',
       name: 'documents-library',
-      builder: (context, state) => const PlaceholderScreen(title: 'Documents Library'),
+      pageBuilder: (context, state) => _fadePage(context, state, const PlaceholderScreen(title: 'Documents Library')),
     ),
     GoRoute(
       path: '/whistleblowing',
       name: 'whistleblowing',
-      builder: (context, state) => const PlaceholderScreen(title: 'Whistleblowing'),
+      pageBuilder: (context, state) => _fadePage(context, state, const PlaceholderScreen(title: 'Whistleblowing')),
     ),
     GoRoute(
       path: '/contact',
       name: 'contact',
-      builder: (context, state) => const PlaceholderScreen(title: 'Contact'),
+      pageBuilder: (context, state) => _fadePage(context, state, const PlaceholderScreen(title: 'Contact')),
     ),
   ],
 );

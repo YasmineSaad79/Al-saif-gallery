@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../utils/app_colors.dart';
+import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
 
 class BrandsSection extends StatelessWidget {
@@ -11,16 +12,14 @@ class BrandsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = Responsive.getHorizontalPadding(context);
+    final l = AppLocalizations.of(context);
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 3),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-      ),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Stack(
         children: [
-          // صورة الخلفية JUG في الوسط
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3),
             child: Center(
@@ -31,18 +30,13 @@ class BrandsSection extends StatelessWidget {
                   width: 700,
                   height: 700,
                   fit: BoxFit.contain,
-                  colorFilter: const ColorFilter.mode(
-                    Color(0xFFD91F36),
-                    BlendMode.srcIn,
-                  ),
+                  colorFilter: const ColorFilter.mode(Color(0xFFD91F36), BlendMode.srcIn),
                 ),
               ),
             ),
           ),
-          // المحتوى
           Column(
             children: [
-              // What We Do Section
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.only(
@@ -54,10 +48,10 @@ class BrandsSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Built on Brands Customers Return To',
+                    Text(
+                      l.brandsTitle,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: AppColors.primary,
                         fontSize: 32,
                         fontFamily: 'Inter',
@@ -68,10 +62,11 @@ class BrandsSection extends StatelessWidget {
                     const SizedBox(height: 24),
                     SizedBox(
                       width: screenWidth > 1600 ? 1000 : screenWidth * 0.6,
-                      child: const Text(
-                        'We build, design, and deliver household essentials across categories customers buy repeatedly and rely on daily. Our platform is structured around three pillars: planning, execution, and accountability—supported by specifications tailored to Saudi households, a national showroom footprint, a supply led by our proprietary warehousing and a robust fulfillment capability, and integrated omni-channel capability, expert repair, and spare parts. Our brand portfolio spans a defined collection.',
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
+                      child: Text(
+                        l.brandsDesc1,
+                        textAlign: l.isArabic ? TextAlign.right : TextAlign.justify,
+                        textDirection: l.isArabic ? TextDirection.rtl : TextDirection.ltr,
+                        style: const TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 15,
                           fontFamily: 'Inter',
@@ -83,10 +78,11 @@ class BrandsSection extends StatelessWidget {
                     const SizedBox(height: 20),
                     SizedBox(
                       width: screenWidth > 1600 ? 1000 : screenWidth * 0.6,
-                      child: const Text(
-                        'This is not generic retail. Al Saif Gallery operates in a carefully defined sector: the household goods and kitchen appliance categories where we hold a leading position in Saudi Arabia, delivering dependable quality at competitive price. Our brand portfolio—including Edison, Tornado, Robust, and Rocky—is designed for Saudi homes and Saudi hospitality needs, including showrooms, wearing materials, air conditioning, and built-in kitchen solutions.',
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
+                      child: Text(
+                        l.brandsDesc2,
+                        textAlign: l.isArabic ? TextAlign.right : TextAlign.justify,
+                        textDirection: l.isArabic ? TextDirection.rtl : TextDirection.ltr,
+                        style: const TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 15,
                           fontFamily: 'Inter',
@@ -98,8 +94,6 @@ class BrandsSection extends StatelessWidget {
                   ],
                 ),
               ),
-              
-              // Services Cards Section
               Padding(
                 padding: EdgeInsets.only(
                   left: horizontalPadding,
@@ -110,105 +104,35 @@ class BrandsSection extends StatelessWidget {
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     if (constraints.maxWidth > 900) {
-                      final availableWidth = constraints.maxWidth - 14; // نقص 14 بكسل (7 من كل جهة)
-                      final cardWidth = (availableWidth - (3 * 24)) / 4;
-                      
+                      final cardWidth = (constraints.maxWidth - 14 - (3 * 24)) / 4;
                       return Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            width: cardWidth,
-                            child: const _ServiceCard(
-                              iconPath: 'assets/images/strategy.svg',
-                              title: 'Strategy & Operations',
-                              description:
-                                  'Disciplined growth, operational excellence, and omni-channel capabilities.',
-                              linkText: 'Explore Strategy',
-                            ),
-                          ),
+                          SizedBox(width: cardWidth, child: _ServiceCard(iconPath: 'assets/images/strategy.svg', title: l.cardStrategyTitle, description: l.cardStrategyDesc, linkText: l.cardStrategyLink)),
                           const SizedBox(width: 24),
-                          SizedBox(
-                            width: cardWidth,
-                            child: const _ServiceCard(
-                              iconPath: 'assets/images/investors.svg',
-                              title: 'Investors & Governance',
-                              description:
-                                  'Financial reports, shareholder information, and governance framework.',
-                              linkText: 'Investor Center',
-                            ),
-                          ),
+                          SizedBox(width: cardWidth, child: _ServiceCard(iconPath: 'assets/images/investors.svg', title: l.cardInvestorsTitle, description: l.cardInvestorsDesc, linkText: l.cardInvestorsLink)),
                           const SizedBox(width: 24),
-                          SizedBox(
-                            width: cardWidth,
-                            child: const _ServiceCard(
-                              iconPath: 'assets/images/brands.svg',
-                              title: 'Our Brands',
-                              description:
-                                  'Edison, Tornado, Robust, and Rocky. Innovation, precision, and trust engineered for Saudi homes.',
-                              linkText: 'Brand Portfolio',
-                            ),
-                          ),
+                          SizedBox(width: cardWidth, child: _ServiceCard(iconPath: 'assets/images/brands.svg', title: l.cardBrandsTitle, description: l.cardBrandsDesc, linkText: l.cardBrandsLink)),
                           const SizedBox(width: 24),
-                          SizedBox(
-                            width: cardWidth,
-                            child: const _ServiceCard(
-                              iconPath: 'assets/images/career.svg',
-                              title: 'Careers & Culture',
-                              description:
-                                  'Join our team. Work with a customer-first culture. Opportunities across all functions.',
-                              linkText: 'Explore Roles',
-                            ),
-                          ),
+                          SizedBox(width: cardWidth, child: _ServiceCard(iconPath: 'assets/images/career.svg', title: l.cardCareersTitle, description: l.cardCareersDesc, linkText: l.cardCareersLink)),
                         ],
                       );
                     } else {
                       return Column(
                         children: [
                           Row(
-                            children: const [
-                              Expanded(
-                                child: _ServiceCard(
-                                  iconPath: 'assets/images/strategy.svg',
-                                  title: 'Strategy & Operations',
-                                  description:
-                                      'Disciplined growth, operational excellence, and omni-channel capabilities.',
-                                  linkText: 'Explore Strategy',
-                                ),
-                              ),
-                              SizedBox(width: 16),
-                              Expanded(
-                                child: _ServiceCard(
-                                  iconPath: 'assets/images/investors.svg',
-                                  title: 'Investors & Governance',
-                                  description:
-                                      'Financial reports, shareholder information, and governance framework.',
-                                  linkText: 'Investor Center',
-                                ),
-                              ),
+                            children: [
+                              Expanded(child: _ServiceCard(iconPath: 'assets/images/strategy.svg', title: l.cardStrategyTitle, description: l.cardStrategyDesc, linkText: l.cardStrategyLink)),
+                              const SizedBox(width: 16),
+                              Expanded(child: _ServiceCard(iconPath: 'assets/images/investors.svg', title: l.cardInvestorsTitle, description: l.cardInvestorsDesc, linkText: l.cardInvestorsLink)),
                             ],
                           ),
                           const SizedBox(height: 16),
                           Row(
-                            children: const [
-                              Expanded(
-                                child: _ServiceCard(
-                                  iconPath: 'assets/images/brands.svg',
-                                  title: 'Our Brands',
-                                  description:
-                                      'Edison, Tornado, Robust, and Rocky. Innovation, precision, and trust engineered for Saudi homes.',
-                                  linkText: 'Brand Portfolio',
-                                ),
-                              ),
-                              SizedBox(width: 16),
-                              Expanded(
-                                child: _ServiceCard(
-                                  iconPath: 'assets/images/career.svg',
-                                  title: 'Careers & Culture',
-                                  description:
-                                      'Join our team. Work with a customer-first culture. Opportunities across all functions.',
-                                  linkText: 'Explore Roles',
-                                ),
-                              ),
+                            children: [
+                              Expanded(child: _ServiceCard(iconPath: 'assets/images/brands.svg', title: l.cardBrandsTitle, description: l.cardBrandsDesc, linkText: l.cardBrandsLink)),
+                              const SizedBox(width: 16),
+                              Expanded(child: _ServiceCard(iconPath: 'assets/images/career.svg', title: l.cardCareersTitle, description: l.cardCareersDesc, linkText: l.cardCareersLink)),
                             ],
                           ),
                         ],
@@ -329,14 +253,10 @@ class _LearnMoreLink extends StatefulWidget {
 }
 
 class _LearnMoreLinkState extends State<_LearnMoreLink> {
-  bool _isHovered = false;
-
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
         onTap: () => context.go(widget.route),
         child: Row(
