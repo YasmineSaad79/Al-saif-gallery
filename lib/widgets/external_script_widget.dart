@@ -11,12 +11,14 @@ class ExternalScriptWidget extends StatefulWidget {
   final String viewId;
   final String widgetType;
   final double fallbackHeight;
+  final String lang;
 
   const ExternalScriptWidget({
     super.key,
     required this.viewId,
     required this.widgetType,
     this.fallbackHeight = 200,
+    this.lang = 'en',
   });
 
   @override
@@ -151,7 +153,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
       loadWidget(
         '${widget.widgetType}',
         "5be9c146-613e-4141-a351-1f5e13fc5513",
-        "en",
+        "${widget.lang}",
         "81a06c05-1a48-4d1b-8dbd-bcf60a76730f",
         "v2"
       );

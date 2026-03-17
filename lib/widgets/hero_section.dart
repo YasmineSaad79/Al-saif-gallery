@@ -24,7 +24,7 @@ class HeroSection extends StatelessWidget {
             ),
           ),
           Positioned.fill(
-            child: Container(color: Colors.red.withOpacity(0.66)),
+            child: Container(color: Colors.red.shade900.withOpacity(0.75)),
           ),
           Positioned(
             top: 80,
@@ -144,7 +144,7 @@ class HeroSection extends StatelessWidget {
                           height: 48,
                           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                           decoration: BoxDecoration(
-                            color: AppColors.primary,
+                            color: const Color(0xFF8B0000),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(

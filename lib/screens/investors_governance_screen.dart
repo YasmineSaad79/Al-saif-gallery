@@ -21,6 +21,7 @@ import '../widgets/performance_widget.dart';
 import '../widgets/share_series_widget.dart';
 import '../widgets/footer_section.dart';
 import '../utils/responsive.dart';
+import '../main.dart';
 
 class InvestorsGovernanceScreen extends StatelessWidget {
   const InvestorsGovernanceScreen({super.key});
@@ -45,17 +46,17 @@ class InvestorsGovernanceScreen extends StatelessWidget {
                 IGInvestmentCaseSection(),
                 _StockTickerSection(),
                 _CompanySnapshotSection(),
+                _CorporateNewsSection(),
                 _FactSheetSection(),
                 _StockActivitySection(),
                 _CorporateActionsSection(),
-                _CorporateNewsSection(),
                 _CompanyFinancialsSection(),
                 _InvestmentCalculatorSection(),
                 _SharePriceSection(),
-                _EmailSubscriptionSection(),
                 _PeerGroupAnalysisSection(),
                 _PerformanceSection(),
                 _ShareSeriesSection(),
+                _EmailSubscriptionSection(),
                 FooterSection(),
               ],
             ),
@@ -66,7 +67,68 @@ class InvestorsGovernanceScreen extends StatelessWidget {
   }
 }
 
-// ===== Stock Ticker =====
+// ===== مساعد لبناء section بعنوان =====
+class _SectionWithTitle extends StatefulWidget {
+  final String titleEn;
+  final String titleAr;
+  final Widget child;
+  final double topPad;
+  final bool showTitle;
+
+  const _SectionWithTitle({
+    required this.titleEn,
+    required this.titleAr,
+    required this.child,
+    this.topPad = 8,
+    this.showTitle = true,
+  });
+
+  @override
+  State<_SectionWithTitle> createState() => _SectionWithTitleState();
+}
+
+class _SectionWithTitleState extends State<_SectionWithTitle> {
+  @override
+  void initState() { super.initState(); localeProvider.addListener(_rebuild); }
+  void _rebuild() { if (mounted) setState(() {}); }
+  @override
+  void dispose() { localeProvider.removeListener(_rebuild); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    final hp = Responsive.getHorizontalPadding(context);
+    final isArabic = localeProvider.isArabic;
+    final title = isArabic ? widget.titleAr : widget.titleEn;
+
+    return Container(
+      width: double.infinity,
+      color: Colors.white,
+      padding: EdgeInsets.fromLTRB(hp, widget.topPad, hp, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (widget.showTitle) ...[
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                title,
+                textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: widget.child,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ===== Stock Ticker (بدون عنوان) =====
 class _StockTickerSection extends StatelessWidget {
   const _StockTickerSection();
   @override
@@ -78,28 +140,18 @@ class _StockTickerSection extends StatelessWidget {
         width: double.infinity,
         color: Colors.white,
         padding: EdgeInsets.fromLTRB(hp, 16, hp, 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Stock Ticker', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 66,
-              child: Container(
-                clipBehavior: Clip.hardEdge,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFF8F9FA),
-                  border: Border(
-                    top: BorderSide(color: Color(0xFFE53935), width: 2),
-                    bottom: BorderSide(color: Color(0xFFE53935), width: 2),
-                  ),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: const StockTickerWidget(),
+        child: Container(
+            clipBehavior: Clip.hardEdge,
+            decoration: const BoxDecoration(
+              color: Color(0xFFF8F9FA),
+              border: Border(
+                top: BorderSide(color: Color(0xFFE53935), width: 2),
+                bottom: BorderSide(color: Color(0xFFE53935), width: 2),
               ),
             ),
-          ],
-        ),
+            height: 70,
+            child: const StockTickerWidget(),
+          ),
       ),
     );
   }
@@ -110,22 +162,23 @@ class _CompanySnapshotSection extends StatelessWidget {
   const _CompanySnapshotSection();
   @override
   Widget build(BuildContext context) {
-    final hp = Responsive.getHorizontalPadding(context);
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Company Snapshot', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-            SizedBox(height: 8),
-            CompanySnapshotWidget(),
-          ],
-        ),
-      ),
+    return const _SectionWithTitle(
+      titleEn: 'Company Snapshot',
+      titleAr: 'نظرة عامة عن الشركة',
+      child: CompanySnapshotWidget(),
+    );
+  }
+}
+
+// ===== Announcements =====
+class _CorporateNewsSection extends StatelessWidget {
+  const _CorporateNewsSection();
+  @override
+  Widget build(BuildContext context) {
+    return const _SectionWithTitle(
+      titleEn: 'Announcements',
+      titleAr: 'الإعلانات',
+      child: CorporateNewsWidget(),
     );
   }
 }
@@ -139,9 +192,17 @@ class _FactSheetSection extends StatefulWidget {
 
 class _FactSheetSectionState extends State<_FactSheetSection> {
   int _tab = 0;
+
+  @override
+  void initState() { super.initState(); localeProvider.addListener(_rebuild); }
+  void _rebuild() { if (mounted) setState(() {}); }
+  @override
+  void dispose() { localeProvider.removeListener(_rebuild); super.dispose(); }
+
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
+    final isArabic = localeProvider.isArabic;
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Container(
@@ -151,13 +212,19 @@ class _FactSheetSectionState extends State<_FactSheetSection> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Fact Sheet', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            SizedBox(
+              width: double.infinity,
+              child: Text(isArabic ? 'نشرة المعلومات' : 'Fact Sheet',
+                  textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            ),
             const SizedBox(height: 8),
             Row(
+              mainAxisAlignment: isArabic ? MainAxisAlignment.end : MainAxisAlignment.start,
               children: [
-                _TabButton(label: 'Table', selected: _tab == 0, onTap: () => setState(() => _tab = 0)),
+                _TabButton(label: isArabic ? 'جدول' : 'Table', selected: _tab == 0, onTap: () => setState(() => _tab = 0)),
                 const SizedBox(width: 8),
-                _TabButton(label: 'Chart', selected: _tab == 1, onTap: () => setState(() => _tab = 1)),
+                _TabButton(label: isArabic ? 'رسم بياني' : 'Chart', selected: _tab == 1, onTap: () => setState(() => _tab = 1)),
               ],
             ),
             const SizedBox(height: 16),
@@ -179,9 +246,17 @@ class _StockActivitySection extends StatefulWidget {
 
 class _StockActivitySectionState extends State<_StockActivitySection> {
   int _tab = 0;
+
+  @override
+  void initState() { super.initState(); localeProvider.addListener(_rebuild); }
+  void _rebuild() { if (mounted) setState(() {}); }
+  @override
+  void dispose() { localeProvider.removeListener(_rebuild); super.dispose(); }
+
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
+    final isArabic = localeProvider.isArabic;
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Container(
@@ -191,13 +266,19 @@ class _StockActivitySectionState extends State<_StockActivitySection> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Stock Activity', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            SizedBox(
+              width: double.infinity,
+              child: Text(isArabic ? 'نشاط السهم' : 'Stock Activity',
+                  textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+            ),
             const SizedBox(height: 8),
             Row(
+              mainAxisAlignment: isArabic ? MainAxisAlignment.end : MainAxisAlignment.start,
               children: [
-                _TabButton(label: 'Simple', selected: _tab == 0, onTap: () => setState(() => _tab = 0)),
+                _TabButton(label: isArabic ? 'بسيط' : 'Simple', selected: _tab == 0, onTap: () => setState(() => _tab = 0)),
                 const SizedBox(width: 8),
-                _TabButton(label: 'Advanced', selected: _tab == 1, onTap: () => setState(() => _tab = 1)),
+                _TabButton(label: isArabic ? 'متقدم' : 'Advanced', selected: _tab == 1, onTap: () => setState(() => _tab = 1)),
               ],
             ),
             const SizedBox(height: 16),
@@ -215,47 +296,10 @@ class _CorporateActionsSection extends StatelessWidget {
   const _CorporateActionsSection();
   @override
   Widget build(BuildContext context) {
-    final hp = Responsive.getHorizontalPadding(context);
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Corporate Actions', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-            SizedBox(height: 8),
-            CorporateActionsWidget(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ===== Corporate News =====
-class _CorporateNewsSection extends StatelessWidget {
-  const _CorporateNewsSection();
-  @override
-  Widget build(BuildContext context) {
-    final hp = Responsive.getHorizontalPadding(context);
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Corporate News', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-            SizedBox(height: 8),
-            CorporateNewsWidget(),
-          ],
-        ),
-      ),
+    return const _SectionWithTitle(
+      titleEn: 'Corporate Actions',
+      titleAr: 'الإجراءات النظامية',
+      child: CorporateActionsWidget(),
     );
   }
 }
@@ -265,22 +309,10 @@ class _CompanyFinancialsSection extends StatelessWidget {
   const _CompanyFinancialsSection();
   @override
   Widget build(BuildContext context) {
-    final hp = Responsive.getHorizontalPadding(context);
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Company Financials', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-            SizedBox(height: 8),
-            CompanyFinancialsWidget(),
-          ],
-        ),
-      ),
+    return const _SectionWithTitle(
+      titleEn: 'Company Financials',
+      titleAr: 'البيانات المالية',
+      child: CompanyFinancialsWidget(),
     );
   }
 }
@@ -290,22 +322,10 @@ class _InvestmentCalculatorSection extends StatelessWidget {
   const _InvestmentCalculatorSection();
   @override
   Widget build(BuildContext context) {
-    final hp = Responsive.getHorizontalPadding(context);
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Investment Calculator', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-            SizedBox(height: 8),
-            InvestmentCalculatorWidget(),
-          ],
-        ),
-      ),
+    return const _SectionWithTitle(
+      titleEn: 'Investment Calculator',
+      titleAr: 'حاسبة الاستثمار',
+      child: InvestmentCalculatorWidget(),
     );
   }
 }
@@ -315,97 +335,10 @@ class _SharePriceSection extends StatelessWidget {
   const _SharePriceSection();
   @override
   Widget build(BuildContext context) {
-    final hp = Responsive.getHorizontalPadding(context);
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Share Price', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-            SizedBox(height: 8),
-            SharePriceWidget(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ===== Email Subscription =====
-class _EmailSubscriptionSection extends StatelessWidget {
-  const _EmailSubscriptionSection();
-  @override
-  Widget build(BuildContext context) {
-    final hp = Responsive.getHorizontalPadding(context);
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Email Subscription', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-            SizedBox(height: 8),
-            EmailSubscriptionWidget(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ===== Share Series =====
-class _ShareSeriesSection extends StatelessWidget {
-  const _ShareSeriesSection();
-  @override
-  Widget build(BuildContext context) {
-    final hp = Responsive.getHorizontalPadding(context);
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Share Series', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-            SizedBox(height: 8),
-            ShareSeriesWidget(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ===== Performance =====
-class _PerformanceSection extends StatelessWidget {
-  const _PerformanceSection();
-  @override
-  Widget build(BuildContext context) {
-    final hp = Responsive.getHorizontalPadding(context);
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Performance', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-            SizedBox(height: 8),
-            PerformanceWidget(),
-          ],
-        ),
-      ),
+    return const _SectionWithTitle(
+      titleEn: 'Share Price',
+      titleAr: 'سعر السهم',
+      child: SharePriceWidget(),
     );
   }
 }
@@ -415,27 +348,54 @@ class _PeerGroupAnalysisSection extends StatelessWidget {
   const _PeerGroupAnalysisSection();
   @override
   Widget build(BuildContext context) {
-    final hp = Responsive.getHorizontalPadding(context);
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Peer Group Analysis', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-            SizedBox(height: 8),
-            PeerGroupAnalysisWidget(),
-          ],
-        ),
-      ),
+    return const _SectionWithTitle(
+      titleEn: 'Peer Group Analysis',
+      titleAr: 'تحليل المجموعة المماثلة',
+      child: PeerGroupAnalysisWidget(),
     );
   }
 }
 
-// ===== Tab Button مخصص =====
+// ===== Performance =====
+class _PerformanceSection extends StatelessWidget {
+  const _PerformanceSection();
+  @override
+  Widget build(BuildContext context) {
+    return const _SectionWithTitle(
+      titleEn: 'Performance',
+      titleAr: 'الأداء',
+      child: PerformanceWidget(),
+    );
+  }
+}
+
+// ===== Share Series =====
+class _ShareSeriesSection extends StatelessWidget {
+  const _ShareSeriesSection();
+  @override
+  Widget build(BuildContext context) {
+    return const _SectionWithTitle(
+      titleEn: 'Share Series',
+      titleAr: 'سلسلة الأسهم',
+      child: ShareSeriesWidget(),
+    );
+  }
+}
+
+// ===== Email Subscription =====
+class _EmailSubscriptionSection extends StatelessWidget {
+  const _EmailSubscriptionSection();
+  @override
+  Widget build(BuildContext context) {
+    return const _SectionWithTitle(
+      titleEn: 'Email Subscription',
+      titleAr: 'الاشتراك بالبريد الإلكتروني',
+      child: EmailSubscriptionWidget(),
+    );
+  }
+}
+
+// ===== Tab Button =====
 class _TabButton extends StatelessWidget {
   final String label;
   final bool selected;

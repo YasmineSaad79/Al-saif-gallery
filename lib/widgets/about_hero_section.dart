@@ -13,13 +13,13 @@ class AboutHeroSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      height: 200,
+      height: 240,
       decoration: const BoxDecoration(
         color: AppColors.primary,
         image: DecorationImage(
           image: AssetImage('assets/images/Background_HorizontalBorder.png'),
           fit: BoxFit.cover,
-          alignment: Alignment.centerRight,
+          alignment: const Alignment(1.0, 0.44),
         ),
       ),
       padding: EdgeInsets.symmetric(
