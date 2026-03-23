@@ -3,8 +3,8 @@ const MANIFEST = 'flutter-app-manifest';
 const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 
-const RESOURCES = {"assets/AssetManifest.bin": "e5b3ad6f481a7e5d4bba0b96340ceac4",
-"assets/AssetManifest.json": "a663113a6276df28ca0778ef75e4d5ce",
+const RESOURCES = {"assets/AssetManifest.bin": "6872f1866d718720d2d258698cfff0e8",
+"assets/AssetManifest.json": "7aea604f769912f328fc2723e6048c9d",
 "assets/assets/images/Al_Saif_Logo.svg": "5b1e4700844d24c0e90e43825f71ea29",
 "assets/assets/images/arrow.svg": "0ed5e3c81e3e5df1f3def4b5884d8426",
 "assets/assets/images/Background_HorizontalBorder.png": "96cb39910f1a419a33794a8cf10678dd",
@@ -22,8 +22,8 @@ const RESOURCES = {"assets/AssetManifest.bin": "e5b3ad6f481a7e5d4bba0b96340ceac4
 "assets/assets/images/Integrity.svg": "c6f41a81be33f780407b5fc503e96ba2",
 "assets/assets/images/investors.svg": "3dc2e18a865eb4f7518a757e3c542437",
 "assets/assets/images/JUG.svg": "0f24a71e82f04f0ecaf0cf07897da009",
-"assets/assets/images/lacation.svg": "907434bb539cdbb5373d8a0cbf248fc4",
 "assets/assets/images/language.svg": "81cbc142e6244bb2703929724a00d29c",
+"assets/assets/images/location.svg": "907434bb539cdbb5373d8a0cbf248fc4",
 "assets/assets/images/modern_kitchen.jpeg": "6ac577a4fc9ec41901d363a21f46ba47",
 "assets/assets/images/news.jpeg": "b8655ab52b0f083e777e20395f28d151",
 "assets/assets/images/news.svg": "59d53bbb2aaa62afeec2cdd9f0547a1c",
@@ -50,9 +50,9 @@ const RESOURCES = {"assets/AssetManifest.bin": "e5b3ad6f481a7e5d4bba0b96340ceac4
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "fb38433c7decc10933189f604fe04a41",
-"/": "fb38433c7decc10933189f604fe04a41",
-"main.dart.js": "4ed9dc2d7e6a4605f5ee81eb2913d97a",
+"index.html": "8360bd75ac7a7281dc2aaf64c40a3379",
+"/": "8360bd75ac7a7281dc2aaf64c40a3379",
+"main.dart.js": "a8e3be54915b3067e8b9881a8a89cc29",
 "manifest.json": "643ea34e61d634cd252f5d58c89cf0e1",
 "version.json": "0de5a7d495987202101ae0d32efe91f0",
 "_redirects": "ef952d360ec42c652095dfeb72a350a6"};
