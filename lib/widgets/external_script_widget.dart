@@ -222,14 +222,6 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   html.EventListener? _messageListener;
   Timer? _debounce;
   double _pendingHeight = 0;
-  bool _hovered = false;
-
-  void _setPointerEvents(bool enabled) {
-    _iframe?.style.pointerEvents = enabled ? 'auto' : 'none';
-    if (_hovered != enabled) {
-      setState(() => _hovered = enabled);
-    }
-  }
 
   @override
   void initState() {
@@ -384,14 +376,10 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   Widget build(BuildContext context) {
     if (!kIsWeb) return const SizedBox.shrink();
 
-    return MouseRegion(
-      onEnter: (_) => _setPointerEvents(true),
-      onExit: (_) => _setPointerEvents(false),
-      child: SizedBox(
-        width: double.infinity,
-        height: _height,
-        child: HtmlElementView(viewType: widget.viewId),
-      ),
+    return SizedBox(
+      width: double.infinity,
+      height: _height,
+      child: HtmlElementView(viewType: widget.viewId),
     );
   }
 }

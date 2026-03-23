@@ -32,8 +32,18 @@ class _AlSaifGalleryAppState extends State<AlSaifGalleryApp> {
       final msg = (event as html.MessageEvent).data;
       if (msg is Map && msg['type'] == 'iframe-wheel') {
         final dy = (msg['deltaY'] as num?)?.toDouble() ?? 0;
-        // Use native browser scroll — works regardless of Flutter scroll controller
-        html.window.scrollBy(0, dy);
+        // Dispatch a synthetic wheel event on the Flutter canvas so
+        // SingleChildScrollView receives it naturally
+        final canvas = html.document.querySelector('flt-glass-pane') ??
+            html.document.querySelector('flutter-view') ??
+            html.document.body;
+        if (canvas != null) {
+          final wheelEvent = html.WheelEvent('wheel',
+            deltaY: dy,
+            deltaMode: 0,
+          );
+          canvas.dispatchEvent(wheelEvent);
+        }
       }
     };
     html.window.addEventListener('message', _wheelListener!);
