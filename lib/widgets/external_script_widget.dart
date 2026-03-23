@@ -46,9 +46,11 @@ class LazyExternalScriptWidget extends StatefulWidget {
 }
 
 class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
-  bool _visible = false;
+  bool _loaded = false;   // تحمّل مرة واحدة فقط
   bool _queued = false;
+  bool _inViewport = false;
   final _key = GlobalKey();
+  Timer? _visibilityTimer;
 
   @override
   void initState() {
@@ -56,8 +58,14 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkVisibility());
   }
 
+  @override
+  void dispose() {
+    _visibilityTimer?.cancel();
+    super.dispose();
+  }
+
   void _checkVisibility() {
-    if (!mounted || _queued) return;
+    if (!mounted) return;
     final ctx = _key.currentContext;
     if (ctx == null) {
       Future.delayed(const Duration(milliseconds: 400), _checkVisibility);
@@ -70,30 +78,53 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
     }
     final pos = box.localToGlobal(Offset.zero);
     final screenH = MediaQuery.of(ctx).size.height;
-    if (pos.dy < screenH + 200) {
-      // visible — add to queue instead of loading immediately
+    final isMobile = screenH < 900 && MediaQuery.of(ctx).size.width < 600;
+    final nearViewport = pos.dy < screenH + 200 && pos.dy > -widget.fallbackHeight - 200;
+
+    if (!_queued && nearViewport) {
       _queued = true;
       _enqueueLoad(() {
-        if (mounted) setState(() => _visible = true);
+        if (mounted) setState(() { _loaded = true; _inViewport = true; });
       });
-    } else {
-      Future.delayed(const Duration(milliseconds: 600), _checkVisibility);
     }
+
+    // على الموبايل فقط: أخفي الـ iframe لما يكون بعيداً جداً
+    if (_loaded && isMobile) {
+      final newInViewport = nearViewport;
+      if (newInViewport != _inViewport) {
+        setState(() => _inViewport = newInViewport);
+      }
+    }
+
+    // استمر في المراقبة
+    _visibilityTimer?.cancel();
+    _visibilityTimer = Timer(const Duration(milliseconds: 800), _checkVisibility);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_visible) {
-      return ExternalScriptWidget(
-        viewId: widget.viewId,
-        widgetType: widget.widgetType,
-        fallbackHeight: widget.fallbackHeight,
-        lang: widget.lang,
-      );
+    if (!_loaded) {
+      return _SkeletonPlaceholder(key: _key, height: widget.fallbackHeight);
     }
-    return _SkeletonPlaceholder(
-      key: _key,
-      height: widget.fallbackHeight,
+
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
+    // على الموبايل: أخفي بـ Offstage بدل dispose لتوفير الذاكرة
+    return Stack(
+      children: [
+        Offstage(
+          offstage: isMobile && !_inViewport,
+          child: ExternalScriptWidget(
+            viewId: widget.viewId,
+            widgetType: widget.widgetType,
+            fallbackHeight: widget.fallbackHeight,
+            lang: widget.lang,
+          ),
+        ),
+        // placeholder بنفس الارتفاع لما يكون مخفياً
+        if (isMobile && !_inViewport)
+          SizedBox(key: _key, width: double.infinity, height: widget.fallbackHeight),
+      ],
     );
   }
 }
