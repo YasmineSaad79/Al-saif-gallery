@@ -88,14 +88,30 @@ class _NCCareersSectionState extends State<NCCareersSection> {
                 ),
               ];
               if (isNarrow) {
-                return GridView.count(
-                  crossAxisCount: 2,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 1.4,
-                  children: stats.map((s) => _StatCard(item: s)).toList(),
+                return Column(
+                  children: [
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(child: _StatCard(item: stats[0])),
+                          const SizedBox(width: 12),
+                          Expanded(child: _StatCard(item: stats[1])),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(child: _StatCard(item: stats[2])),
+                          const SizedBox(width: 12),
+                          Expanded(child: _StatCard(item: stats[3])),
+                        ],
+                      ),
+                    ),
+                  ],
                 );
               }
               return IntrinsicHeight(
@@ -246,6 +262,7 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),

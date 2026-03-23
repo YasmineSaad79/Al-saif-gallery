@@ -75,14 +75,20 @@ class _BlackFooter extends StatelessWidget {
                   ],
                 );
               } else {
-                return Wrap(
-                  spacing: 40,
-                  runSpacing: 32,
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(width: 250, child: _FooterAbout(l: l)),
-                    SizedBox(width: 150, child: _FooterColumn(title: l.footerCompany, items: [l.footerAboutUs, l.footerStrategy, l.footerCareers])),
-                    SizedBox(width: 150, child: _FooterColumn(title: l.footerInvestors, items: [l.footerAnnualReports, l.footerGovernance, l.footerReports])),
-                    SizedBox(width: 150, child: _FooterColumn(title: l.footerContact, items: [l.footerIR, 'ir@alsaifgallery.com', '+966 11 406 4444'])),
+                    _FooterAbout(l: l),
+                    const SizedBox(height: 28),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: _FooterColumn(title: l.footerCompany, items: [l.footerAboutUs, l.footerStrategy, l.footerCareers])),
+                        Expanded(child: _FooterColumn(title: l.footerInvestors, items: [l.footerAnnualReports, l.footerGovernance, l.footerReports])),
+                      ],
+                    ),
+                    const SizedBox(height: 28),
+                    _FooterColumn(title: l.footerContact, items: [l.footerIR, 'ir@alsaifgallery.com', '+966 11 406 4444']),
                   ],
                 );
               }

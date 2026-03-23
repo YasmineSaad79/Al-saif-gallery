@@ -21,54 +21,26 @@ class InvestmentCaseSection extends StatelessWidget {
           const SizedBox(height: 6),
           Text(l.investmentSubtitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary, fontSize: 14, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
           const SizedBox(height: 30),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              if (constraints.maxWidth > 900) {
-                return IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(child: _InvestmentCard(number: '1', title: l.invest1Title, description: l.invest1Desc)),
-                      const SizedBox(width: 16),
-                      Expanded(child: _InvestmentCard(number: '2', title: l.invest2Title, description: l.invest2Desc)),
-                    ],
-                  ),
-                );
-              } else {
-                return Column(
-                  children: [
-                    _InvestmentCard(number: '1', title: l.invest1Title, description: l.invest1Desc),
-                    const SizedBox(height: 24),
-                    _InvestmentCard(number: '2', title: l.invest2Title, description: l.invest2Desc),
-                  ],
-                );
-              }
-            },
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: _InvestmentCard(number: '1', title: l.invest1Title, description: l.invest1Desc)),
+                const SizedBox(width: 16),
+                Expanded(child: _InvestmentCard(number: '2', title: l.invest2Title, description: l.invest2Desc)),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              if (constraints.maxWidth > 900) {
-                return IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(child: _InvestmentCard(number: '3', title: l.invest3Title, description: l.invest3Desc)),
-                      const SizedBox(width: 16),
-                      Expanded(child: _InvestmentCard(number: '4', title: l.invest4Title, description: l.invest4Desc)),
-                    ],
-                  ),
-                );
-              } else {
-                return Column(
-                  children: [
-                    _InvestmentCard(number: '3', title: l.invest3Title, description: l.invest3Desc),
-                    const SizedBox(height: 24),
-                    _InvestmentCard(number: '4', title: l.invest4Title, description: l.invest4Desc),
-                  ],
-                );
-              }
-            },
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: _InvestmentCard(number: '3', title: l.invest3Title, description: l.invest3Desc)),
+                const SizedBox(width: 16),
+                Expanded(child: _InvestmentCard(number: '4', title: l.invest4Title, description: l.invest4Desc)),
+              ],
+            ),
           ),
         ],
       ),
@@ -90,6 +62,7 @@ class _InvestmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,

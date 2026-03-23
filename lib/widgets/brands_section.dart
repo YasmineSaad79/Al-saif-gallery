@@ -105,35 +105,43 @@ class BrandsSection extends StatelessWidget {
                   builder: (context, constraints) {
                     if (constraints.maxWidth > 900) {
                       final cardWidth = (constraints.maxWidth - 14 - (3 * 24)) / 4;
-                      return Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(width: cardWidth, child: _ServiceCard(iconPath: 'assets/images/strategy.svg', title: l.cardStrategyTitle, description: l.cardStrategyDesc, linkText: l.cardStrategyLink)),
-                          const SizedBox(width: 24),
-                          SizedBox(width: cardWidth, child: _ServiceCard(iconPath: 'assets/images/investors.svg', title: l.cardInvestorsTitle, description: l.cardInvestorsDesc, linkText: l.cardInvestorsLink)),
-                          const SizedBox(width: 24),
-                          SizedBox(width: cardWidth, child: _ServiceCard(iconPath: 'assets/images/brands.svg', title: l.cardBrandsTitle, description: l.cardBrandsDesc, linkText: l.cardBrandsLink)),
-                          const SizedBox(width: 24),
-                          SizedBox(width: cardWidth, child: _ServiceCard(iconPath: 'assets/images/career.svg', title: l.cardCareersTitle, description: l.cardCareersDesc, linkText: l.cardCareersLink)),
-                        ],
+                      return IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            SizedBox(width: cardWidth, child: _ServiceCard(iconPath: 'assets/images/strategy.svg', title: l.cardStrategyTitle, description: l.cardStrategyDesc, linkText: l.cardStrategyLink)),
+                            const SizedBox(width: 24),
+                            SizedBox(width: cardWidth, child: _ServiceCard(iconPath: 'assets/images/investors.svg', title: l.cardInvestorsTitle, description: l.cardInvestorsDesc, linkText: l.cardInvestorsLink)),
+                            const SizedBox(width: 24),
+                            SizedBox(width: cardWidth, child: _ServiceCard(iconPath: 'assets/images/brands.svg', title: l.cardBrandsTitle, description: l.cardBrandsDesc, linkText: l.cardBrandsLink)),
+                            const SizedBox(width: 24),
+                            SizedBox(width: cardWidth, child: _ServiceCard(iconPath: 'assets/images/career.svg', title: l.cardCareersTitle, description: l.cardCareersDesc, linkText: l.cardCareersLink)),
+                          ],
+                        ),
                       );
                     } else {
                       return Column(
                         children: [
-                          Row(
-                            children: [
-                              Expanded(child: _ServiceCard(iconPath: 'assets/images/strategy.svg', title: l.cardStrategyTitle, description: l.cardStrategyDesc, linkText: l.cardStrategyLink)),
-                              const SizedBox(width: 16),
-                              Expanded(child: _ServiceCard(iconPath: 'assets/images/investors.svg', title: l.cardInvestorsTitle, description: l.cardInvestorsDesc, linkText: l.cardInvestorsLink)),
-                            ],
+                          IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(child: _ServiceCard(iconPath: 'assets/images/strategy.svg', title: l.cardStrategyTitle, description: l.cardStrategyDesc, linkText: l.cardStrategyLink)),
+                                const SizedBox(width: 16),
+                                Expanded(child: _ServiceCard(iconPath: 'assets/images/investors.svg', title: l.cardInvestorsTitle, description: l.cardInvestorsDesc, linkText: l.cardInvestorsLink)),
+                              ],
+                            ),
                           ),
                           const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(child: _ServiceCard(iconPath: 'assets/images/brands.svg', title: l.cardBrandsTitle, description: l.cardBrandsDesc, linkText: l.cardBrandsLink)),
-                              const SizedBox(width: 16),
-                              Expanded(child: _ServiceCard(iconPath: 'assets/images/career.svg', title: l.cardCareersTitle, description: l.cardCareersDesc, linkText: l.cardCareersLink)),
-                            ],
+                          IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(child: _ServiceCard(iconPath: 'assets/images/brands.svg', title: l.cardBrandsTitle, description: l.cardBrandsDesc, linkText: l.cardBrandsLink)),
+                                const SizedBox(width: 16),
+                                Expanded(child: _ServiceCard(iconPath: 'assets/images/career.svg', title: l.cardCareersTitle, description: l.cardCareersDesc, linkText: l.cardCareersLink)),
+                              ],
+                            ),
                           ),
                         ],
                       );
@@ -173,6 +181,7 @@ class _ServiceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: double.infinity,
       constraints: const BoxConstraints(minHeight: 240),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(

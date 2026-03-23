@@ -91,19 +91,80 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
         lang: widget.lang,
       );
     }
-    return SizedBox(
+    return _SkeletonPlaceholder(
       key: _key,
-      width: double.infinity,
       height: widget.fallbackHeight,
-      child: const Center(
-        child: SizedBox(
-          width: 24,
-          height: 24,
-          child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFFE53935)),
+    );
+  }
+}
+
+class _SkeletonPlaceholder extends StatefulWidget {
+  final double height;
+  const _SkeletonPlaceholder({super.key, required this.height});
+
+  @override
+  State<_SkeletonPlaceholder> createState() => _SkeletonPlaceholderState();
+}
+
+class _SkeletonPlaceholderState extends State<_SkeletonPlaceholder>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _anim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200))
+      ..repeat(reverse: true);
+    _anim = Tween<double>(begin: 0.3, end: 0.7).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _anim,
+      builder: (_, __) => Container(
+        width: double.infinity,
+        height: widget.height,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Color.lerp(const Color(0xFFE5E7EB), const Color(0xFFF3F4F6), _anim.value),
+        ),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _bar(0.4),
+            const SizedBox(height: 12),
+            _bar(0.7),
+            const SizedBox(height: 8),
+            _bar(0.6),
+            const SizedBox(height: 8),
+            _bar(0.5),
+          ],
         ),
       ),
     );
   }
+
+  Widget _bar(double widthFactor) => FractionallySizedBox(
+        widthFactor: widthFactor,
+        child: Container(
+          height: 12,
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.6),
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+      );
 }
 
 class ExternalScriptWidget extends StatefulWidget {
