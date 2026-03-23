@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/home_screen.dart';
 import '../screens/about_us_screen.dart';
+import '../screens/strategy_screen.dart';
 import '../screens/investors_governance_screen.dart';
 import '../screens/news_careers_screen.dart';
 
@@ -31,7 +32,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/strategy-operations',
       name: 'strategy-operations',
-      pageBuilder: (context, state) => _fadePage(context, state, const PlaceholderScreen(title: 'Strategy & Operations')),
+      pageBuilder: (context, state) => _fadePage(context, state, const StrategyScreen()),
     ),
     GoRoute(
       path: '/investors-governance',

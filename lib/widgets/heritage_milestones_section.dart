@@ -127,38 +127,35 @@ class _MilestoneCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
       ),
-      child: Column(
-        crossAxisAlignment: isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: double.infinity,
-            child: Text(
-              year,
-              textAlign: isArabic ? TextAlign.right : TextAlign.left,
-              textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-              style: const TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: 'Inter', fontWeight: FontWeight.w700),
+      child: Directionality(
+        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                year,
+                style: const TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: 'Inter', fontWeight: FontWeight.w700),
+              ),
             ),
-          ),
-          const SizedBox(height: 6),
-          SizedBox(
-            width: double.infinity,
-            child: Text(
-              title,
-              textAlign: isArabic ? TextAlign.right : TextAlign.left,
-              textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-              style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontFamily: 'Inter', fontWeight: FontWeight.w700),
+            const SizedBox(height: 6),
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                title,
+                style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontFamily: 'Inter', fontWeight: FontWeight.w700),
+              ),
             ),
-          ),
-          const SizedBox(height: 4),
-          Expanded(
-            child: Text(
-              description,
-              textAlign: isArabic ? TextAlign.right : TextAlign.left,
-              textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-              style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontFamily: 'Inter', fontWeight: FontWeight.w400, height: 1.4),
+            const SizedBox(height: 4),
+            Expanded(
+              child: Text(
+                description,
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontFamily: 'Inter', fontWeight: FontWeight.w400, height: 1.4),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

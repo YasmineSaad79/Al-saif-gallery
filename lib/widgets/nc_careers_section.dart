@@ -45,7 +45,7 @@ class _NCCareersSectionState extends State<NCCareersSection> {
               constraints: const BoxConstraints(maxWidth: 560),
               child: Text(
                 isArabic
-                    ? 'ابنِ مسيرتك المهنية مع الرائد السعودي في مستلزمات المنزل. نبحث عن أفراد موهوبين للانضمام إلى فريقنا المتنامي الذي يضم أكثر من 1,280 موظفاً في خمسة أسواق.'
+                    ? 'ابنِ مسيرتك المهنية مع الرائد السعودي في مستلزمات المنزل. نبحث عن أفراد موهوبين للانضمام إلى فريقنا المتنامي الذي يضم أكثر من \u200E1,280\u200F موظفاً في خمسة أسواق.'
                     : "Build your career with Saudi Arabia's leading household essentials retailer. We're looking for talented individuals to join our growing team of 1,280+ employees across five markets.",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
@@ -64,7 +64,7 @@ class _NCCareersSectionState extends State<NCCareersSection> {
               final stats = [
                 _StatItem(
                   icon: 'assets/images/Customer.svg',
-                  value: '1,280+',
+                  value: '\u200E1,280+\u200F',
                   label: isArabic ? 'موظف' : 'Employees',
                   sub: isArabic ? 'في 5 أسواق' : 'Across 5 markets',
                 ),

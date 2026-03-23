@@ -23,18 +23,18 @@ class _NCNewsSectionState extends State<NCNewsSection> {
 
     final items = [
       _NewsItem(
-        date:     isArabic ? 'مارس 2026'    : 'March 2026',
+        date:     isArabic ? 'مارس \u200E2026\u200F'    : 'March 2026',
         tag:      isArabic ? 'نتائج مالية'  : 'Financial Results',
         tagColor: const Color(0xFFE53935),
         title:    isArabic
-            ? 'نتائج الربع الأول 2026'
+            ? 'نتائج الربع الأول \u200E2026\u200F'
             : 'Q1 2026 Financial Results',
         desc:     isArabic
             ? 'تعلن السيف غاليري عن نتائج الربع الأول، مع استمرار زخم نمو القنوات الرقمية وتحسينات الكفاءة التشغيلية.'
             : 'Al Saif Gallery announces first quarter results, continuing momentum in digital channel growth and operational efficiency improvements.',
       ),
       _NewsItem(
-        date:     isArabic ? 'ديسمبر 2024'  : 'December 2024',
+        date:     isArabic ? 'ديسمبر \u200E2024\u200F'  : 'December 2024',
         tag:      isArabic ? 'قيادة'         : 'Leadership',
         tagColor: const Color(0xFFE53935),
         title:    isArabic
@@ -45,14 +45,14 @@ class _NCNewsSectionState extends State<NCNewsSection> {
             : 'Ahmed bin Saleh Al Sultan appointed as CEO, marking the first professional, non-family CEO in the Company\'s history.',
       ),
       _NewsItem(
-        date:     isArabic ? 'ديسمبر 2024'  : 'December 2024',
+        date:     isArabic ? 'ديسمبر \u200E2024\u200F'  : 'December 2024',
         tag:      isArabic ? 'توسع'          : 'Expansion',
         tagColor: const Color(0xFFE53935),
         title:    isArabic
             ? 'التوسع الخليجي مستمر'
             : 'GCC Expansion Continues',
         desc:     isArabic
-            ? 'افتتاح صالات عرض جديدة في الدوحة (1,392 م²) والعين (1,700 م²)، مما يعزز حضورنا الخليجي إلى سبعة مواقع.'
+            ? 'افتتاح صالات عرض جديدة في الدوحة (\u200E1,392\u200F م²) والعين (\u200E1,700\u200F م²)، مما يعزز حضورنا الخليجي إلى سبعة مواقع.'
             : 'New showrooms opened in Doha (1,392 m²) and Al Ain (1,700 m²), strengthening our GCC presence to seven locations.',
       ),
     ];

@@ -26,13 +26,13 @@ class AppLocalizations {
 
   // ── Hero Section ─────────────────────────────────────────────────────────
   String get heroTitle => isArabic
-      ? 'بيت الأسرة السعودية\nمنذ 1993.'
+      ? 'بيت الأسرة السعودية\nمنذ \u200E1993\u200F.'
       : "Saudi Arabia's Home\nSince 1993.";
   String get heroSubtitle => isArabic
       ? 'ثلاثة عقود في خدمة الأسرة السعودية. هدفنا واحد: جودة تُبنى عليها الثقة، كل يوم'
       : 'Thirty years of serving Saudi households. One purpose: trusted quality, every day.';
   String get heroDesc1 => isArabic
-      ? 'السيف غاليري وجهة متخصصة في المملكة العربية السعودية لمستلزمات المنزل وأجهزة المطبخ، انطلقت من معرض واحد في الرياض لتصبح اليوم منصة تجزئة وطنية تضم 73 صالة عرض عبر المملكة ودول مجلس التعاون الخليجي. ومنذ إدراجها في السوق المالية السعودية (تداول) عام 2022، تجمع السيف غاليري بين مزايا الشركة المدرجة وانضباط التشغيل الذي بنى ثقة الأسر السعودية على مدى ثلاثة عقود.'
+      ? 'السيف غاليري وجهة متخصصة في المملكة العربية السعودية لمستلزمات المنزل وأجهزة المطبخ، انطلقت من معرض واحد في الرياض لتصبح اليوم منصة تجزئة وطنية تضم \u200E73\u200F صالة عرض عبر المملكة ودول مجلس التعاون الخليجي. ومنذ إدراجها في السوق المالية السعودية (تداول) عام \u200E2022\u200F، تجمع السيف غاليري بين مزايا الشركة المدرجة وانضباط التشغيل الذي بنى ثقة الأسر السعودية على مدى ثلاثة عقود.'
       : "Al Saif Gallery is Saudi Arabia's specialist in household essentials and kitchen appliances, built from a single Riyadh showroom into a national retail platform of 73 locations across the Kingdom and the GCC. Listed on Tadawul since 2022, we combine the scale of a public company with the discipline of an operator that has earned household trust for three decades.";
   String get heroDesc2 => isArabic
       ? 'يقوم نموذج أعمالنا على علامات تجارية مملوكة وحصرية، في مقدمتها إيدسون وتورنادو وروبست وروكي، صُمّمت ووُضّعت مواصفاتها للبيت السعودي ومطبخه وضيافته. وكل منتج نقدمه هو اختيار مدروس: جودة تكسب الولاء، وقيمة تحترم العميل.'
@@ -42,14 +42,14 @@ class AppLocalizations {
 
 
   // ── Stats Section ────────────────────────────────────────────────────────
-  String get statsShowrooms         => isArabic ? '73 صالة عرض'                     : 'Showrooms';
-  String get statsShowroomsSubtitle => isArabic ? 'في 5 أسواق خليجية'               : 'Across 5 GCC markets';
-  String get statsRevenue           => isArabic ? '758.8 مليون ريال إيرادات'         : 'Net Profit';
-  String get statsRevenueSubtitle   => isArabic ? 'الأداء المالي لعام 2025'          : 'SAR 758.8M Revenue';
-  String get statsPropRevenue       => isArabic ? 'نحو 88% إيرادات العلامات الخاصة' : '~88% Proprietary Revenue';
-  String get statsPropRevenueSubtitle => isArabic ? 'علامات مملوكة وحصرية'          : 'Owned & exclusive brands';
-  String get statsEcommerce         => isArabic ? '37% نمو التجارة الإلكترونية'     : '37% E-Commerce Growth';
-  String get statsEcommerceSubtitle => isArabic ? '94 مليون ريال مبيعات رقمية'      : 'SAR 94M digital sales';
+  String get statsShowrooms         => isArabic ? '\u200E73\u200F صالة عرض'                     : 'Showrooms';
+  String get statsShowroomsSubtitle => isArabic ? 'في \u200E5\u200F أسواق خليجية'               : 'Across 5 GCC markets';
+  String get statsRevenue           => isArabic ? '\u200E758.8\u200F مليون ريال إيرادات'         : 'Net Profit';
+  String get statsRevenueSubtitle   => isArabic ? 'الأداء المالي لعام \u200E2025\u200F'          : 'SAR 758.8M Revenue';
+  String get statsPropRevenue       => isArabic ? 'نحو \u200E88%\u200F إيرادات العلامات الخاصة' : '~88% Proprietary Revenue';
+  String get statsPropRevenueSubtitle => isArabic ? 'علامات مملوكة وحصرية'                      : 'Owned & exclusive brands';
+  String get statsEcommerce         => isArabic ? '\u200E37%\u200F نمو التجارة الإلكترونية'     : '37% E-Commerce Growth';
+  String get statsEcommerceSubtitle => isArabic ? '\u200E94\u200F مليون ريال مبيعات رقمية'      : 'SAR 94M digital sales';
 
   // ── Brands Section ───────────────────────────────────────────────────────
   String get brandsTitle => isArabic
@@ -83,7 +83,7 @@ class AppLocalizations {
 
   String get cardCareersTitle => isArabic ? 'الوظائف والثقافة المؤسسية' : 'Careers & Culture';
   String get cardCareersDesc  => isArabic
-      ? 'انضم إلى فريق يخدم الأسرة السعودية عبر 73 صالة عرض. فرص في التجزئة واللوجستيات والرقمي والوظائف المؤسسية.'
+      ? 'انضم إلى فريق يخدم الأسرة السعودية عبر \u200E73\u200F صالة عرض. فرص في التجزئة واللوجستيات والرقمي والوظائف المؤسسية.'
       : 'Join a team serving Saudi households across 73 locations. Explore opportunities in retail, logistics, digital, and corporate functions.';
   String get cardCareersLink  => isArabic ? 'استكشف الوظائف' : 'Explore Roles';
 
@@ -91,7 +91,7 @@ class AppLocalizations {
   // ── Our Purpose Section ──────────────────────────────────────────────────
   String get purposeTitle => isArabic ? 'غايتنا' : 'Our Purpose';
   String get purposeDesc1 => isArabic
-      ? 'نعمل على إتاحة مستلزمات منزلية موثوقة ومصممة بعناية للأسر السعودية، بقيمة عادلة وخدمة مستمرة والتزام يتجاوز لحظة الشراء. ومنذ تأسيسنا عام 1993، لم تتغير هذه الرسالة؛ وما تطوّر هو حجمنا وقدراتنا: من معرض واحد إلى شبكة وطنية، ومن نشاط تجاري تقليدي إلى نموذج متكامل للتجزئة، ومن شركة خاصة إلى شركة مدرجة في "تداول" تخدم مصلحة مساهميها جنباً إلى جنب مع عملائها.'
+      ? 'نعمل على إتاحة مستلزمات منزلية موثوقة ومصممة بعناية للأسر السعودية، بقيمة عادلة وخدمة مستمرة والتزام يتجاوز لحظة الشراء. ومنذ تأسيسنا عام \u200E1993\u200F، لم تتغير هذه الرسالة؛ وما تطوّر هو حجمنا وقدراتنا: من معرض واحد إلى شبكة وطنية، ومن نشاط تجاري تقليدي إلى نموذج متكامل للتجزئة، ومن شركة خاصة إلى شركة مدرجة في "تداول" تخدم مصلحة مساهميها جنباً إلى جنب مع عملائها.'
       : 'We exist to make trusted, well-designed household essentials accessible to Saudi families, backed by honest value, consistent service, and a commitment that extends well beyond the point of purchase.';
   String get purposeDesc2 => isArabic
       ? 'تنعكس هذه الغاية في جميع جوانب عملنا: مواصفات المنتجات المصمّمة لفنون الطبخ والضيافة السعودية، ومنظومة خدمة ما بعد البيع التي تصون ثقة العميل، وإطار حوكمة يليق بشركة مدرجة، واستراتيجية بُنيت لخلق قيمة طويلة الأمد لجميع أصحاب المصلحة.'
@@ -167,31 +167,31 @@ class AppLocalizations {
       ? 'إطلاق الموقع والتطبيق إلى جانب برنامج ولاء العملاء، مما أرسى أسس نموذج متعدد القنوات.'
       : 'The online platform and mobile application are launched alongside a customer loyalty program, establishing the foundation for omni-channel operations.';
 
-  String get m2018year  => '2018-2022';
+  String get m2018year  => isArabic ? '\u200E2018\u200F-\u200E2022\u200F' : '2018-2022';
   String get m2018title => isArabic ? 'ريادة إيدسون في الأجهزة المنزلية الكبيرة' : 'Edison Brand Leadership';
   String get m2018desc  => isArabic
       ? 'توسّع وتعمّق منصة العلامات الخاصة. إطلاق إيدسون للأجهزة الكبيرة، من ثلاجات وغسالات ومكيفات هواء، يُوسّع المنظومة من الأجهزة الصغيرة إلى حلول المنزل كاملاً.'
       : 'Proprietary brand platform scaled and deepened. Launch of the Edison large appliance extension, including refrigerators, washing machines, and air conditioning, expands the offering from small appliances into whole-home solutions.';
 
-  String get m2022year  => isArabic ? '27 ديسمبر 2022' : '27 December 2022';
+  String get m2022year  => isArabic ? '\u200E27\u200F ديسمبر \u200E2022\u200F' : '27 December 2022';
   String get m2022title => isArabic ? 'الطرح العام الأولي في تداول' : 'Tadawul IPO';
   String get m2022desc  => isArabic
-      ? 'إدراج السيف غاليري في السوق الرئيسية للسوق المالية السعودية بسعر 115 ريالاً للسهم قبل التجزئة، بتغطية 269%، مما يعكس الطلب الواسع من السوق على متخصص متميز في مستلزمات المنزل السعودي.'
+      ? 'إدراج السيف غاليري في السوق الرئيسية للسوق المالية السعودية بسعر \u200E115\u200F ريالاً للسهم قبل التجزئة، بتغطية \u200E269%\u200F، مما يعكس الطلب الواسع من السوق على متخصص متميز في مستلزمات المنزل السعودي.'
       : 'Al Saif Gallery lists on the Saudi Exchange Main Market at SAR 115 per share (pre-split). The offering is 269% oversubscribed, reflecting strong market demand for a pure-play specialist in Saudi household essentials.';
 
-  String get m2023year  => isArabic ? 'يوليو 2023' : 'July 2023';
+  String get m2023year  => isArabic ? 'يوليو \u200E2023\u200F' : 'July 2023';
   String get m2023title => isArabic ? 'توسيع الهيكل الرأسمالي' : 'Capital Structure Expansion';
   String get m2023desc  => isArabic
-      ? 'تجزئة الأسهم بنسبة 10 إلى 1 ترفع عدد الأسهم إلى 350 مليون سهم، مما يُعزز سيولة السهم في السوق.'
+      ? 'تجزئة الأسهم بنسبة \u200E10\u200F إلى \u200E1\u200F ترفع عدد الأسهم إلى \u200E350\u200F مليون سهم، مما يُعزز سيولة السهم في السوق.'
       : '10-for-1 stock split increases shares outstanding to 350 million, improving market liquidity.';
 
   String get m2024year  => '2024';
   String get m2024title => isArabic ? 'التوسع الخليجي' : 'GCC Expansion';
   String get m2024desc  => isArabic
-      ? 'افتتاح صالات عرض جديدة في الدوحة (ديسمبر 2024، 1,392 م²) والعين (ديسمبر 2024، 1,700 م²) ومسقط، ليبلغ مجموع صالات دول الخليج سبعة مواقع في الإمارات والكويت وعُمان وقطر.'
+      ? 'افتتاح صالات عرض جديدة في الدوحة (ديسمبر \u200E2024\u200F، \u200E1,392\u200F م²) والعين (ديسمبر \u200E2024\u200F، \u200E1,700\u200F م²) ومسقط، ليبلغ مجموع صالات دول الخليج سبعة مواقع في الإمارات والكويت وعُمان وقطر.'
       : 'New showrooms open in Doha (December 2024, 1,392 m²), Al Ain (December 2024, 1,700 m²), and Muscat, bringing the GCC network to seven locations across UAE, Kuwait, Oman, and Qatar.';
 
-  String get m2024bYear  => isArabic ? 'ديسمبر 2024' : 'Dec 2024';
+  String get m2024bYear  => isArabic ? 'ديسمبر \u200E2024\u200F' : 'Dec 2024';
   String get m2024bTitle => isArabic ? 'مرحلة قيادة جديدة' : 'Leadership Transition';
   String get m2024bDesc  => isArabic
       ? 'تعيين أحمد بن صالح آل سلطان رئيساً تنفيذياً، وهو أول رئيس تنفيذي محترف من خارج الأسرة المؤسِّسة في تاريخ الشركة، إيذاناً بمرحلة جديدة من التركيز التشغيلي ونضج الحوكمة.'
@@ -200,7 +200,7 @@ class AppLocalizations {
   String get m2025year  => '2025';
   String get m2025title => isArabic ? 'الانتعاش المالي والتسارع الرقمي' : 'Financial Recovery & Digital Acceleration';
   String get m2025desc  => isArabic
-      ? 'إيرادات 758.8 مليون ريال، وصافي ربح 58 مليون ريال بنمو 54.6% مقارنة بالعام السابق، ونمو التجارة الإلكترونية 37% لتبلغ 94 مليون ريال، مما يجسّد متانة النموذج التشغيلي وزخم التحول الرقمي.'
+      ? 'إيرادات \u200E758.8\u200F مليون ريال، وصافي ربح \u200E58\u200F مليون ريال بنمو \u200E54.6%\u200F مقارنة بالعام السابق، ونمو التجارة الإلكترونية \u200E37%\u200F لتبلغ \u200E94\u200F مليون ريال، مما يجسّد متانة النموذج التشغيلي وزخم التحول الرقمي.'
       : 'Revenue of SAR 758.8M, net profit of SAR 58M (+54.6% year-on-year), and e-commerce growth of 37% to SAR 94M demonstrate the platform\'s operational resilience and digital momentum.';
 
   // ── Leadership Section ───────────────────────────────────────────────────
@@ -208,7 +208,7 @@ class AppLocalizations {
 
   String get boardTitle => isArabic ? 'مجلس الإدارة' : 'Board of Directors';
   String get boardDesc  => isArabic
-      ? 'يتولى مجلس الإدارة الإشراف الاستراتيجي وصون حقوق المساهمين وضمان مساءلة الإدارة وفق التزامات الشركة بوصفها مدرجة في تداول. أُعيد انتخاب المجلس الحالي في أكتوبر 2025 للفترة من 2025 إلى 2028.'
+      ? 'يتولى مجلس الإدارة الإشراف الاستراتيجي وصون حقوق المساهمين وضمان مساءلة الإدارة وفق التزامات الشركة بوصفها مدرجة في تداول. أُعيد انتخاب المجلس الحالي في أكتوبر \u200E2025\u200F للفترة من \u200E2025\u200F إلى \u200E2028\u200F.'
       : 'The Board provides strategic oversight, safeguards shareholder interests, and ensures that management accountability aligns with our obligations as a Tadawul-listed company. The current board was re-elected in October 2025 for the 2025 to 2028 term.';
   String get boardLink  => isArabic ? 'عرض السير الذاتية لأعضاء المجلس' : 'View Board Profiles';
 
@@ -226,12 +226,12 @@ class AppLocalizations {
 
   String get invest1Title => isArabic ? 'ملكية العلامات التجارية بهوية سعودية' : 'Saudi-Focused Brand Ownership';
   String get invest1Desc  => isArabic
-      ? 'تأتي نحو 88% من إيراداتنا من علامات تجارية نملكها أو نوزّعها حصرياً: إيدسون، تورنادو، روبست، روكي، إيفرست، إيليغانس، ليما، راين، تايم ليس، رويال، فالكون وغلوري. علاقاتنا المباشرة مع المصنّعين تُتيح لنا تجاوز الوسطاء، مما يمنحنا كفاءة في التكلفة ومرونة في تحديد مواصفات المنتجات وفق متطلبات الأسرة السعودية. وحين يفتح عميلنا منتجاً من إديسون، فهو لا يفتح منتجاً مستورداً عاماً، بل منتجاً صُمّم خصيصاً للبيت السعودي.'
+      ? 'تأتي نحو \u200E88%\u200F من إيراداتنا من علامات تجارية نملكها أو نوزّعها حصرياً: إيدسون، تورنادو، روبست، روكي، إيفرست، إيليغانس، ليما، راين، تايم ليس، رويال، فالكون وغلوري. علاقاتنا المباشرة مع المصنّعين تُتيح لنا تجاوز الوسطاء، مما يمنحنا كفاءة في التكلفة ومرونة في تحديد مواصفات المنتجات وفق متطلبات الأسرة السعودية. وحين يفتح عميلنا منتجاً من إديسون، فهو لا يفتح منتجاً مستورداً عاماً، بل منتجاً صُمّم خصيصاً للبيت السعودي.'
       : 'Approximately 88% of our revenue comes from proprietary and exclusive brands we control: Edison, Tornado, Robust, Rocky, Everest, Elegance, Leema, Rhine, Timeless, Royal, Falcon, and Glory. Direct manufacturing relationships eliminate wholesaler intermediaries, enabling superior cost efficiency and the ability to specify products for Saudi usage patterns. When our customers open an Edison product, they are not opening a generic import. They are opening something engineered with Saudi households in mind.';
 
   String get invest2Title => isArabic ? 'الانتشار الوطني وعمق الخدمة' : 'National Reach with Service Depth';
   String get invest2Desc  => isArabic
-      ? '73 صالة عرض في المملكة العربية السعودية وخمسة أسواق خليجية، تدعمها مستودعات مركزية في الرياض ومركز توزيع متخصص في جدة. التزامات التوصيل من يوم إلى 3 أيام داخل الرياض، ومن 3 إلى 5 أيام في أرجاء المملكة، ومن 5 إلى 10 أيام دولياً. شبكتنا ليست مجرد بنية توزيع، بل منصة خدمة وضمان متكاملة.'
+      ? '\u200E73\u200F صالة عرض في المملكة العربية السعودية وخمسة أسواق خليجية، تدعمها مستودعات مركزية في الرياض ومركز توزيع متخصص في جدة. التزامات التوصيل من يوم إلى \u200E3\u200F أيام داخل الرياض، ومن \u200E3\u200F إلى \u200E5\u200F أيام في أرجاء المملكة، ومن \u200E5\u200F إلى \u200E10\u200F أيام دولياً. شبكتنا ليست مجرد بنية توزيع، بل منصة خدمة وضمان متكاملة.'
       : '73 showrooms across Saudi Arabia and five GCC markets, supported by centralized warehouses in Riyadh with a combined area exceeding 50,000 m² and a dedicated fulfillment center in Jeddah. Delivery commitments of 1 to 3 days within Riyadh, 3 to 5 days across the Kingdom, and 5 to 10 days internationally distinguish us from retail competitors who treat logistics as an afterthought. Our network is not just a distribution asset. It is a service and warranty platform.';
 
   String get invest3Title => isArabic ? 'الالتزام بخدمة ما بعد البيع' : 'Post-Purchase Commitment';
@@ -241,7 +241,7 @@ class AppLocalizations {
 
   String get invest4Title => isArabic ? 'التكامل بين القنوات الرقمية والمادية' : 'Omni-Channel Integration';
   String get invest4Desc  => isArabic
-      ? 'قنواتنا الرقمية ليست نشاطاً موازياً، بل امتداد حقيقي لصالات عرضنا. في عام 2025، بلغت مبيعات التجارة الإلكترونية 94 مليون ريال، أي 12.4% من إجمالي الإيرادات، بنمو 37% مقارنة بالعام السابق. خدمة الاستلام من المعرض، والإرجاع داخل الفروع، والمعالجة الموحّدة للضمانات، وخيارات الدفع المتعددة بما فيها التقسيط والدفع الذكي، تربط المعرض بالشاشة في رحلة عميل واحدة متسقة.'
+      ? 'قنواتنا الرقمية ليست نشاطاً موازياً، بل امتداد حقيقي لصالات عرضنا. في عام \u200E2025\u200F، بلغت مبيعات التجارة الإلكترونية \u200E94\u200F مليون ريال، أي \u200E12.4%\u200F من إجمالي الإيرادات، بنمو \u200E37%\u200F مقارنة بالعام السابق. خدمة الاستلام من المعرض، والإرجاع داخل الفروع، والمعالجة الموحّدة للضمانات، وخيارات الدفع المتعددة بما فيها التقسيط والدفع الذكي، تربط المعرض بالشاشة في رحلة عميل واحدة متسقة.'
       : 'Our digital channels are not a parallel business. They are an integrated extension of our showrooms. In 2025, digital sales contributed SAR 94 million, representing 12.4% of total revenue and growing 37% year-on-year. Click-and-collect, in-store returns, unified warranty processing, and multiple payment options including installment and smart device payment connect the showroom and the screen into a single customer journey.';
 
 
@@ -252,13 +252,13 @@ class AppLocalizations {
       : 'Join a team serving Saudi households across 73 locations.\nExplore opportunities in retail, logistics, digital, and corporate functions.';
 
   // ── Footer Section ───────────────────────────────────────────────────────
-  String get footerCtaTitle    => isArabic ? 'تبحث عن تسوّق من أكثر من 15,000 منتج؟' : 'Looking to shop our full range of 15,000+ products?';
+  String get footerCtaTitle    => isArabic ? 'تبحث عن تسوّق من أكثر من \u200E15,000\u200F منتج؟' : 'Looking to shop our full range of 15,000+ products?';
   String get footerCtaSubtitle => isArabic
       ? 'زُر متجر السيف غاليري الإلكتروني للتوصيل السريع في المملكة ودول الخليج.'
       : 'Visit the Al Saif Gallery online store for fast delivery across the Kingdom and the GCC.';
   String get footerCtaButton   => isArabic ? 'تسوق الآن' : 'Visit the Online Store';
 
-  String get footerEstablished  => isArabic ? 'تأسست عام 1993' : 'Established in 1989';
+  String get footerEstablished  => isArabic ? 'تأسست عام \u200E1993\u200F' : 'Established in 1989';
   String get footerCompany      => isArabic ? 'الشركة'          : 'Company';
   String get footerAboutUs      => isArabic ? 'من نحن'          : 'About Us';
   String get footerStrategy     => isArabic ? 'الاستراتيجية'    : 'Strategy';
@@ -270,7 +270,7 @@ class AppLocalizations {
   String get footerContact      => isArabic ? 'تواصل معنا'      : 'Contact';
   String get footerIR           => isArabic ? 'علاقات المستثمرين' : 'Investor Relations';
   String get footerCopyright    => isArabic
-      ? '© 2025 معرض السيف للأجهزة المنزلية. جميع الحقوق محفوظة.'
+      ? '© \u200E2025\u200F معرض السيف للأجهزة المنزلية. جميع الحقوق محفوظة.'
       : '© 2025 Al Saif Gallery. All rights reserved.';
   String get footerPrivacy      => isArabic ? 'سياسة الخصوصية'  : 'Privacy Policy';
   String get footerTerms        => isArabic ? 'الشروط والأحكام'  : 'Terms of Service';
@@ -311,27 +311,27 @@ class AppLocalizations {
 
   String get igInvest2Title => isArabic ? 'جودة الأرباح مصدرها العمليات' : 'Earnings Quality Rooted in Operations';
   String get igInvest2Desc  => isArabic
-      ? 'حقّقت السيف غاليري صافي ربح قدره 58 مليون ريال في عام 2025 بنمو 54.6% على أساس سنوي، مدفوعاً كلياً بتحسينات تشغيلية. لم يعتمد هذا الانتعاش على مبيعات أصول أو بنود استثنائية. وتعكس إيرادات بلغت 758.8 مليون ريال وهامش مجمل ربح بنسبة 23.5% وتدفق نقدي تشغيلي بقيمة 78.7 مليون ريال؛ القوة الربحية الكامنة للنموذج التشغيلي للشركة. وأنهت الشركة عام 2025 بصافي نقد 25.9 مليون ريال بعد السداد الكامل لجميع التزامات الدين قصير الأجل.'
+      ? 'حقّقت السيف غاليري صافي ربح قدره \u200E58\u200F مليون ريال في عام \u200E2025\u200F بنمو \u200E54.6%\u200F على أساس سنوي، مدفوعاً كلياً بتحسينات تشغيلية. لم يعتمد هذا الانتعاش على مبيعات أصول أو بنود استثنائية. وتعكس إيرادات بلغت \u200E758.8\u200F مليون ريال وهامش مجمل ربح بنسبة \u200E23.5%\u200F وتدفق نقدي تشغيلي بقيمة \u200E78.7\u200F مليون ريال؛ القوة الربحية الكامنة للنموذج التشغيلي للشركة. وأنهت الشركة عام \u200E2025\u200F بصافي نقد \u200E25.9\u200F مليون ريال بعد السداد الكامل لجميع التزامات الدين قصير الأجل.'
       : 'In 2025, Al Saif Gallery delivered SAR 58 million in net profit, a 54.6% increase year-on-year, driven entirely by operational improvements. Revenue of SAR 758.8 million, a gross margin of 23.5%, and operating cash flow of SAR 78.7 million reflect the underlying earning power of the platform. The Company ended 2025 with net cash of SAR 25.9 million.';
 
   String get igInvest3Title => isArabic ? 'ميزة هوامش العلامات التجارية الخاصة' : 'Proprietary Brand Margin Advantage';
   String get igInvest3Desc  => isArabic
-      ? 'تأتي نحو 88% من الإيرادات من علامات تجارية نملكها أو نمتلك توزيعها الحصري. ويُتيح التوريد المباشر من شركاء التصنيع هوامش ربح على المنتجات الخاصة تتفوق هيكلياً على نموذج البيع بالجملة والتجزئة التقليدي. كما يرفع التوسع المستمر لعلامة إيدسون نحو الأجهزة الكبيرة من فرص الإيرادات ويُحسّن مزيج الهوامش معاً.'
+      ? 'تأتي نحو \u200E88%\u200F من الإيرادات من علامات تجارية نملكها أو نمتلك توزيعها الحصري. ويُتيح التوريد المباشر من شركاء التصنيع هوامش ربح على المنتجات الخاصة تتفوق هيكلياً على نموذج البيع بالجملة والتجزئة التقليدي. كما يرفع التوسع المستمر لعلامة إيدسون نحو الأجهزة الكبيرة من فرص الإيرادات ويُحسّن مزيج الهوامش معاً.'
       : 'Approximately 88% of revenue flows through brands we own or exclusively hold. Direct sourcing from manufacturing partners enables gross margins on proprietary products that are structurally superior to the standard wholesale-retail model. The ongoing extension of the Edison brand into large appliances expands both revenue opportunity and margin mix.';
 
   String get igInvest4Title => isArabic ? 'رؤية 2030 رافعة نمو هيكلية' : 'Vision 2030 as Structural Tailwind';
   String get igInvest4Desc  => isArabic
-      ? 'تُولّد طفرة الإسكان في المملكة العربية السعودية، ارتفاع نسبة تملّك المسكن من 47% عام 2016 إلى 65.4% عام 2024 مع أكثر من 660,000 وحدة سكنية قيد التطوير وبرنامج سكني دعم أكثر من 122,000 أسرة عام 2024، طلباً متيناً ومستداماً على مستلزمات المنزل. كل منزل سعودي جديد يحتاج إلى تجهيز مطبخ متكامل.'
+      ? 'تُولّد طفرة الإسكان في المملكة العربية السعودية، ارتفاع نسبة تملّك المسكن من \u200E47%\u200F عام \u200E2016\u200F إلى \u200E65.4%\u200F عام \u200E2024\u200F مع أكثر من \u200E660,000\u200F وحدة سكنية قيد التطوير وبرنامج سكني دعم أكثر من \u200E122,000\u200F أسرة عام \u200E2024\u200F، طلباً متيناً ومستداماً على مستلزمات المنزل. كل منزل سعودي جديد يحتاج إلى تجهيز مطبخ متكامل.'
       : "Saudi Arabia's housing boom, with homeownership rising from 47% in 2016 to 65.4% in 2024, with 660,000+ new units in the pipeline and Sakani supporting 122,000+ families in 2024, creates a durable demand tailwind for household essentials. Every new Saudi home requires a full kitchen outfitting.";
 
   String get igInvest5Title => isArabic ? 'تسارع التجارة الإلكترونية مع الرافعة التشغيلية' : 'Digital Acceleration with Operating Leverage';
   String get igInvest5Desc  => isArabic
-      ? 'نمت التجارة الإلكترونية 37% في 2025 مُسهِمةً بـ 94 مليون ريال، أي 12.4% من الإيرادات، عبر تطبيق يتجاوز عدد تنزيلاته 500,000. وتعمل القناة الرقمية بالاعتماد على البنية اللوجستية المشتركة وخدمة ما بعد البيع مع الشبكة المادية، مما يُنشئ رافعة تشغيلية حقيقية مع نمو الإيرادات الرقمية ضمن شبكة الفروع والبنية التشغيلية القائمة.'
+      ? 'نمت التجارة الإلكترونية \u200E37%\u200F في \u200E2025\u200F مُسهِمةً بـ \u200E94\u200F مليون ريال، أي \u200E12.4%\u200F من الإيرادات، عبر تطبيق يتجاوز عدد تنزيلاته \u200E500,000\u200F. وتعمل القناة الرقمية بالاعتماد على البنية اللوجستية المشتركة وخدمة ما بعد البيع مع الشبكة المادية، مما يُنشئ رافعة تشغيلية حقيقية مع نمو الإيرادات الرقمية ضمن شبكة الفروع والبنية التشغيلية القائمة.'
       : 'E-commerce grew 37% in 2025, contributing SAR 94 million (12.4% of revenue) through an app with 500,000+ downloads. The digital channel operates with shared logistics and after-sales infrastructure, creating operating leverage as digital revenue grows within the existing physical footprint.';
 
   String get igInvest6Title => isArabic ? 'قيادة محترفة في لحظة محورية' : 'Professional Leadership at a Pivotal Moment';
   String get igInvest6Desc  => isArabic
-      ? 'تم تعيين أحمد بن صالح آل سلطان رئيساً تنفيذياً في ديسمبر 2024، وهو أول رئيس تنفيذي محترف من خارج الأسرة المؤسِّسة في تاريخ الشركة، ويمثّل ذلك خطوة نضوج حوكمي مقصودة. إطاره الاستراتيجي ثلاثي المحاور، تجربة العميل وجودة الأرباح والتوسع المدروس، يتجلى بالفعل في نتائج 2025.'
+      ? 'تم تعيين أحمد بن صالح آل سلطان رئيساً تنفيذياً في ديسمبر \u200E2024\u200F، وهو أول رئيس تنفيذي محترف من خارج الأسرة المؤسِّسة في تاريخ الشركة، ويمثّل ذلك خطوة نضوج حوكمي مقصودة. إطاره الاستراتيجي ثلاثي المحاور، تجربة العميل وجودة الأرباح والتوسع المدروس، يتجلى بالفعل في نتائج \u200E2025\u200F.'
       : 'The appointment of CEO Ahmed bin Saleh Al Sultan in December 2024, the first professional, non-family CEO in the Company\'s history, marks a deliberate governance maturation step. His three-pillar strategic framework (customer experience, earnings quality, measured expansion) is already reflected in the 2025 results.';
 }
 
