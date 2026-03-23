@@ -272,8 +272,8 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { overflow: hidden; background: #ffffff; margin: 0; padding: 0; }
-  body > div { margin: 0 !important; padding: 0 !important; }
+  html, body { overflow-x: hidden; overflow-y: hidden; background: #ffffff; margin: 0; padding: 0; width: 100%; }
+  body > div { margin: 0 !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; }
 </style>
 <script src="https://irp.atnmo.com/v2/widget/widget-loader.js"></script>
 </head>
@@ -376,10 +376,15 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   Widget build(BuildContext context) {
     if (!kIsWeb) return const SizedBox.shrink();
 
-    return SizedBox(
-      width: double.infinity,
-      height: _height,
-      child: HtmlElementView(viewType: widget.viewId),
+    return Listener(
+      onPointerDown: (_) => _iframe?.style.pointerEvents = 'auto',
+      onPointerUp: (_) => _iframe?.style.pointerEvents = 'none',
+      onPointerCancel: (_) => _iframe?.style.pointerEvents = 'none',
+      child: SizedBox(
+        width: double.infinity,
+        height: _height,
+        child: HtmlElementView(viewType: widget.viewId),
+      ),
     );
   }
 }
