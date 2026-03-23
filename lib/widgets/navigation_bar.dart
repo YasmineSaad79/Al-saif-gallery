@@ -30,6 +30,75 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
     super.dispose();
   }
 
+  void _openMenu(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final currentRoute = GoRouterState.of(context).uri.path;
+    final isArabic = localeProvider.isArabic;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) {
+        final items = [
+          (l.navHome, '/'),
+          (l.navAboutUs, '/about-us'),
+          (l.navStrategy, '/strategy-operations'),
+          (l.navInvestors, '/investors-governance'),
+          (l.navNewsroom, '/news-careers'),
+        ];
+        return Directionality(
+          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 8),
+                Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2))),
+                const SizedBox(height: 8),
+                ...items.map((item) {
+                  final isActive = currentRoute == item.$2;
+                  return InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.go(item.$2);
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                      decoration: BoxDecoration(
+                        border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+                        color: isActive ? AppColors.primary.withOpacity(0.05) : Colors.white,
+                      ),
+                      child: Row(
+                        children: [
+                          if (isActive)
+                            Container(width: 3, height: 18, color: AppColors.primary, margin: EdgeInsets.only(left: isArabic ? 12 : 0, right: isArabic ? 0 : 12)),
+                          Text(
+                            item.$1,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                              color: isActive ? AppColors.primary : AppColors.textPrimary,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final horizontalPadding = Responsive.getHorizontalPadding(context);
@@ -46,30 +115,16 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
           bottom: BorderSide(width: 1, color: AppColors.border),
         ),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 2,
-            offset: const Offset(0, 1),
-            spreadRadius: -1,
-          ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-            spreadRadius: 0,
-          ),
+          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 2, offset: const Offset(0, 1), spreadRadius: -1),
+          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 3, offset: const Offset(0, 1), spreadRadius: 0),
         ],
       ),
       child: Row(
         children: [
-          // اللوجو دائماً في اليسار
           SizedBox(
             width: 144,
             height: 59,
-            child: SvgPicture.asset(
-              'assets/images/Al_Saif_Logo.svg',
-              fit: BoxFit.contain,
-            ),
+            child: SvgPicture.asset('assets/images/Al_Saif_Logo.svg', fit: BoxFit.contain),
           ),
           const Spacer(),
           if (!isMobile) ...[
@@ -84,8 +139,8 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
             _NavItem(text: l.navNewsroom, isActive: currentRoute == '/news-careers', onTap: () => context.go('/news-careers')),
           ] else
             IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {},
+              icon: const Icon(Icons.menu, color: AppColors.textPrimary),
+              onPressed: () => _openMenu(context),
             ),
         ],
       ),
@@ -98,11 +153,7 @@ class _NavItem extends StatelessWidget {
   final bool isActive;
   final VoidCallback? onTap;
 
-  const _NavItem({
-    required this.text,
-    this.isActive = false,
-    this.onTap,
-  });
+  const _NavItem({required this.text, this.isActive = false, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -125,11 +176,7 @@ class _NavItem extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            Container(
-              height: 2,
-              width: 40,
-              color: isActive ? AppColors.primary : Colors.transparent,
-            ),
+            Container(height: 2, width: 40, color: isActive ? AppColors.primary : Colors.transparent),
           ],
         ),
       ),
