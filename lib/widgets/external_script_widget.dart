@@ -46,16 +46,20 @@ class LazyExternalScriptWidget extends StatefulWidget {
 }
 
 class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
-  bool _loaded = false;   // تحمّل مرة واحدة فقط
+  bool _show = false;   // هل يجب عرض الـ iframe الآن
   bool _queued = false;
-  bool _inViewport = false;
   final _key = GlobalKey();
   Timer? _visibilityTimer;
+
+  bool get _isMobile {
+    if (!mounted) return false;
+    return MediaQuery.of(context).size.width < 600;
+  }
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkVisibility());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _startMonitoring());
   }
 
   @override
@@ -64,67 +68,71 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
     super.dispose();
   }
 
-  void _checkVisibility() {
-    if (!mounted) return;
-    final ctx = _key.currentContext;
-    if (ctx == null) {
-      Future.delayed(const Duration(milliseconds: 400), _checkVisibility);
-      return;
-    }
+  void _startMonitoring() {
+    _checkVisibility();
+  }
+
+  bool _isNearViewport(BuildContext ctx) {
     final box = ctx.findRenderObject() as RenderBox?;
-    if (box == null || !box.hasSize) {
-      Future.delayed(const Duration(milliseconds: 400), _checkVisibility);
-      return;
-    }
+    if (box == null || !box.hasSize) return false;
     final pos = box.localToGlobal(Offset.zero);
     final screenH = MediaQuery.of(ctx).size.height;
-    final isMobile = screenH < 900 && MediaQuery.of(ctx).size.width < 600;
-    final nearViewport = pos.dy < screenH + 200 && pos.dy > -widget.fallbackHeight - 200;
+    return pos.dy < screenH + 300 && pos.dy > -(widget.fallbackHeight + 300);
+  }
 
-    if (!_queued && nearViewport) {
-      _queued = true;
-      _enqueueLoad(() {
-        if (mounted) setState(() { _loaded = true; _inViewport = true; });
-      });
+  void _checkVisibility() {
+    if (!mounted) return;
+
+    final ctx = _key.currentContext;
+    if (ctx == null) {
+      _scheduleCheck(400);
+      return;
     }
 
-    // على الموبايل فقط: أخفي الـ iframe لما يكون بعيداً جداً
-    if (_loaded && isMobile) {
-      final newInViewport = nearViewport;
-      if (newInViewport != _inViewport) {
-        setState(() => _inViewport = newInViewport);
+    final near = _isNearViewport(ctx);
+
+    if (!_isMobile) {
+      // Desktop: حمّل مرة واحدة فقط ولا تدمر
+      if (!_queued && near) {
+        _queued = true;
+        _enqueueLoad(() { if (mounted) setState(() => _show = true); });
       }
+      return; // لا حاجة لمراقبة مستمرة على desktop
     }
 
-    // استمر في المراقبة
+    // Mobile: حمّل وادمر حسب الـ viewport
+    if (near && !_show) {
+      if (!_queued) {
+        _queued = true;
+        _enqueueLoad(() { if (mounted) setState(() => _show = true); });
+      } else {
+        // سبق وانتهى الـ queue، حمّل مباشرة
+        if (mounted) setState(() => _show = true);
+      }
+    } else if (!near && _show) {
+      // بعيد عن الـ viewport — ادمر الـ iframe لتحرير الذاكرة
+      setState(() => _show = false);
+    }
+
+    _scheduleCheck(600);
+  }
+
+  void _scheduleCheck(int ms) {
     _visibilityTimer?.cancel();
-    _visibilityTimer = Timer(const Duration(milliseconds: 800), _checkVisibility);
+    _visibilityTimer = Timer(Duration(milliseconds: ms), _checkVisibility);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_loaded) {
+    if (!_show) {
       return _SkeletonPlaceholder(key: _key, height: widget.fallbackHeight);
     }
-
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
-    // على الموبايل: أخفي بـ Offstage بدل dispose لتوفير الذاكرة
-    return Stack(
-      children: [
-        Offstage(
-          offstage: isMobile && !_inViewport,
-          child: ExternalScriptWidget(
-            viewId: widget.viewId,
-            widgetType: widget.widgetType,
-            fallbackHeight: widget.fallbackHeight,
-            lang: widget.lang,
-          ),
-        ),
-        // placeholder بنفس الارتفاع لما يكون مخفياً
-        if (isMobile && !_inViewport)
-          SizedBox(key: _key, width: double.infinity, height: widget.fallbackHeight),
-      ],
+    return ExternalScriptWidget(
+      key: ValueKey(widget.viewId),
+      viewId: widget.viewId,
+      widgetType: widget.widgetType,
+      fallbackHeight: widget.fallbackHeight,
+      lang: widget.lang,
     );
   }
 }
@@ -376,15 +384,10 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   Widget build(BuildContext context) {
     if (!kIsWeb) return const SizedBox.shrink();
 
-    return Listener(
-      onPointerDown: (_) => _iframe?.style.pointerEvents = 'auto',
-      onPointerUp: (_) => _iframe?.style.pointerEvents = 'none',
-      onPointerCancel: (_) => _iframe?.style.pointerEvents = 'none',
-      child: SizedBox(
-        width: double.infinity,
-        height: _height,
-        child: HtmlElementView(viewType: widget.viewId),
-      ),
+    return SizedBox(
+      width: double.infinity,
+      height: _height,
+      child: HtmlElementView(viewType: widget.viewId),
     );
   }
 }
