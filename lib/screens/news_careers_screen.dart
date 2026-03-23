@@ -6,7 +6,6 @@ import '../widgets/nc_news_section.dart';
 import '../widgets/nc_careers_section.dart';
 import '../widgets/nc_contact_section.dart';
 import '../widgets/footer_section.dart';
-import '../main.dart';
 
 class NewsCareersScreen extends StatelessWidget {
   const NewsCareersScreen({super.key});
@@ -20,8 +19,7 @@ class NewsCareersScreen extends StatelessWidget {
           margin: const EdgeInsets.all(20),
           constraints: const BoxConstraints(maxWidth: 1880),
           color: const Color(0xFFF8FAFB),
-          child: SingleChildScrollView(
-            controller: globalScrollController,
+          child: const SingleChildScrollView(
             child: Column(
               children: const [
                 TopBar(),

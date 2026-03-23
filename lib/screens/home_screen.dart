@@ -5,7 +5,6 @@ import '../widgets/hero_section.dart';
 import '../widgets/stats_section.dart';
 import '../widgets/brands_section.dart';
 import '../widgets/footer_section.dart';
-import '../main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -31,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
           constraints: const BoxConstraints(maxWidth: 1880), // 1920 - 40 للـ margin
           color: const Color(0xFFF8FAFB),
           child: SingleChildScrollView(
-            controller: globalScrollController,
             child: Column(
               children: const [
                 TopBar(),

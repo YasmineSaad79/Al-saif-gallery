@@ -13,9 +13,6 @@ void main() {
 // Global LocaleProvider instance accessible from widgets
 final LocaleProvider localeProvider = LocaleProvider();
 
-// Global scroll controller shared across all screens
-final ScrollController globalScrollController = ScrollController();
-
 class AlSaifGalleryApp extends StatefulWidget {
   const AlSaifGalleryApp({super.key});
 
@@ -30,15 +27,13 @@ class _AlSaifGalleryAppState extends State<AlSaifGalleryApp> {
   void initState() {
     super.initState();
     localeProvider.addListener(_onLocaleChanged);
+    // Forward wheel events from iframes to the Flutter app's scroll
     _wheelListener = (event) {
       final msg = (event as html.MessageEvent).data;
       if (msg is Map && msg['type'] == 'iframe-wheel') {
         final dy = (msg['deltaY'] as num?)?.toDouble() ?? 0;
-        if (globalScrollController.hasClients) {
-          final target = (globalScrollController.offset + dy)
-              .clamp(0.0, globalScrollController.position.maxScrollExtent);
-          globalScrollController.jumpTo(target);
-        }
+        // Use native browser scroll — works regardless of Flutter scroll controller
+        html.window.scrollBy(0, dy);
       }
     };
     html.window.addEventListener('message', _wheelListener!);
