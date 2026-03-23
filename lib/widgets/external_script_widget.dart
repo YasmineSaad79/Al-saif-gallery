@@ -21,7 +21,7 @@ void _processQueue() {
   _queueRunning = true;
   final next = _loadQueue.removeAt(0);
   next();
-  Future.delayed(const Duration(milliseconds: 1500), _processQueue);
+  Future.delayed(const Duration(milliseconds: 3000), _processQueue);
 }
 // ────────────────────────────────────────────────────────────────────────────
 
@@ -70,7 +70,7 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
     }
     final pos = box.localToGlobal(Offset.zero);
     final screenH = MediaQuery.of(ctx).size.height;
-    if (pos.dy < screenH + 600) {
+    if (pos.dy < screenH + 200) {
       // visible — add to queue instead of loading immediately
       _queued = true;
       _enqueueLoad(() {
