@@ -36,6 +36,7 @@ class InvestorsGovernanceScreen extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 1880),
           color: const Color(0xFFF8FAFB),
           child: SingleChildScrollView(
+            controller: globalScrollController,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [

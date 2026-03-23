@@ -8,6 +8,7 @@ import '../widgets/our_values_section.dart';
 import '../widgets/heritage_milestones_section.dart';
 import '../widgets/leadership_section.dart';
 import '../widgets/footer_section.dart';
+import '../main.dart';
 
 class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({super.key});
@@ -22,6 +23,7 @@ class AboutUsScreen extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 1880),
           color: const Color(0xFFF8FAFB),
           child: SingleChildScrollView(
+            controller: globalScrollController,
             child: Column(
               children: const [
                 TopBar(),

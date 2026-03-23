@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'utils/app_theme.dart';
 import 'utils/app_router.dart';
@@ -11,6 +13,9 @@ void main() {
 // Global LocaleProvider instance accessible from widgets
 final LocaleProvider localeProvider = LocaleProvider();
 
+// Global scroll controller shared across all screens
+final ScrollController globalScrollController = ScrollController();
+
 class AlSaifGalleryApp extends StatefulWidget {
   const AlSaifGalleryApp({super.key});
 
@@ -19,10 +24,24 @@ class AlSaifGalleryApp extends StatefulWidget {
 }
 
 class _AlSaifGalleryAppState extends State<AlSaifGalleryApp> {
+  html.EventListener? _wheelListener;
+
   @override
   void initState() {
     super.initState();
     localeProvider.addListener(_onLocaleChanged);
+    _wheelListener = (event) {
+      final msg = (event as html.MessageEvent).data;
+      if (msg is Map && msg['type'] == 'iframe-wheel') {
+        final dy = (msg['deltaY'] as num?)?.toDouble() ?? 0;
+        if (globalScrollController.hasClients) {
+          final target = (globalScrollController.offset + dy)
+              .clamp(0.0, globalScrollController.position.maxScrollExtent);
+          globalScrollController.jumpTo(target);
+        }
+      }
+    };
+    html.window.addEventListener('message', _wheelListener!);
   }
 
   void _onLocaleChanged() => setState(() {});
@@ -30,6 +49,9 @@ class _AlSaifGalleryAppState extends State<AlSaifGalleryApp> {
   @override
   void dispose() {
     localeProvider.removeListener(_onLocaleChanged);
+    if (_wheelListener != null) {
+      html.window.removeEventListener('message', _wheelListener!);
+    }
     super.dispose();
   }
 

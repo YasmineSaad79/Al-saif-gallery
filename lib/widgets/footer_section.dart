@@ -53,10 +53,12 @@ class _BlackFooter extends StatelessWidget {
     final horizontalPadding = Responsive.getHorizontalPadding(context);
     final l = AppLocalizations.of(context);
 
+    final isMobile = Responsive.isMobile(context);
+
     return Container(
       width: double.infinity,
       color: const Color(0xFF1A1A1A),
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 28),
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 24 : horizontalPadding, vertical: 28),
       child: Column(
         children: [
           LayoutBuilder(
@@ -78,17 +80,21 @@ class _BlackFooter extends StatelessWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _FooterAbout(l: l),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(child: _FooterAbout(l: l)),
+                        Expanded(child: _FooterColumn(title: l.footerCompany, items: [l.footerAboutUs, l.footerStrategy, l.footerCareers])),
+                      ],
+                    ),
                     const SizedBox(height: 28),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(child: _FooterColumn(title: l.footerCompany, items: [l.footerAboutUs, l.footerStrategy, l.footerCareers])),
                         Expanded(child: _FooterColumn(title: l.footerInvestors, items: [l.footerAnnualReports, l.footerGovernance, l.footerReports])),
+                        Expanded(child: _FooterColumn(title: l.footerContact, items: [l.footerIR, 'ir@alsaifgallery.com', '+966 11 406 4444'])),
                       ],
                     ),
-                    const SizedBox(height: 28),
-                    _FooterColumn(title: l.footerContact, items: [l.footerIR, 'ir@alsaifgallery.com', '+966 11 406 4444']),
                   ],
                 );
               }

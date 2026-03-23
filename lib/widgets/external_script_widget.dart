@@ -191,6 +191,14 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   html.EventListener? _messageListener;
   Timer? _debounce;
   double _pendingHeight = 0;
+  bool _hovered = false;
+
+  void _setPointerEvents(bool enabled) {
+    _iframe?.style.pointerEvents = enabled ? 'auto' : 'none';
+    if (_hovered != enabled) {
+      setState(() => _hovered = enabled);
+    }
+  }
 
   @override
   void initState() {
@@ -203,6 +211,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
       ..style.border = 'none'
       ..style.width = '100%'
       ..style.height = '100%'
+      ..style.pointerEvents = 'none'
       ..srcdoc = _buildHtml();
 
     _messageListener = (event) {
@@ -249,6 +258,11 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
 <div id="${widget.widgetType}-widget"></div>
 <script>
 (function() {
+  // Forward wheel events to parent Flutter page
+  window.addEventListener('wheel', function(e) {
+    window.parent.postMessage({ type: 'iframe-wheel', deltaY: e.deltaY }, '*');
+  }, { passive: true });
+
   var ID = '${widget.viewId}';
   var debounceTimer = null;
   var lastSent = 0;
@@ -339,10 +353,14 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   Widget build(BuildContext context) {
     if (!kIsWeb) return const SizedBox.shrink();
 
-    return SizedBox(
-      width: double.infinity,
-      height: _height,
-      child: HtmlElementView(viewType: widget.viewId),
+    return MouseRegion(
+      onEnter: (_) => _setPointerEvents(true),
+      onExit: (_) => _setPointerEvents(false),
+      child: SizedBox(
+        width: double.infinity,
+        height: _height,
+        child: HtmlElementView(viewType: widget.viewId),
+      ),
     );
   }
 }
