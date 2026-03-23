@@ -18,7 +18,7 @@ class _CompanySnapshotWidgetState extends State<CompanySnapshotWidget> {
   @override
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return ExternalScriptWidget(
+    return LazyExternalScriptWidget(
       key: ValueKey('company-snapshot-$lang'),
       viewId: 'company-snapshot-view-$lang',
       widgetType: 'company-snapshot',

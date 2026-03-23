@@ -7,6 +7,87 @@ import 'dart:ui_web' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+/// Wraps [ExternalScriptWidget] and only initializes the iframe
+/// once the placeholder enters the viewport (lazy loading).
+class LazyExternalScriptWidget extends StatefulWidget {
+  final String viewId;
+  final String widgetType;
+  final double fallbackHeight;
+  final String lang;
+
+  const LazyExternalScriptWidget({
+    super.key,
+    required this.viewId,
+    required this.widgetType,
+    this.fallbackHeight = 200,
+    this.lang = 'en',
+  });
+
+  @override
+  State<LazyExternalScriptWidget> createState() => _LazyExternalScriptWidgetState();
+}
+
+class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
+  bool _visible = false;
+  final _key = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    // Check visibility after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkVisibility());
+  }
+
+  void _checkVisibility() {
+    if (!mounted) return;
+    final ctx = _key.currentContext;
+    if (ctx == null) {
+      // retry
+      Future.delayed(const Duration(milliseconds: 300), _checkVisibility);
+      return;
+    }
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) {
+      Future.delayed(const Duration(milliseconds: 300), _checkVisibility);
+      return;
+    }
+    final pos = box.localToGlobal(Offset.zero);
+    final screenH = MediaQuery.of(ctx).size.height;
+    if (pos.dy < screenH + 800) {
+      // within 800px of viewport — load it
+      if (mounted) setState(() => _visible = true);
+    } else {
+      // not yet visible — check again on scroll
+      Future.delayed(const Duration(milliseconds: 500), _checkVisibility);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_visible) {
+      return ExternalScriptWidget(
+        viewId: widget.viewId,
+        widgetType: widget.widgetType,
+        fallbackHeight: widget.fallbackHeight,
+        lang: widget.lang,
+      );
+    }
+    // Placeholder with approximate height
+    return SizedBox(
+      key: _key,
+      width: double.infinity,
+      height: widget.fallbackHeight,
+      child: const Center(
+        child: SizedBox(
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFFE53935)),
+        ),
+      ),
+    );
+  }
+}
+
 class ExternalScriptWidget extends StatefulWidget {
   final String viewId;
   final String widgetType;
@@ -52,7 +133,6 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
           msg['id'] == widget.viewId) {
         final h = (msg['height'] as num).toDouble();
         if (h > 20) {
-          // debounce: انتظر 400ms بعد آخر رسالة قبل التطبيق
           _pendingHeight = h;
           _debounce?.cancel();
           _debounce = Timer(const Duration(milliseconds: 400), () {
@@ -113,7 +193,6 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     return Math.ceil(h) + 4;
   }
 
-  // debounce في الـ JS أيضاً - لا يرسل إلا بعد استقرار الارتفاع
   function reportDebounced() {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(function() {

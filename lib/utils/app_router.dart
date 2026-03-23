@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../screens/home_screen.dart';
 import '../screens/about_us_screen.dart';
 import '../screens/investors_governance_screen.dart';
+import '../screens/news_careers_screen.dart';
 
 CustomTransitionPage _fadePage(BuildContext context, GoRouterState state, Widget child) {
   return CustomTransitionPage(
@@ -40,7 +41,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/news-careers',
       name: 'news-careers',
-      pageBuilder: (context, state) => _fadePage(context, state, const PlaceholderScreen(title: 'News & Careers')),
+      pageBuilder: (context, state) => _fadePage(context, state, const NewsCareersScreen()),
     ),
     GoRoute(
       path: '/documents-library',

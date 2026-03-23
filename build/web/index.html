@@ -17,6 +17,12 @@
   <base href="/">
 
   <meta charset="UTF-8">
+  <style>
+    flt-glass-pane, flt-scene, flt-scene-host {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+    }
+  </style>
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
 
@@ -27,14 +33,14 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%238B0000' stroke='%23600000' stroke-width='2'/><ellipse cx='50' cy='50' rx='20' ry='48' fill='none' stroke='white' stroke-width='2.5'/><line x1='2' y1='50' x2='98' y2='50' stroke='white' stroke-width='2.5'/><line x1='10' y1='25' x2='90' y2='25' stroke='white' stroke-width='2'/><line x1='10' y1='75' x2='90' y2='75' stroke='white' stroke-width='2'/><circle cx='50' cy='50' r='48' fill='none' stroke='%23600000' stroke-width='2'/></svg>"/>
 
   <title>al_saif_gallery</title>
   <link rel="manifest" href="manifest.json">
 
   <script>
     // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = "4072970952";
+    const serviceWorkerVersion = "63883270";
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
@@ -51,7 +57,7 @@
           serviceWorkerVersion: serviceWorkerVersion,
         },
         onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine({renderer: "html"}).then(function(appRunner) {
+          engineInitializer.initializeEngine({renderer: "html", hostElement: undefined}).then(function(appRunner) {
             appRunner.runApp();
           });
         }

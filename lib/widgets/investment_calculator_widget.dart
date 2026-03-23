@@ -18,7 +18,7 @@ class _InvestmentCalculatorWidgetState extends State<InvestmentCalculatorWidget>
   @override
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return ExternalScriptWidget(
+    return LazyExternalScriptWidget(
       key: ValueKey('investment-calculator-$lang'),
       viewId: 'investment-calculator-view-$lang',
       widgetType: 'investment-calculator',

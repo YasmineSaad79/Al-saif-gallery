@@ -245,6 +245,12 @@ class AppLocalizations {
       : 'Our digital channels are not a parallel business. They are an integrated extension of our showrooms. In 2025, digital sales contributed SAR 94 million, representing 12.4% of total revenue and growing 37% year-on-year. Click-and-collect, in-store returns, unified warranty processing, and multiple payment options including installment and smart device payment connect the showroom and the screen into a single customer journey.';
 
 
+  // ── NC Hero Section ──────────────────────────────────────────────────────
+  String get ncHeroTitle    => isArabic ? 'غرفة الأخبار' : 'Newsroom & Careers';
+  String get ncHeroSubtitle => isArabic
+      ? 'أخبار مؤسسية، وإعلانات مالية، ومبادرات مسؤولية. شفافية في الوقت المناسب.'
+      : 'Join a team serving Saudi households across 73 locations.\nExplore opportunities in retail, logistics, digital, and corporate functions.';
+
   // ── Footer Section ───────────────────────────────────────────────────────
   String get footerCtaTitle    => isArabic ? 'تبحث عن تسوّق من أكثر من 15,000 منتج؟' : 'Looking to shop our full range of 15,000+ products?';
   String get footerCtaSubtitle => isArabic

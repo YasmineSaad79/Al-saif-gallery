@@ -18,7 +18,7 @@ class _PeerGroupAnalysisWidgetState extends State<PeerGroupAnalysisWidget> {
   @override
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return ExternalScriptWidget(
+    return LazyExternalScriptWidget(
       key: ValueKey('peer-group-analysis-$lang'),
       viewId: 'peer-group-analysis-view-$lang',
       widgetType: 'peer-group-analysis',

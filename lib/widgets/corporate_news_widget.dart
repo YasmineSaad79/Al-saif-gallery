@@ -18,7 +18,7 @@ class _CorporateNewsWidgetState extends State<CorporateNewsWidget> {
   @override
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return ExternalScriptWidget(
+    return LazyExternalScriptWidget(
       key: ValueKey('corporate-news-$lang'),
       viewId: 'corporate-news-view-$lang',
       widgetType: 'corporate-news',

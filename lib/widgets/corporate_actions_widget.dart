@@ -18,7 +18,7 @@ class _CorporateActionsWidgetState extends State<CorporateActionsWidget> {
   @override
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return ExternalScriptWidget(
+    return LazyExternalScriptWidget(
       key: ValueKey('corporate-actions-$lang'),
       viewId: 'corporate-actions-view-$lang',
       widgetType: 'corporate-actions',
