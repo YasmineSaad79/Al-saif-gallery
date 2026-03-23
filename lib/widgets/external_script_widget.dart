@@ -7,6 +7,24 @@ import 'dart:ui_web' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+// ── Global load queue: max 1 iframe loaded every 1.5s ──────────────────────
+final List<VoidCallback> _loadQueue = [];
+bool _queueRunning = false;
+
+void _enqueueLoad(VoidCallback load) {
+  _loadQueue.add(load);
+  if (!_queueRunning) _processQueue();
+}
+
+void _processQueue() {
+  if (_loadQueue.isEmpty) { _queueRunning = false; return; }
+  _queueRunning = true;
+  final next = _loadQueue.removeAt(0);
+  next();
+  Future.delayed(const Duration(milliseconds: 1500), _processQueue);
+}
+// ────────────────────────────────────────────────────────────────────────────
+
 /// Wraps [ExternalScriptWidget] and only initializes the iframe
 /// once the placeholder enters the viewport (lazy loading).
 class LazyExternalScriptWidget extends StatefulWidget {
@@ -29,36 +47,37 @@ class LazyExternalScriptWidget extends StatefulWidget {
 
 class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
   bool _visible = false;
+  bool _queued = false;
   final _key = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    // Check visibility after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkVisibility());
   }
 
   void _checkVisibility() {
-    if (!mounted) return;
+    if (!mounted || _queued) return;
     final ctx = _key.currentContext;
     if (ctx == null) {
-      // retry
-      Future.delayed(const Duration(milliseconds: 300), _checkVisibility);
+      Future.delayed(const Duration(milliseconds: 400), _checkVisibility);
       return;
     }
     final box = ctx.findRenderObject() as RenderBox?;
     if (box == null || !box.hasSize) {
-      Future.delayed(const Duration(milliseconds: 300), _checkVisibility);
+      Future.delayed(const Duration(milliseconds: 400), _checkVisibility);
       return;
     }
     final pos = box.localToGlobal(Offset.zero);
     final screenH = MediaQuery.of(ctx).size.height;
-    if (pos.dy < screenH + 800) {
-      // within 800px of viewport — load it
-      if (mounted) setState(() => _visible = true);
+    if (pos.dy < screenH + 600) {
+      // visible — add to queue instead of loading immediately
+      _queued = true;
+      _enqueueLoad(() {
+        if (mounted) setState(() => _visible = true);
+      });
     } else {
-      // not yet visible — check again on scroll
-      Future.delayed(const Duration(milliseconds: 500), _checkVisibility);
+      Future.delayed(const Duration(milliseconds: 600), _checkVisibility);
     }
   }
 
@@ -72,7 +91,6 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
         lang: widget.lang,
       );
     }
-    // Placeholder with approximate height
     return SizedBox(
       key: _key,
       width: double.infinity,
