@@ -42,3 +42,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# FVM Version Cache
+.fvm/
+
+# Node
+node_modules/
+ir-widgets/.next/

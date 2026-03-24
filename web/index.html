@@ -1,68 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
-
   <meta charset="UTF-8">
-  <style>
-    flt-glass-pane, flt-scene, flt-scene-host {
-      user-select: text !important;
-      -webkit-user-select: text !important;
-    }
-  </style>
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Al Saif Gallery">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="al_saif_gallery">
+  <meta name="apple-mobile-web-app-title" content="Al Saif Gallery">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%238B0000' stroke='%23600000' stroke-width='2'/><ellipse cx='50' cy='50' rx='20' ry='48' fill='none' stroke='white' stroke-width='2.5'/><line x1='2' y1='50' x2='98' y2='50' stroke='white' stroke-width='2.5'/><line x1='10' y1='25' x2='90' y2='25' stroke='white' stroke-width='2'/><line x1='10' y1='75' x2='90' y2='75' stroke='white' stroke-width='2'/><circle cx='50' cy='50' r='48' fill='none' stroke='%23600000' stroke-width='2'/></svg>"/>
 
-  <title>al_saif_gallery</title>
+  <title>Al Saif Gallery</title>
   <link rel="manifest" href="manifest.json">
+  <style>
+    ::selection { background: #1f415c; color: inherit; }
+    ::-moz-selection { background: #406583; color: inherit; }
+
+    /* Allow text selection inside iframes embedded via Flutter Web */
+    iframe {
+      user-select: text;
+      -webkit-user-select: text;
+      pointer-events: auto;
+    }
+  </style>
 
   <script>
-    // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = null;
-  </script>
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
-</head>
-<body>
-  <!-- Investor Relations widget loader -->
-  <script src="https://irp.atnmo.com/v2/widget/widget-loader.js"></script>
+    // Fix: Flutter's flt-glass-pane sits on top of platform views (iframes) and
+    // blocks all mouse/touch events including text selection.
+    // We temporarily disable pointer-events on the glass pane when the cursor
+    // is over an iframe, restoring them when it leaves.
+    document.addEventListener('DOMContentLoaded', function () {
+      var observer = new MutationObserver(function () {
+        var glassPane = document.querySelector('flt-glass-pane');
+        if (!glassPane) return;
+        observer.disconnect();
 
-  <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine({renderer: "html", hostElement: undefined}).then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
+        document.addEventListener('mouseover', function (e) {
+          if (e.target && e.target.tagName === 'IFRAME') {
+            glassPane.style.pointerEvents = 'none';
+          }
+        }, true);
+
+        document.addEventListener('mouseout', function (e) {
+          if (e.target && e.target.tagName === 'IFRAME') {
+            glassPane.style.pointerEvents = '';
+          }
+        }, true);
       });
+
+      observer.observe(document.body, { childList: true, subtree: true });
     });
   </script>
+  <script src="flutter_bootstrap.js" async></script>
+</head>
+<body>
 </body>
 </html>

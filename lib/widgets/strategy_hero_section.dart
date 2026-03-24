@@ -42,7 +42,6 @@ class _StrategyHeroSectionState extends State<StrategyHeroSection> {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: isMobile ? 24 : 32,
-                      fontFamily: 'Inter',
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -54,7 +53,6 @@ class _StrategyHeroSectionState extends State<StrategyHeroSection> {
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.9),
                       fontSize: isMobile ? 13 : 15,
-                      fontFamily: 'Inter',
                       fontWeight: FontWeight.w400,
                       height: 1.6,
                     ),
@@ -68,7 +66,6 @@ class _StrategyHeroSectionState extends State<StrategyHeroSection> {
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.85),
                           fontSize: isMobile ? 12 : 14,
-                          fontFamily: 'Inter',
                           fontWeight: FontWeight.w400,
                           height: 1.7,
                         ),
@@ -84,3 +81,8 @@ class _StrategyHeroSectionState extends State<StrategyHeroSection> {
     );
   }
 }
+
+
+
+
+

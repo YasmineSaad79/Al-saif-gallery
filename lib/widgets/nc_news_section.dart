@@ -72,7 +72,6 @@ class _NCNewsSectionState extends State<NCNewsSection> {
               style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
-                fontFamily: 'Inter',
                 color: Color(0xFF1A1A1A),
               ),
             ),
@@ -142,104 +141,66 @@ class _NewsCardState extends State<_NewsCard> {
     final isArabic = widget.isArabic;
     final item = widget.item;
 
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit:  (_) => setState(() => _hovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFE8E8E8)),
-          boxShadow: _hovered
-              ? [BoxShadow(color: Colors.black.withOpacity(0.10), blurRadius: 16, offset: const Offset(0, 4))]
-              : [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 6, offset: const Offset(0, 2))],
-        ),
-        padding: const EdgeInsets.all(24),
-        child: Directionality(
-          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Date + Tag row
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    item.date,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF888888),
-                      fontFamily: 'Inter',
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: item.tagColor.withOpacity(0.10),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      item.tag,
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: item.tagColor,
-                        fontFamily: 'Inter',
+    return SelectionContainer.disabled(
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit:  (_) => setState(() => _hovered = false),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: const Color(0xFFE8E8E8)),
+            boxShadow: _hovered
+                ? [BoxShadow(color: Colors.black.withOpacity(0.10), blurRadius: 16, offset: const Offset(0, 4))]
+                : [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 6, offset: const Offset(0, 2))],
+          ),
+          padding: const EdgeInsets.all(24),
+          child: Directionality(
+            textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(item.date, style: const TextStyle(fontSize: 12, color: Color(0xFF888888))),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: item.tagColor.withOpacity(0.10),
+                        borderRadius: BorderRadius.circular(4),
                       ),
+                      child: Text(item.tag, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: item.tagColor)),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 14),
-              // Title
-              Text(
-                item.title,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Inter',
-                  color: Color(0xFF1A1A1A),
-                  height: 1.3,
+                  ],
                 ),
-              ),
-              const SizedBox(height: 10),
-              // Description
-              Text(
-                item.desc,
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: Color(0xFF555555),
-                  fontFamily: 'Inter',
-                  height: 1.6,
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Read More
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    isArabic ? 'اقرأ المزيد' : 'Read More',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFFE53935),
-                      fontFamily: 'Inter',
+                const SizedBox(height: 14),
+                Text(item.title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A), height: 1.3)),
+                const SizedBox(height: 10),
+                Text(item.desc, style: const TextStyle(fontSize: 13, color: Color(0xFF555555), height: 1.6)),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      isArabic ? 'اقرأ المزيد' : 'Read More',
+                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFFE53935)),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(
-                    isArabic ? Icons.chevron_left : Icons.chevron_right,
-                    size: 16,
-                    color: const Color(0xFFE53935),
-                  ),
-                ],
-              ),
-            ],
+                    const SizedBox(width: 4),
+                    Icon(isArabic ? Icons.chevron_left : Icons.chevron_right, size: 16, color: const Color(0xFFE53935)),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+
+
+
+

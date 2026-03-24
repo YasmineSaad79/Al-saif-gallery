@@ -19,3 +19,7 @@ class AppColors {
   static const Color border = Color(0xFFE5E7EB);
   static const Color borderDark = Color(0xFFD0D5DB);
 }
+
+
+
+

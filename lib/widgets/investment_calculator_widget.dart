@@ -17,13 +17,14 @@ class _InvestmentCalculatorWidgetState extends State<InvestmentCalculatorWidget>
 
   @override
   Widget build(BuildContext context) {
-    final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return LazyExternalScriptWidget(
-      key: ValueKey('investment-calculator-$lang'),
-      viewId: 'investment-calculator-view-$lang',
-      widgetType: 'investment-calculator',
-      fallbackHeight: 200,
-      lang: lang,
-    );
+    final isAr = localeProvider.isArabic;
+    return Stack(children: [
+      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'investment-calculator-view-en', widgetType: 'investment-calculator', fallbackHeight: 200, lang: 'en')),
+      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'investment-calculator-view-ar', widgetType: 'investment-calculator', fallbackHeight: 200, lang: 'ar')),
+    ]);
   }
 }
+
+
+
+

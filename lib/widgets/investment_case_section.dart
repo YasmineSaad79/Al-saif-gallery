@@ -17,9 +17,9 @@ class InvestmentCaseSection extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 35),
       child: Column(
         children: [
-          Text(l.investmentTitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textPrimary, fontSize: 28, fontFamily: 'Inter', fontWeight: FontWeight.w700)),
+          Text(l.investmentTitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textPrimary, fontSize: 28, fontWeight: FontWeight.w700)),
           const SizedBox(height: 6),
-          Text(l.investmentSubtitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary, fontSize: 14, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
+          Text(l.investmentSubtitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary, fontSize: 14, fontWeight: FontWeight.w400)),
           const SizedBox(height: 30),
           IntrinsicHeight(
             child: Row(
@@ -80,7 +80,6 @@ class _InvestmentCard extends StatelessWidget {
             style: const TextStyle(
               color: AppColors.primary,
               fontSize: 26,
-              fontFamily: 'Inter',
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -90,7 +89,6 @@ class _InvestmentCard extends StatelessWidget {
             style: const TextStyle(
               color: AppColors.textPrimary,
               fontSize: 15,
-              fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -100,7 +98,6 @@ class _InvestmentCard extends StatelessWidget {
             style: const TextStyle(
               color: AppColors.textSecondary,
               fontSize: 13,
-              fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
               height: 1.4,
             ),
@@ -110,3 +107,8 @@ class _InvestmentCard extends StatelessWidget {
     );
   }
 }
+
+
+
+
+

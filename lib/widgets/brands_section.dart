@@ -54,7 +54,6 @@ class BrandsSection extends StatelessWidget {
                       style: const TextStyle(
                         color: AppColors.primary,
                         fontSize: 32,
-                        fontFamily: 'Inter',
                         fontWeight: FontWeight.w700,
                         height: 1.25,
                       ),
@@ -65,11 +64,9 @@ class BrandsSection extends StatelessWidget {
                       child: Text(
                         l.brandsDesc1,
                         textAlign: l.isArabic ? TextAlign.right : TextAlign.justify,
-                        textDirection: l.isArabic ? TextDirection.rtl : TextDirection.ltr,
                         style: const TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 15,
-                          fontFamily: 'Inter',
                           fontWeight: FontWeight.w400,
                           height: 1.68,
                         ),
@@ -81,11 +78,9 @@ class BrandsSection extends StatelessWidget {
                       child: Text(
                         l.brandsDesc2,
                         textAlign: l.isArabic ? TextAlign.right : TextAlign.justify,
-                        textDirection: l.isArabic ? TextDirection.rtl : TextDirection.ltr,
                         style: const TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 15,
-                          fontFamily: 'Inter',
                           fontWeight: FontWeight.w400,
                           height: 1.68,
                         ),
@@ -217,7 +212,6 @@ class _ServiceCard extends StatelessWidget {
             style: const TextStyle(
               color: Color(0xFF111827),
               fontSize: 15,
-              fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
               height: 1.4,
             ),
@@ -228,7 +222,6 @@ class _ServiceCard extends StatelessWidget {
             style: const TextStyle(
               color: Color(0xFF6B7280),
               fontSize: 12,
-              fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
               height: 1.5,
             ),
@@ -260,35 +253,41 @@ class _LearnMoreLink extends StatefulWidget {
 class _LearnMoreLinkState extends State<_LearnMoreLink> {
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: () => context.go(widget.route),
-        child: Row(
-          children: [
-            Text(
-              widget.text,
-              style: const TextStyle(
-                color: AppColors.primary,
-                fontSize: 12,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-                height: 1.5,
+    return SelectionContainer.disabled(
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: () => context.go(widget.route),
+          child: Row(
+            children: [
+              Text(
+                widget.text,
+                style: const TextStyle(
+                  color: AppColors.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  height: 1.5,
+                ),
               ),
-            ),
-            const SizedBox(width: 6),
-            SvgPicture.asset(
-              'assets/images/arrow.svg',
-              width: 14,
-              height: 14,
-              colorFilter: const ColorFilter.mode(
-                AppColors.primary,
-                BlendMode.srcIn,
+              const SizedBox(width: 6),
+              SvgPicture.asset(
+                'assets/images/arrow.svg',
+                width: 14,
+                height: 14,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.primary,
+                  BlendMode.srcIn,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+
+
+
+

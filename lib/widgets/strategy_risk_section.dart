@@ -31,14 +31,12 @@ class _StrategyRiskSectionState extends State<StrategyRiskSection> {
         textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
         child: Column(
           children: [
-            // Title
             Text(
               isArabic ? 'إدارة المخاطر' : 'Risk Management',
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
-                fontFamily: 'Inter',
                 color: Color(0xFF1A1A1A),
               ),
             ),
@@ -53,7 +51,6 @@ class _StrategyRiskSectionState extends State<StrategyRiskSection> {
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 14,
-                  fontFamily: 'Inter',
                   color: Color(0xFF6B7280),
                   height: 1.7,
                 ),
@@ -81,7 +78,6 @@ class _StrategyRiskSectionState extends State<StrategyRiskSection> {
               textAlign: isArabic ? TextAlign.right : TextAlign.left,
               style: const TextStyle(
                 fontSize: 11,
-                fontFamily: 'Inter',
                 color: Color(0xFF9CA3AF),
                 fontStyle: FontStyle.italic,
                 height: 1.5,
@@ -210,23 +206,21 @@ class _DesktopTable extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Text(text,
             style: const TextStyle(
-                fontSize: 12, fontWeight: FontWeight.w700,
-                fontFamily: 'Inter', color: Color(0xFF374151))),
+                fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF374151))),
       );
 
   Widget _boldCell(String text) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Text(text,
             style: const TextStyle(
-                fontSize: 12, fontWeight: FontWeight.w700,
-                fontFamily: 'Inter', color: Color(0xFF1A1A1A))),
+                fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
       );
 
   Widget _cell(String text) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Text(text,
             style: const TextStyle(
-                fontSize: 12, fontFamily: 'Inter',
+                fontSize: 12,
                 color: Color(0xFF6B7280), height: 1.55)),
       );
 }
@@ -255,19 +249,17 @@ class _MobileTable extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(r.category,
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700,
-                      fontFamily: 'Inter', color: Color(0xFF1A1A1A))),
+                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
               const SizedBox(height: 6),
               Text(r.description,
-                  style: const TextStyle(fontSize: 12, fontFamily: 'Inter',
+                  style: const TextStyle(fontSize: 12,
                       color: Color(0xFF6B7280), height: 1.55)),
               const SizedBox(height: 8),
               Text(isArabic ? 'الضوابط الرئيسية:' : 'Key Controls:',
-                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700,
-                      fontFamily: 'Inter', color: Color(0xFF374151))),
+                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFF374151))),
               const SizedBox(height: 4),
               Text(r.controls,
-                  style: const TextStyle(fontSize: 12, fontFamily: 'Inter',
+                  style: const TextStyle(fontSize: 12,
                       color: Color(0xFF6B7280), height: 1.55)),
             ],
           ),
@@ -276,3 +268,8 @@ class _MobileTable extends StatelessWidget {
     );
   }
 }
+
+
+
+
+

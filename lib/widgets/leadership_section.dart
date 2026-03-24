@@ -18,7 +18,7 @@ class LeadershipSection extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 35),
       child: Column(
         children: [
-          Text(l.leadershipTitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textPrimary, fontSize: 28, fontFamily: 'Inter', fontWeight: FontWeight.w700)),
+          Text(l.leadershipTitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textPrimary, fontSize: 28, fontWeight: FontWeight.w700)),
           const SizedBox(height: 30),
           LayoutBuilder(
             builder: (context, constraints) {
@@ -82,7 +82,6 @@ class _LeadershipCard extends StatelessWidget {
             style: const TextStyle(
               color: AppColors.textPrimary,
               fontSize: 15,
-              fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -92,15 +91,13 @@ class _LeadershipCard extends StatelessWidget {
             style: const TextStyle(
               color: AppColors.textSecondary,
               fontSize: 13,
-              fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
               height: 1.4,
             ),
-            maxLines: 6,
-            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 8), // تقليل المسافة
           InkWell(
+            mouseCursor: SystemMouseCursors.click,
             onTap: () {
               // TODO: Navigate to profiles page
             },
@@ -112,7 +109,6 @@ class _LeadershipCard extends StatelessWidget {
                   style: const TextStyle(
                     color: AppColors.primary,
                     fontSize: 11,
-                    fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -134,3 +130,8 @@ class _LeadershipCard extends StatelessWidget {
     );
   }
 }
+
+
+
+
+

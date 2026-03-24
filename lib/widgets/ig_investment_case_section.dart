@@ -19,12 +19,12 @@ class IGInvestmentCaseSection extends StatelessWidget {
         children: [
           SizedBox(
             width: double.infinity,
-            child: Text(l.igInvestTitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textPrimary, fontSize: 28, fontFamily: 'Inter', fontWeight: FontWeight.w700)),
+            child: Text(l.igInvestTitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textPrimary, fontSize: 28, fontWeight: FontWeight.w700)),
           ),
           const SizedBox(height: 6),
           SizedBox(
             width: double.infinity,
-            child: Text(l.igInvestSubtitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary, fontSize: 14, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
+            child: Text(l.igInvestSubtitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary, fontSize: 14, fontWeight: FontWeight.w400)),
           ),
           const SizedBox(height: 30),
           LayoutBuilder(
@@ -111,76 +111,53 @@ class _IGInvestmentCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: isArabic ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
-            children: [
-              if (isArabic) ...[
-                Expanded(
-                  child: Text(
-                    title,
-                    textDirection: TextDirection.rtl,
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 13,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+      child: Directionality(
+        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // الرقم في أعلى اليمين دائماً
+            Align(
+              alignment: isArabic ? Alignment.topRight : Alignment.topLeft,
+              child: Text(
+                number,
+                style: const TextStyle(
+                  color: AppColors.primary,
+                  fontSize: 32,
+                  fontWeight: FontWeight.w700,
+                  height: 1,
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  number,
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 26,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ] else ...[
-                Text(
-                  number,
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 26,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ],
-          ),
-          if (!isArabic) ...[
-            const SizedBox(height: 6),
+              ),
+            ),
+            const SizedBox(height: 8),
             Text(
               title,
+              textAlign: isArabic ? TextAlign.right : TextAlign.left,
               style: const TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 13,
-                fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
               ),
             ),
-          ],
-          const SizedBox(height: 6),
-          Text(
+            const SizedBox(height: 6),
+            Text(
               description,
-              textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
               textAlign: isArabic ? TextAlign.right : TextAlign.left,
               style: const TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 11,
-                fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
-                height: 1.4,
+                height: 1.6,
               ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
+
+
+
+
+

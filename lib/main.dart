@@ -69,8 +69,17 @@ class _AlSaifGalleryAppState extends State<AlSaifGalleryApp> {
       routerConfig: appRouter,
       builder: (context, child) => AppLocalizationsProvider(
         provider: localeProvider,
-        child: child!,
+        child: Directionality(
+          textDirection: localeProvider.isArabic
+              ? TextDirection.rtl
+              : TextDirection.ltr,
+          child: child!,
+        ),
       ),
     );
   }
 }
+
+
+
+

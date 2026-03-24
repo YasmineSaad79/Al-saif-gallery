@@ -5,16 +5,21 @@ import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
 
 Widget _heroBtn(BuildContext context, String label, Color bg, Color fg, VoidCallback onTap) {
-  return MouseRegion(
-    cursor: SystemMouseCursors.click,
-    child: GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 48,
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-        decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-        child: Center(
-          child: Text(label, style: TextStyle(color: fg, fontSize: 16, fontFamily: 'Inter', fontWeight: FontWeight.w700)),
+  return SelectionContainer.disabled(
+    child: MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          height: 48,
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+          decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(color: fg, fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+          ),
         ),
       ),
     ),
@@ -37,7 +42,6 @@ class HeroSection extends StatelessWidget {
 
         return Stack(
           children: [
-            // Background image
             Positioned.fill(
               child: Image.asset(
                 'assets/images/modern_kitchen.jpeg',
@@ -45,108 +49,132 @@ class HeroSection extends StatelessWidget {
                 alignment: Alignment.topCenter,
               ),
             ),
-            // Red overlay
             Positioned.fill(
-              child: Container(color: Colors.red.shade900.withOpacity(0.7)),
+              child: Container(
+                  color: Colors.red.shade900.withOpacity(0.7)),
             ),
-            // Content — drives the height
             Container(
               width: double.infinity,
               height: height,
-              constraints: isMobile ? const BoxConstraints(minHeight: 420) : null,
+              constraints:
+                  isMobile ? const BoxConstraints(minHeight: 420) : null,
               padding: EdgeInsets.fromLTRB(hPad, 80, hPad, 32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Align(
-                    alignment: isArabic ? Alignment.centerRight : Alignment.centerLeft,
+                    alignment: isArabic
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Text(
                       l.heroTitle,
-                      textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                      textAlign:
+                          isArabic ? TextAlign.right : TextAlign.left,
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: isMobile ? 28 : 38,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w700,
-                        height: 1.2,
-                      ),
+                          color: Colors.white,
+                          fontSize: isMobile ? 28 : 38,
+                          fontWeight: FontWeight.w700,
+                          height: 1.2),
                     ),
                   ),
                   const SizedBox(height: 14),
                   Align(
-                    alignment: isArabic ? Alignment.centerRight : Alignment.centerLeft,
+                    alignment: isArabic
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 700),
                       child: Text(
                         l.heroSubtitle,
-                        textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                        textAlign:
+                            isArabic ? TextAlign.right : TextAlign.left,
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: isMobile ? 14 : 16,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                          height: 1.5,
-                        ),
+                            color: Colors.white,
+                            fontSize: isMobile ? 14 : 16,
+                            fontWeight: FontWeight.w400,
+                            height: 1.5),
                       ),
                     ),
                   ),
                   const SizedBox(height: 18),
                   Align(
-                    alignment: isArabic ? Alignment.centerRight : Alignment.centerLeft,
+                    alignment: isArabic
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 750),
                       child: Text(
                         l.heroDesc1,
-                        textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                        textAlign:
+                            isArabic ? TextAlign.right : TextAlign.left,
                         style: const TextStyle(
-                          color: Color(0xFFDAEAFE),
-                          fontSize: 13,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                          height: 1.6,
-                        ),
+                            color: Color(0xFFDAEAFE),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            height: 1.6),
                       ),
                     ),
                   ),
                   const SizedBox(height: 18),
                   Align(
-                    alignment: isArabic ? Alignment.centerRight : Alignment.centerLeft,
+                    alignment: isArabic
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 750),
                       child: Text(
                         l.heroDesc2,
-                        textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                        textAlign:
+                            isArabic ? TextAlign.right : TextAlign.left,
                         style: const TextStyle(
-                          color: Color(0xFFDAEAFE),
-                          fontSize: 13,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                          height: 1.6,
-                        ),
+                            color: Color(0xFFDAEAFE),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            height: 1.6),
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
                   Align(
-                    alignment: isArabic ? Alignment.centerRight : Alignment.centerLeft,
+                    alignment: isArabic
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: isMobile
                         ? Wrap(
                             spacing: 16,
                             runSpacing: 12,
                             children: [
-                              _heroBtn(context, l.heroExploreStory, Colors.white, AppColors.primary, () => context.go('/about-us')),
-                              _heroBtn(context, l.heroInvestorRelations, const Color(0xFF8B0000), Colors.white, () => context.go('/investors-governance')),
+                              _heroBtn(
+                                  context,
+                                  l.heroExploreStory,
+                                  Colors.white,
+                                  AppColors.primary,
+                                  () => context.go('/about-us')),
+                              _heroBtn(
+                                  context,
+                                  l.heroInvestorRelations,
+                                  const Color(0xFF8B0000),
+                                  Colors.white,
+                                  () => context.go('/investors-governance')),
                             ],
                           )
                         : Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              _heroBtn(context, l.heroExploreStory, Colors.white, AppColors.primary, () => context.go('/about-us')),
+                              _heroBtn(
+                                  context,
+                                  l.heroExploreStory,
+                                  Colors.white,
+                                  AppColors.primary,
+                                  () => context.go('/about-us')),
                               const SizedBox(width: 16),
-                              _heroBtn(context, l.heroInvestorRelations, const Color(0xFF8B0000), Colors.white, () => context.go('/investors-governance')),
+                              _heroBtn(
+                                  context,
+                                  l.heroInvestorRelations,
+                                  const Color(0xFF8B0000),
+                                  Colors.white,
+                                  () => context.go('/investors-governance')),
                             ],
                           ),
                   ),
@@ -159,3 +187,8 @@ class HeroSection extends StatelessWidget {
     );
   }
 }
+
+
+
+
+

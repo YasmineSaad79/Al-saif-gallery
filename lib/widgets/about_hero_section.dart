@@ -37,7 +37,6 @@ class AboutHeroSection extends StatelessWidget {
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 32,
-                fontFamily: 'Inter',
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -47,7 +46,6 @@ class AboutHeroSection extends StatelessWidget {
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
-                fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -57,3 +55,8 @@ class AboutHeroSection extends StatelessWidget {
     );
   }
 }
+
+
+
+
+

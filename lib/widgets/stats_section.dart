@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
 
@@ -101,7 +101,6 @@ class _StatCard extends StatelessWidget {
             style: const TextStyle(
               color: Color(0xFFC62030),
               fontSize: 27,
-              fontFamily: 'Inter',
               fontWeight: FontWeight.w700,
               height: 1.15,
             ),
@@ -113,7 +112,6 @@ class _StatCard extends StatelessWidget {
             style: const TextStyle(
               color: Color(0xFF101727),
               fontSize: 10,
-              fontFamily: 'Inter',
               fontWeight: FontWeight.w700,
               height: 1.48,
             ),
@@ -125,7 +123,6 @@ class _StatCard extends StatelessWidget {
             style: const TextStyle(
               color: Color(0xFF495565),
               fontSize: 8,
-              fontFamily: 'Inter',
               fontWeight: FontWeight.w400,
               height: 1.40,
             ),
@@ -135,3 +132,8 @@ class _StatCard extends StatelessWidget {
     );
   }
 }
+
+
+
+
+

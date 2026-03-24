@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
+import '../main.dart';
 
 class HeritageMilestonesSection extends StatefulWidget {
   const HeritageMilestonesSection({super.key});
@@ -11,13 +13,104 @@ class HeritageMilestonesSection extends StatefulWidget {
   State<HeritageMilestonesSection> createState() => _HeritageMilestonesSectionState();
 }
 
-class _HeritageMilestonesSectionState extends State<HeritageMilestonesSection> {
-  final ScrollController _scrollController = ScrollController();
+class _HeritageMilestonesSectionState extends State<HeritageMilestonesSection>
+    with SingleTickerProviderStateMixin {
+  final ScrollController _timelineController = ScrollController();
+  final ScrollController _cardsController = ScrollController();
+  late final Ticker _ticker;
+
+  bool _userInteracting = false;
+  bool _justResumed = false;
+  Duration _lastElapsed = Duration.zero;
+  bool _frameScheduled = false;
+
+  static const double _pxPerSecond = 40.0;
+  static const Duration _resumeDelay = Duration(seconds: 2);
+
+  @override
+  void initState() {
+    super.initState();
+    localeProvider.addListener(_onLocaleChanged);
+    _ticker = createTicker(_onTick);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _ticker.start();
+    });
+  }
+
+  void _onTick(Duration elapsed) {
+    if (_userInteracting) {
+      _lastElapsed = elapsed;
+      return;
+    }
+    if (_justResumed) {
+      _justResumed = false;
+      _lastElapsed = elapsed;
+      return;
+    }
+
+    final dt = (elapsed - _lastElapsed).inMicroseconds / 1e6;
+    _lastElapsed = elapsed;
+    if (dt <= 0 || dt > 0.5) return;
+
+    final delta = _pxPerSecond * dt;
+
+    // Use Future.microtask to run scroll OUTSIDE the current frame pipeline
+    // This prevents the mouse_tracker assertion (line 200) which fires when
+    // scroll position changes during Flutter's hit-testing / mouse-tracking phase
+    if (!_frameScheduled) {
+      _frameScheduled = true;
+      Future.microtask(() {
+        _frameScheduled = false;
+        if (!mounted || _userInteracting) return;
+        _applyScroll(delta);
+      });
+    }
+  }
+
+  void _applyScroll(double delta) {
+    for (final ctrl in [_cardsController, _timelineController]) {
+      if (!ctrl.hasClients) continue;
+      final pos = ctrl.position;
+      final max = pos.maxScrollExtent;
+      if (max <= 0) continue;
+      final next = pos.pixels + delta;
+      if (next >= max) {
+        ctrl.jumpTo(0);
+      } else {
+        ctrl.jumpTo(next);
+      }
+    }
+  }
+
+  void _onLocaleChanged() {
+    if (!mounted) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (_cardsController.hasClients) _cardsController.jumpTo(0);
+      if (_timelineController.hasClients) _timelineController.jumpTo(0);
+    });
+  }
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    localeProvider.removeListener(_onLocaleChanged);
+    _ticker.dispose();
+    _timelineController.dispose();
+    _cardsController.dispose();
     super.dispose();
+  }
+
+  void _onUserInteractionStart() {
+    _userInteracting = true;
+  }
+
+  void _onUserInteractionEnd() {
+    Future.delayed(_resumeDelay, () {
+      if (mounted) {
+        _justResumed = true;
+        _userInteracting = false;
+      }
+    });
   }
 
   @override
@@ -44,17 +137,38 @@ class _HeritageMilestonesSectionState extends State<HeritageMilestonesSection> {
     return Container(
       width: double.infinity,
       color: Colors.white,
-      padding: EdgeInsets.only(left: horizontalPadding, right: horizontalPadding, top: 35, bottom: 35),
+      padding: EdgeInsets.only(
+        left: horizontalPadding,
+        right: horizontalPadding,
+        top: 35,
+        bottom: 35,
+      ),
       child: Column(
         children: [
-          Text(l.heritageTitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textPrimary, fontSize: 28, fontFamily: 'Inter', fontWeight: FontWeight.w700)),
+          Text(
+            l.heritageTitle,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 28,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           const SizedBox(height: 6),
-          Text(l.heritageSubtitle, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary, fontSize: 14, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
+          Text(
+            l.heritageSubtitle,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
           const SizedBox(height: 30),
           SizedBox(
             height: 10,
             child: SingleChildScrollView(
-              controller: _scrollController,
+              controller: _timelineController,
               scrollDirection: Axis.horizontal,
               child: SizedBox(
                 width: milestones.length * 240 + (milestones.length - 1) * 20.0,
@@ -80,22 +194,33 @@ class _HeritageMilestonesSectionState extends State<HeritageMilestonesSection> {
             ),
           ),
           const SizedBox(height: 20),
-          SizedBox(
-            height: 260,
-            child: ListView.separated(
-              controller: _scrollController,
-              scrollDirection: Axis.horizontal,
-              itemCount: milestones.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 20),
-              itemBuilder: (context, index) {
-                final m = milestones[index];
-                return _MilestoneCard(
-                  year: m.year,
-                  title: m.title,
-                  description: m.desc,
-                  isArabic: isArabic,
-                );
-              },
+          SelectionContainer.disabled(
+            child: MouseRegion(
+              onEnter: (_) => _onUserInteractionStart(),
+              onExit: (_) => _onUserInteractionEnd(),
+              child: SizedBox(
+                height: 260,
+                child: Listener(
+                  onPointerDown: (_) => _onUserInteractionStart(),
+                  onPointerUp: (_) => _onUserInteractionEnd(),
+                  onPointerCancel: (_) => _onUserInteractionEnd(),
+                  child: ListView.separated(
+                    controller: _cardsController,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: milestones.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 20),
+                    itemBuilder: (context, index) {
+                      final m = milestones[index];
+                      return _MilestoneCard(
+                        year: m.year,
+                        title: m.title,
+                        description: m.desc,
+                        isArabic: isArabic,
+                      );
+                    },
+                  ),
+                ),
+              ),
             ),
           ),
         ],
@@ -136,7 +261,11 @@ class _MilestoneCard extends StatelessWidget {
               width: double.infinity,
               child: Text(
                 year,
-                style: const TextStyle(color: AppColors.primary, fontSize: 18, fontFamily: 'Inter', fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                  color: AppColors.primary,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             const SizedBox(height: 6),
@@ -144,14 +273,23 @@ class _MilestoneCard extends StatelessWidget {
               width: double.infinity,
               child: Text(
                 title,
-                style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontFamily: 'Inter', fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             const SizedBox(height: 4),
             Expanded(
               child: Text(
                 description,
-                style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontFamily: 'Inter', fontWeight: FontWeight.w400, height: 1.4),
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  height: 1.4,
+                ),
               ),
             ),
           ],

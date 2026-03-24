@@ -5,6 +5,7 @@ import '../widgets/hero_section.dart';
 import '../widgets/stats_section.dart';
 import '../widgets/brands_section.dart';
 import '../widgets/footer_section.dart';
+import '../main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,6 +16,20 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    super.initState();
+    localeProvider.addListener(_rebuild);
+  }
+
+  @override
+  void dispose() {
+    localeProvider.removeListener(_rebuild);
+    super.dispose();
+  }
+
+  void _rebuild() => setState(() {});
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     precacheImage(const AssetImage('assets/images/modern_kitchen.jpeg'), context);
@@ -22,27 +37,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white, // خلفية بيضاء
-      body: Center(
-        child: Container(
-          margin: const EdgeInsets.all(20), // مسافة بيضاء من جميع الجهات
-          constraints: const BoxConstraints(maxWidth: 1880), // 1920 - 40 للـ margin
-          color: const Color(0xFFF8FAFB),
-          child: SingleChildScrollView(
-            child: Column(
-              children: const [
-                TopBar(),
-                CustomNavigationBar(),
-                HeroSection(),
-                StatsSection(),
-                BrandsSection(),
-                FooterSection(),
-              ],
-            ),
+    final content = Center(
+      child: Container(
+        margin: const EdgeInsets.all(20),
+        constraints: const BoxConstraints(maxWidth: 1880),
+        color: const Color(0xFFF8FAFB),
+        child: SingleChildScrollView(
+          child: Column(
+            children: const [
+              TopBar(),
+              CustomNavigationBar(),
+              HeroSection(),
+              StatsSection(),
+              BrandsSection(),
+              FooterSection(),
+            ],
           ),
         ),
       ),
+    );
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: localeProvider.isArabic
+          ? SelectionContainer.disabled(child: content)
+          : SelectionArea(child: content),
     );
   }
 }

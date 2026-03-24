@@ -61,6 +61,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                 ...items.map((item) {
                   final isActive = currentRoute == item.$2;
                   return InkWell(
+                    mouseCursor: SystemMouseCursors.click,
                     onTap: () {
                       Navigator.pop(context);
                       context.go(item.$2);
@@ -82,7 +83,6 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                               fontSize: 15,
                               fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
                               color: isActive ? AppColors.primary : AppColors.textPrimary,
-                              fontFamily: 'Inter',
                             ),
                           ),
                         ],
@@ -119,30 +119,33 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
           BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 3, offset: const Offset(0, 1), spreadRadius: 0),
         ],
       ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 144,
-            height: 59,
-            child: SvgPicture.asset('assets/images/Al_Saif_Logo.svg', fit: BoxFit.contain),
-          ),
-          const Spacer(),
-          if (!isMobile) ...[
-            _NavItem(text: l.navHome, isActive: currentRoute == '/', onTap: () => context.go('/')),
-            const SizedBox(width: 32),
-            _NavItem(text: l.navAboutUs, isActive: currentRoute == '/about-us', onTap: () => context.go('/about-us')),
-            const SizedBox(width: 32),
-            _NavItem(text: l.navStrategy, isActive: currentRoute == '/strategy-operations', onTap: () => context.go('/strategy-operations')),
-            const SizedBox(width: 32),
-            _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: () => context.go('/investors-governance')),
-            const SizedBox(width: 32),
-            _NavItem(text: l.navNewsroom, isActive: currentRoute == '/news-careers', onTap: () => context.go('/news-careers')),
-          ] else
-            IconButton(
-              icon: const Icon(Icons.menu, color: AppColors.textPrimary),
-              onPressed: () => _openMenu(context),
+      child: Directionality(
+        textDirection: l.isArabic ? TextDirection.rtl : TextDirection.ltr,
+        child: Row(
+          children: [
+            SizedBox(
+              width: 144,
+              height: 59,
+              child: SvgPicture.asset('assets/images/Al_Saif_Logo.svg', fit: BoxFit.contain),
             ),
-        ],
+            const Spacer(),
+            if (!isMobile) ...[
+              _NavItem(text: l.navHome, isActive: currentRoute == '/', onTap: () => context.go('/')),
+              const SizedBox(width: 32),
+              _NavItem(text: l.navAboutUs, isActive: currentRoute == '/about-us', onTap: () => context.go('/about-us')),
+              const SizedBox(width: 32),
+              _NavItem(text: l.navStrategy, isActive: currentRoute == '/strategy-operations', onTap: () => context.go('/strategy-operations')),
+              const SizedBox(width: 32),
+              _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: () => context.go('/investors-governance')),
+              const SizedBox(width: 32),
+              _NavItem(text: l.navNewsroom, isActive: currentRoute == '/news-careers', onTap: () => context.go('/news-careers')),
+            ] else
+              IconButton(
+                icon: const Icon(Icons.menu, color: AppColors.textPrimary),
+                onPressed: () => _openMenu(context),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -157,29 +160,36 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              text,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: isActive ? AppColors.textPrimary : AppColors.textSecondary,
-                fontSize: 13.1,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                height: 1.53,
+    return SelectionContainer.disabled(
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: onTap,
+          behavior: HitTestBehavior.opaque,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: isActive ? AppColors.textPrimary : AppColors.textSecondary,
+                  fontSize: 13.1,
+                  fontWeight: FontWeight.w400,
+                  height: 1.53,
+                ),
               ),
-            ),
-            const SizedBox(height: 4),
-            Container(height: 2, width: 40, color: isActive ? AppColors.primary : Colors.transparent),
-          ],
+              const SizedBox(height: 4),
+              Container(height: 2, width: 40, color: isActive ? AppColors.primary : Colors.transparent),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+
+
+
+

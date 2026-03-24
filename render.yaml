@@ -1,14 +1,33 @@
 services:
+  # ── Flutter Web (Static Site) ──────────────────────────────────────────────
   - type: web
     name: al-saif-gallery
     env: static
-    buildCommand: |
-      git clone https://github.com/flutter/flutter.git -b stable --depth 1 /opt/flutter
-      export PATH="$PATH:/opt/flutter/bin"
-      flutter pub get
-      flutter build web --web-renderer html --release
+    buildCommand: bash build.sh
     staticPublishPath: build/web
+    envVars:
+      - key: IR_PAGE_URL
+        fromService:
+          name: al-saif-ir-widgets
+          type: web
+          property: host
+          transform: "https://{value}/ir"
     headers:
       - path: /*
         name: Cache-Control
         value: no-cache
+
+  # ── IR Widgets (Next.js) ───────────────────────────────────────────────────
+  - type: web
+    name: al-saif-ir-widgets
+    env: node
+    rootDir: ir-widgets
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+    headers:
+      - path: /*
+        name: Access-Control-Allow-Origin
+        value: "*"

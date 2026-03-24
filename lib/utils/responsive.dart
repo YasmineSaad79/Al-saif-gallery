@@ -24,7 +24,7 @@ class Responsive {
     if (width >= largeDesktop) {
       return 192.0; // للشاشات الكبيرة جداً (202 - 10)
     } else if (width >= desktop) {
-      return (width * 0.1) - 8; // 10% من عرض الشاشة - 8
+      return ((width * 0.1) - 8).clamp(8.0, 192.0);
     } else if (width >= tablet) {
       return 52.0; // (62 - 10)
     } else {
@@ -44,3 +44,7 @@ class Responsive {
     return desktop;
   }
 }
+
+
+
+

@@ -27,3 +27,8 @@ class _StockActivityAdvancedWidgetState extends State<StockActivityAdvancedWidge
     );
   }
 }
+
+
+
+
+

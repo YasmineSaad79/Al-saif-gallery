@@ -112,7 +112,6 @@ class _StrategyRoadmapSectionState extends State<StrategyRoadmapSection> {
             style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.w700,
-              fontFamily: 'Inter',
               color: Color(0xFF1A1A1A),
             ),
           ),
@@ -200,7 +199,6 @@ class _PhaseCard extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
                   color: phase.badgeColor,
                 ),
               ),
@@ -212,7 +210,6 @@ class _PhaseCard extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                fontFamily: 'Inter',
                 color: Color(0xFF1A1A1A),
               ),
             ),
@@ -223,7 +220,6 @@ class _PhaseCard extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                fontFamily: 'Inter',
                 color: Color(0xFF374151),
               ),
             ),
@@ -233,7 +229,6 @@ class _PhaseCard extends StatelessWidget {
               phase.description,
               style: const TextStyle(
                 fontSize: 13,
-                fontFamily: 'Inter',
                 color: Color(0xFF6B7280),
                 height: 1.65,
               ),
@@ -245,7 +240,6 @@ class _PhaseCard extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
-                fontFamily: 'Inter',
                 color: Color(0xFF1A1A1A),
               ),
             ),
@@ -264,7 +258,6 @@ class _PhaseCard extends StatelessWidget {
                           kpi,
                           style: const TextStyle(
                             fontSize: 12,
-                            fontFamily: 'Inter',
                             color: Color(0xFF4B5563),
                             height: 1.5,
                           ),
@@ -279,3 +272,8 @@ class _PhaseCard extends StatelessWidget {
     );
   }
 }
+
+
+
+
+

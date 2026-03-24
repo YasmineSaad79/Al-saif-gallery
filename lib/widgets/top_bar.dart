@@ -77,41 +77,47 @@ class _TopBarState extends State<TopBar> {
   }
 
   Widget _buildItem(String text, String iconPath, VoidCallback? onTap) {
-    return MouseRegion(
-      cursor: onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
+    return SelectionContainer.disabled(
       child: GestureDetector(
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
-        child: SizedBox(
-          height: 14,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                iconPath,
-                width: 14,
-                height: 14,
-                colorFilter: const ColorFilter.mode(AppColors.textSecondary, BlendMode.srcIn),
-              ),
-              if (text.isNotEmpty) ...[
-                const SizedBox(width: 6),
-                Text(
-                  text,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 12,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w400,
-                    height: 1.0,
-                    leadingDistribution: TextLeadingDistribution.even,
-                  ),
+        child: MouseRegion(
+          cursor: onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
+          child: SizedBox(
+            height: 14,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  iconPath,
+                  width: 14,
+                  height: 14,
+                  colorFilter: const ColorFilter.mode(AppColors.textSecondary, BlendMode.srcIn),
                 ),
+                if (text.isNotEmpty) ...[
+                  const SizedBox(width: 6),
+                  Text(
+                    text,
+                    style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      height: 1.0,
+                      leadingDistribution: TextLeadingDistribution.even,
+                    ),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+
+
+
+

@@ -66,9 +66,8 @@ class _IGHeroSectionState extends State<IGHeroSection> {
                           width: double.infinity,
                           child: Text(
                             l.igHeroTitle,
-                            textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
                             textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                            style: const TextStyle(color: Colors.white, fontSize: 28, fontFamily: 'Inter', fontWeight: FontWeight.w700),
+                            style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w700),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -76,9 +75,8 @@ class _IGHeroSectionState extends State<IGHeroSection> {
                           width: double.infinity,
                           child: Text(
                             l.igHeroSubtitle,
-                            textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
                             textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                            style: const TextStyle(color: Colors.white, fontSize: 14, fontFamily: 'Inter', fontWeight: FontWeight.w400, height: 1.5),
+                            style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400, height: 1.5),
                           ),
                         ),
                       ],
@@ -93,3 +91,8 @@ class _IGHeroSectionState extends State<IGHeroSection> {
     );
   }
 }
+
+
+
+
+

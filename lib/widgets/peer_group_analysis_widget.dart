@@ -17,13 +17,14 @@ class _PeerGroupAnalysisWidgetState extends State<PeerGroupAnalysisWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return LazyExternalScriptWidget(
-      key: ValueKey('peer-group-analysis-$lang'),
-      viewId: 'peer-group-analysis-view-$lang',
-      widgetType: 'peer-group-analysis',
-      fallbackHeight: 400,
-      lang: lang,
-    );
+    final isAr = localeProvider.isArabic;
+    return Stack(children: [
+      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'peer-group-analysis-view-en', widgetType: 'peer-group-analysis', fallbackHeight: 400, lang: 'en')),
+      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'peer-group-analysis-view-ar', widgetType: 'peer-group-analysis', fallbackHeight: 400, lang: 'ar')),
+    ]);
   }
 }
+
+
+
+

@@ -27,3 +27,8 @@ class _EmailSubscriptionWidgetState extends State<EmailSubscriptionWidget> {
     );
   }
 }
+
+
+
+
+

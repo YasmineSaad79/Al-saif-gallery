@@ -97,7 +97,6 @@ class _StrategyPillarsSectionState extends State<StrategyPillarsSection> {
                 style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
-                  fontFamily: 'Inter',
                   color: Color(0xFF1A1A1A),
                 ),
               ),
@@ -153,18 +152,15 @@ class _PillarCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(pillar.pillarLabel,
-                      style: const TextStyle(fontSize: 12, color: Color(0xFFC62030),
-                          fontFamily: 'Inter', fontWeight: FontWeight.w600)),
+                      style: const TextStyle(fontSize: 12, color: Color(0xFFC62030), fontWeight: FontWeight.w600)),
                   const SizedBox(height: 6),
                   Text(pillar.title,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700,
-                          fontFamily: 'Inter', color: Color(0xFF1A1A1A))),
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A))),
                   const SizedBox(height: 14),
                   ...pillar.paragraphs.map((p) => Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: Text(p,
-                        style: const TextStyle(fontSize: 13, color: Color(0xFF555555),
-                            fontFamily: 'Inter', height: 1.7)),
+                        style: const TextStyle(fontSize: 13, color: Color(0xFF555555), height: 1.7)),
                   )),
                 ],
               ),
@@ -175,3 +171,8 @@ class _PillarCard extends StatelessWidget {
     );
   }
 }
+
+
+
+
+

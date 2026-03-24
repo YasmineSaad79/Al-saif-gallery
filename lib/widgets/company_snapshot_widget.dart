@@ -17,13 +17,14 @@ class _CompanySnapshotWidgetState extends State<CompanySnapshotWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return LazyExternalScriptWidget(
-      key: ValueKey('company-snapshot-$lang'),
-      viewId: 'company-snapshot-view-$lang',
-      widgetType: 'company-snapshot',
-      fallbackHeight: 200,
-      lang: lang,
-    );
+    final isAr = localeProvider.isArabic;
+    return Stack(children: [
+      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'company-snapshot-view-en', widgetType: 'company-snapshot', fallbackHeight: 200, lang: 'en')),
+      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'company-snapshot-view-ar', widgetType: 'company-snapshot', fallbackHeight: 200, lang: 'ar')),
+    ]);
   }
 }
+
+
+
+

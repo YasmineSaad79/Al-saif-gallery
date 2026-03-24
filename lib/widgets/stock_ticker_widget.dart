@@ -27,3 +27,8 @@ class _StockTickerWidgetState extends State<StockTickerWidget> {
     );
   }
 }
+
+
+
+
+

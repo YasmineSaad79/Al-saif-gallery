@@ -17,13 +17,14 @@ class _CompanyFinancialsWidgetState extends State<CompanyFinancialsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return LazyExternalScriptWidget(
-      key: ValueKey('company-financials-$lang'),
-      viewId: 'company-financials-view-$lang',
-      widgetType: 'company-financials',
-      fallbackHeight: 200,
-      lang: lang,
-    );
+    final isAr = localeProvider.isArabic;
+    return Stack(children: [
+      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'company-financials-view-en', widgetType: 'company-financials', fallbackHeight: 200, lang: 'en')),
+      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'company-financials-view-ar', widgetType: 'company-financials', fallbackHeight: 200, lang: 'ar')),
+    ]);
   }
 }
+
+
+
+

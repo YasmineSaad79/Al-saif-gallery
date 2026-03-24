@@ -36,7 +36,6 @@ class _NCCareersSectionState extends State<NCCareersSection> {
               style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
-                fontFamily: 'Inter',
                 color: Color(0xFF1A1A1A),
               ),
             ),
@@ -51,7 +50,6 @@ class _NCCareersSectionState extends State<NCCareersSection> {
                 style: const TextStyle(
                   fontSize: 14,
                   color: Color(0xFF555555),
-                  fontFamily: 'Inter',
                   height: 1.6,
                 ),
               ),
@@ -205,7 +203,6 @@ class _NCCareersSectionState extends State<NCCareersSection> {
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
-                      fontFamily: 'Inter',
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -217,7 +214,6 @@ class _NCCareersSectionState extends State<NCCareersSection> {
                     style: const TextStyle(
                       fontSize: 13,
                       color: Colors.white70,
-                      fontFamily: 'Inter',
                       height: 1.6,
                     ),
                   ),
@@ -229,6 +225,8 @@ class _NCCareersSectionState extends State<NCCareersSection> {
                       side: const BorderSide(color: Colors.white, width: 1.5),
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    ).copyWith(
+                      mouseCursor: const MaterialStatePropertyAll(SystemMouseCursors.click),
                     ),
                     child: Text(
                       isArabic ? 'عرض الوظائف المتاحة' : 'View Open Positions',
@@ -279,20 +277,19 @@ class _StatCard extends StatelessWidget {
             style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w700,
-              fontFamily: 'Inter',
               color: Color(0xFF1A1A1A),
             ),
           ),
           const SizedBox(height: 2),
           Text(
             item.label,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF333333), fontFamily: 'Inter'),
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF333333)),
           ),
           const SizedBox(height: 2),
           Text(
             item.sub,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 11, color: Color(0xFF888888), fontFamily: 'Inter'),
+            style: const TextStyle(fontSize: 11, color: Color(0xFF888888)),
           ),
         ],
       ),
@@ -324,7 +321,6 @@ class _InfoCard extends StatelessWidget {
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              fontFamily: 'Inter',
               color: Color(0xFF1A1A1A),
             ),
           ),
@@ -342,7 +338,7 @@ class _InfoCard extends StatelessWidget {
                     Expanded(
                       child: boldFirst
                           ? _BoldFirstText(text: b)
-                          : Text(b, style: const TextStyle(fontSize: 13, color: Color(0xFF444444), fontFamily: 'Inter', height: 1.5)),
+                          : Text(b, style: const TextStyle(fontSize: 13, color: Color(0xFF444444), height: 1.5)),
                     ),
                   ],
                 ),
@@ -362,11 +358,11 @@ class _BoldFirstText extends StatelessWidget {
   Widget build(BuildContext context) {
     final idx = text.indexOf(':');
     if (idx == -1) {
-      return Text(text, style: const TextStyle(fontSize: 13, color: Color(0xFF444444), fontFamily: 'Inter', height: 1.5));
+      return Text(text, style: const TextStyle(fontSize: 13, color: Color(0xFF444444), height: 1.5));
     }
     return RichText(
       text: TextSpan(
-        style: const TextStyle(fontSize: 13, color: Color(0xFF444444), fontFamily: 'Inter', height: 1.5),
+        style: const TextStyle(fontSize: 13, color: Color(0xFF444444), height: 1.5),
         children: [
           TextSpan(text: text.substring(0, idx + 1), style: const TextStyle(fontWeight: FontWeight.w700)),
           TextSpan(text: text.substring(idx + 1)),
@@ -375,3 +371,8 @@ class _BoldFirstText extends StatelessWidget {
     );
   }
 }
+
+
+
+
+

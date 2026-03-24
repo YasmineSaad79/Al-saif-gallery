@@ -55,12 +55,10 @@ class _NCHeroSectionState extends State<NCHeroSection> {
                           width: double.infinity,
                           child: Text(
                             l.ncHeroTitle,
-                            textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
                             textAlign: isArabic ? TextAlign.right : TextAlign.left,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 28,
-                              fontFamily: 'Inter',
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -70,12 +68,10 @@ class _NCHeroSectionState extends State<NCHeroSection> {
                           width: double.infinity,
                           child: Text(
                             l.ncHeroSubtitle,
-                            textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
                             textAlign: isArabic ? TextAlign.right : TextAlign.left,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14,
-                              fontFamily: 'Inter',
                               fontWeight: FontWeight.w400,
                               height: 1.5,
                             ),
@@ -93,3 +89,8 @@ class _NCHeroSectionState extends State<NCHeroSection> {
     );
   }
 }
+
+
+
+
+

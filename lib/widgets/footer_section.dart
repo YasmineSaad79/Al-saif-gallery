@@ -23,18 +23,20 @@ class FooterSection extends StatelessWidget {
             children: [
               SvgPicture.asset('assets/images/bag.svg', width: 28, height: 28, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
               const SizedBox(height: 10),
-              Text(l.footerCtaTitle, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontSize: 14, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
+              Text(l.footerCtaTitle, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400)),
               const SizedBox(height: 4),
-              Text(l.footerCtaSubtitle, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontSize: 11, fontFamily: 'Inter', fontWeight: FontWeight.w300)),
+              Text(l.footerCtaSubtitle, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w300)),
               const SizedBox(height: 14),
-              MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: () => html.window.open('https://alsaifgallery.com/', '_blank'),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 9),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(3)),
-                    child: Text(l.footerCtaButton, style: const TextStyle(color: AppColors.primary, fontSize: 12, fontFamily: 'Inter', fontWeight: FontWeight.w500)),
+              SelectionContainer.disabled(
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () => html.window.open('https://alsaifgallery.com/', '_blank'),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 9),
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(3)),
+                      child: Text(l.footerCtaButton, style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w500)),
+                    ),
                   ),
                 ),
               ),
@@ -119,11 +121,11 @@ class _FooterAbout extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Al Saif Gallery', style: TextStyle(color: Colors.white, fontSize: 14, fontFamily: 'Inter', fontWeight: FontWeight.w600)),
+        Text('Al Saif Gallery', style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
         const SizedBox(height: 8),
-        Text(l.footerEstablished, style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 11, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
+        Text(l.footerEstablished, style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 11, fontWeight: FontWeight.w400)),
         const SizedBox(height: 2),
-        const Text('Tadawul: 4192', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 11, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
+        Text('Tadawul: 4192', style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 11, fontWeight: FontWeight.w400)),
       ],
     );
   }
@@ -148,7 +150,6 @@ class _FooterColumn extends StatelessWidget {
           style: const TextStyle(
             color: Colors.white,
             fontSize: 12,
-            fontFamily: 'Inter',
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -161,7 +162,6 @@ class _FooterColumn extends StatelessWidget {
               style: const TextStyle(
                 color: Color(0xFF9CA3AF),
                 fontSize: 11,
-                fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -184,13 +184,13 @@ class _FooterCopyright extends StatelessWidget {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(l.footerCopyright, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
+              Text(l.footerCopyright, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontWeight: FontWeight.w400)),
               Wrap(
                 spacing: 24,
                 children: [
-                  Text(l.footerPrivacy, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
-                  Text(l.footerTerms, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
-                  Text(l.footerCorporateGov, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
+                  Text(l.footerPrivacy, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontWeight: FontWeight.w400)),
+                  Text(l.footerTerms, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontWeight: FontWeight.w400)),
+                  Text(l.footerCorporateGov, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontWeight: FontWeight.w400)),
                 ],
               ),
             ],
@@ -199,13 +199,13 @@ class _FooterCopyright extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(l.footerCopyright, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
+              Text(l.footerCopyright, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontWeight: FontWeight.w400)),
               const SizedBox(height: 12),
-              Text(l.footerPrivacy, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
+              Text(l.footerPrivacy, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontWeight: FontWeight.w400)),
               const SizedBox(height: 8),
-              Text(l.footerTerms, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
+              Text(l.footerTerms, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontWeight: FontWeight.w400)),
               const SizedBox(height: 8),
-              Text(l.footerCorporateGov, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontFamily: 'Inter', fontWeight: FontWeight.w400)),
+              Text(l.footerCorporateGov, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontWeight: FontWeight.w400)),
             ],
           );
         }
@@ -213,3 +213,8 @@ class _FooterCopyright extends StatelessWidget {
     );
   }
 }
+
+
+
+
+

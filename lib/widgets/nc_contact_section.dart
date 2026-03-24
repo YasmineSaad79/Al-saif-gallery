@@ -35,7 +35,6 @@ class _NCContactSectionState extends State<NCContactSection> {
               style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
-                fontFamily: 'Inter',
                 color: Color(0xFF1A1A1A),
               ),
             ),
@@ -49,7 +48,6 @@ class _NCContactSectionState extends State<NCContactSection> {
               style: const TextStyle(
                 fontSize: 14,
                 color: Color(0xFF555555),
-                fontFamily: 'Inter',
                 height: 1.6,
               ),
             ),
@@ -124,7 +122,6 @@ class _ContactCard extends StatelessWidget {
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              fontFamily: 'Inter',
               color: Color(0xFF1A1A1A),
             ),
           ),
@@ -135,7 +132,6 @@ class _ContactCard extends StatelessWidget {
                   text: TextSpan(
                     style: const TextStyle(
                       fontSize: 13,
-                      fontFamily: 'Inter',
                       color: Color(0xFF444444),
                       height: 1.5,
                     ),
@@ -154,3 +150,8 @@ class _ContactCard extends StatelessWidget {
     );
   }
 }
+
+
+
+
+

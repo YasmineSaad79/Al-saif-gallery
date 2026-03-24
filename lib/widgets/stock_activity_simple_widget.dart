@@ -27,3 +27,8 @@ class _StockActivitySimpleWidgetState extends State<StockActivitySimpleWidget> {
     );
   }
 }
+
+
+
+
+

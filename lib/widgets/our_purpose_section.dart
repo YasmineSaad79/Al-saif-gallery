@@ -18,38 +18,60 @@ class OurPurposeSection extends StatelessWidget {
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
-          child: Column(
-            children: [
-              Text(
-                l.purposeTitle,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 28,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w700,
+          child: Directionality(
+            textDirection: l.isArabic ? TextDirection.rtl : TextDirection.ltr,
+            child: Column(
+              children: [
+                Text(
+                  l.purposeTitle,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(l.purposeDesc1,
-                textAlign: l.isArabic ? TextAlign.right : TextAlign.justify,
-                textDirection: l.isArabic ? TextDirection.rtl : TextDirection.ltr,
-                style: const TextStyle(color: AppColors.textSecondary, fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w400, height: 1.4)),
-              const SizedBox(height: 8),
-              Text(l.purposeDesc2,
-                textAlign: l.isArabic ? TextAlign.right : TextAlign.justify,
-                textDirection: l.isArabic ? TextDirection.rtl : TextDirection.ltr,
-                style: const TextStyle(color: AppColors.textSecondary, fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w400, height: 1.4)),
-              const SizedBox(height: 8),
-              if (l.purposeDesc3.isNotEmpty)
-                Text(l.purposeDesc3,
+                const SizedBox(height: 8),
+                Text(
+                  l.purposeDesc1,
                   textAlign: l.isArabic ? TextAlign.right : TextAlign.justify,
-                  textDirection: l.isArabic ? TextDirection.rtl : TextDirection.ltr,
-                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 15, fontFamily: 'Inter', fontWeight: FontWeight.w400, height: 1.4)),
-            ],
+                  style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      height: 1.4),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l.purposeDesc2,
+                  textAlign: l.isArabic ? TextAlign.right : TextAlign.justify,
+                  style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      height: 1.4),
+                ),
+                const SizedBox(height: 8),
+                if (l.purposeDesc3.isNotEmpty)
+                  Text(
+                    l.purposeDesc3,
+                    textAlign: l.isArabic ? TextAlign.right : TextAlign.justify,
+                    style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        height: 1.4),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+
+
+
+

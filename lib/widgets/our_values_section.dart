@@ -21,7 +21,7 @@ class OurValuesSection extends StatelessWidget {
           Text(
             l.valuesTitle,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: AppColors.textPrimary, fontSize: 28, fontFamily: 'Inter', fontWeight: FontWeight.w700),
+            style: const TextStyle(color: AppColors.textPrimary, fontSize: 28, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 30),
           LayoutBuilder(
@@ -103,7 +103,6 @@ class _ValueCard extends StatelessWidget {
             style: const TextStyle(
               color: AppColors.textPrimary,
               fontSize: 16,
-              fontFamily: 'Inter',
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -114,7 +113,6 @@ class _ValueCard extends StatelessWidget {
               style: const TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 13,
-                fontFamily: 'Inter',
                 fontWeight: FontWeight.w400,
                 height: 1.4,
               ),
@@ -124,3 +122,8 @@ class _ValueCard extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
