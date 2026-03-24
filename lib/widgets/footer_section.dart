@@ -191,7 +191,7 @@ class _FooterCopyright extends StatelessWidget {
                   Text(l.footerPrivacy, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontWeight: FontWeight.w400)),
                   Text(l.footerTerms, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontWeight: FontWeight.w400)),
                   Text(l.footerCorporateGov, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontWeight: FontWeight.w400)),
-                  const Text('v1.0.1', style: TextStyle(color: Color(0xFF4B5563), fontSize: 10)),
+                  const Text('v1.0.2', style: TextStyle(color: Color(0xFF4B5563), fontSize: 10)),
                 ],
               ),
             ],
@@ -208,7 +208,7 @@ class _FooterCopyright extends StatelessWidget {
               const SizedBox(height: 8),
               Text(l.footerCorporateGov, style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12, fontWeight: FontWeight.w400)),
               const SizedBox(height: 8),
-              const Text('v1.0.1', style: TextStyle(color: Color(0xFF4B5563), fontSize: 10)),
+              const Text('v1.0.2', style: TextStyle(color: Color(0xFF4B5563), fontSize: 10)),
             ],
           );
         }
