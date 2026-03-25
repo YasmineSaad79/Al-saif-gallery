@@ -21,6 +21,23 @@ class BrandsSection extends StatelessWidget {
       decoration: const BoxDecoration(color: Colors.white),
       child: Stack(
         children: [
+          if (isMobile)
+            Positioned.fill(
+              child: Align(
+                alignment: const Alignment(0, -0.5),
+                child: Opacity(
+                  opacity: 0.08,
+                  child: SvgPicture.asset(
+                    'assets/images/JUG.svg',
+                    width: 450,
+                    height: 450,
+                    fit: BoxFit.contain,
+                    colorFilter: const ColorFilter.mode(Color(0xFFD91F36), BlendMode.srcIn),
+                  ),
+                ),
+              ),
+            )
+          else
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 3),
             child: Center(
@@ -28,8 +45,8 @@ class BrandsSection extends StatelessWidget {
                 opacity: 0.08,
                 child: SvgPicture.asset(
                   'assets/images/JUG.svg',
-                  width: isMobile ? 300 : 700,
-                  height: isMobile ? 300 : 700,
+                  width: 700,
+                  height: 700,
                   fit: BoxFit.contain,
                   colorFilter: const ColorFilter.mode(Color(0xFFD91F36), BlendMode.srcIn),
                 ),
