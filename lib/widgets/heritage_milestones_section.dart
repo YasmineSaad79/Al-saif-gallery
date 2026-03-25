@@ -317,7 +317,7 @@ class _VerticalTimeline extends StatelessWidget {
     return Column(
       children: [
         for (int i = 0; i < milestones.length; i++)
-          _VerticalTimelineItem(
+          _VerticalTimelineRow(
             year: milestones[i].year,
             title: milestones[i].title,
             desc: milestones[i].desc,
@@ -329,14 +329,14 @@ class _VerticalTimeline extends StatelessWidget {
   }
 }
 
-class _VerticalTimelineItem extends StatelessWidget {
+class _VerticalTimelineRow extends StatelessWidget {
   final String year;
   final String title;
   final String desc;
   final bool isArabic;
   final bool isLast;
 
-  const _VerticalTimelineItem({
+  const _VerticalTimelineRow({
     required this.year,
     required this.title,
     required this.desc,
@@ -346,55 +346,82 @@ class _VerticalTimelineItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+    return IntrinsicHeight(
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Timeline line + dot
+          // عمود الخط والنقطة
           SizedBox(
             width: 32,
-            child: Column(
+            child: Stack(
+              alignment: Alignment.topCenter,
               children: [
-                Container(
-                  width: 12,
-                  height: 12,
-                  decoration: const BoxDecoration(
-                    color: AppColors.primary,
-                    shape: BoxShape.circle,
+                // الخط يمر من الأعلى للأسفل خلف النقطة
+                Positioned(
+                  top: 0,
+                  bottom: 0,
+                  width: 2,
+                  child: Container(color: const Color(0xFF6B7280)),
+                ),
+                // النقطة الحمراء فوق الخط
+                Positioned(
+                  top: 14,
+                  child: Container(
+                    width: 12,
+                    height: 12,
+                    decoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
-                if (!isLast)
-                  Container(width: 2, height: 80, color: const Color(0xFFE5E7EB)),
               ],
             ),
           ),
           const SizedBox(width: 12),
-          // Card
+          // البطاقة
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(bottom: isLast ? 0 : 16),
-              child: Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xFFE5E7EB)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(year, style: const TextStyle(color: AppColors.primary, fontSize: 16, fontWeight: FontWeight.w700)),
-                    const SizedBox(height: 4),
-                    Text(title, style: const TextStyle(color: AppColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w700)),
-                    const SizedBox(height: 4),
-                    Text(desc, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, height: 1.4)),
-                  ],
-                ),
-              ),
+              child: _VerticalCard(year: year, title: title, desc: desc, isArabic: isArabic),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _VerticalCard extends StatelessWidget {
+  final String year;
+  final String title;
+  final String desc;
+  final bool isArabic;
+
+  const _VerticalCard({required this.year, required this.title, required this.desc, required this.isArabic});
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: const Color(0xFFE5E7EB)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(year, style: const TextStyle(color: AppColors.primary, fontSize: 16, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 4),
+            Text(title, style: const TextStyle(color: AppColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 4),
+            Text(desc, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, height: 1.4)),
+          ],
+        ),
       ),
     );
   }

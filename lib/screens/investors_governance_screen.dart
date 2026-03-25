@@ -19,6 +19,7 @@ import '../widgets/share_series_widget.dart';
 import '../widgets/email_subscription_widget.dart';
 import '../widgets/footer_section.dart';
 import '../utils/responsive.dart';
+import '../utils/page_meta.dart';
 import '../main.dart';
 
 class InvestorsGovernanceScreen extends StatefulWidget {
@@ -33,6 +34,10 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
   void initState() {
     super.initState();
     localeProvider.addListener(_rebuild);
+    setPageMeta(
+      title: 'Al Saif Gallery Investor Relations | Tadawul 4192 | السيف غاليري',
+      description: 'Official investor relations for Al Saif Gallery (Tadawul: 4192). Financial results, governance documents, shareholder services, and regulatory disclosures for Saudi Exchange investors.',
+    );
   }
 
   @override

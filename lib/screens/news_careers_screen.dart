@@ -6,6 +6,7 @@ import '../widgets/nc_news_section.dart';
 import '../widgets/nc_careers_section.dart';
 import '../widgets/nc_contact_section.dart';
 import '../widgets/footer_section.dart';
+import '../utils/page_meta.dart';
 import '../main.dart';
 
 class NewsCareersScreen extends StatefulWidget {
@@ -20,6 +21,10 @@ class _NewsCareersScreenState extends State<NewsCareersScreen> {
   void initState() {
     super.initState();
     localeProvider.addListener(_rebuild);
+    setPageMeta(
+      title: 'Al Saif Gallery Newsroom | Corporate News & Press Releases',
+      description: 'Latest corporate news, press releases, and regulatory announcements from Al Saif Gallery (Tadawul: 4192). Bilingual newsroom updated on every disclosure.',
+    );
   }
 
   @override

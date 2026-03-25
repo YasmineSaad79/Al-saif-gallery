@@ -6,6 +6,7 @@ import '../widgets/strategy_intro_section.dart';
 import '../widgets/strategy_pillars_section.dart';
 import '../widgets/strategy_roadmap_section.dart';
 import '../widgets/strategy_risk_section.dart';
+import '../utils/page_meta.dart';
 import '../main.dart';
 import '../widgets/footer_section.dart';
 
@@ -21,6 +22,10 @@ class _StrategyScreenState extends State<StrategyScreen> {
   void initState() {
     super.initState();
     localeProvider.addListener(_rebuild);
+    setPageMeta(
+      title: 'Strategy & Operations | Al Saif Gallery | Disciplined Growth in Saudi Retail',
+      description: "Al Saif Gallery's three-phase strategy: brand ownership, national reach, digital integration, and after-sales depth. A disciplined operating model built for sustainable value.",
+    );
   }
 
   @override

@@ -28,11 +28,11 @@ class _StrategyRoadmapSectionState extends State<StrategyRoadmapSection> {
         badgeBg: const Color(0xFFDCFCE7),
         borderColor: const Color(0xFF16A34A),
         phaseLabel: isArabic ? 'المرحلة الأولى' : 'Phase 1',
-        title: isArabic ? 'بناء الأساس' : 'Foundation',
+        title: isArabic ? 'بناء الأساس' : 'Foundation (Completed through 2024)',
         description: isArabic
             ? 'ترسيخ محفظة العلامات التجارية مع التركيز على العلامات المملوكة والحصرية. اكتمال شبكة التجزئة الأولى في المملكة مع حضور خليجي انتقائي. إرساء البنية التحتية للتكامل متعدد القنوات بما يشمل وسائل الدفع الشائعة وأُطر اتفاقيات مستوى الخدمة للتوصيل. تعزيز المستودعات المركزية في الرياض بدعم مركز التوزيع في جدة. تطوير نموذج خدمة ما بعد البيع بضمانات متعددة السنوات ومعالجة مركزية للخدمة.'
-            : 'Rationalized and deepened the brand portfolio with focus on owned and exclusive labels. Completed the KSA-first retail network with selective GCC presence. Established omni-channel integration infrastructure including popular payment methods and delivery SLA frameworks.',
-        kpiTitle: isArabic ? 'مؤشرات الأداء الرئيسية لمرحلة الأساس:' : 'Key Performance Indicators:',
+            : 'Rationalized and deepened the brand portfolio with focus on owned and exclusive labels. Completed the KSA-first retail network with selective GCC presence. Established omni-channel integration infrastructure including popular payment methods and delivery SLA frameworks. Strengthened Riyadh central warehouses supported by Jeddah fulfillment. Enhanced the after-sales model with multi-year warranties and centralized service processing.',
+        kpiTitle: isArabic ? 'مؤشرات الأداء الرئيسية لمرحلة الأساس:' : 'Phase 1 KPIs:',
         kpis: isArabic ? [
           '\u200E73\u200F صالة عرض إجمالاً (\u200E66\u200F في المملكة، \u200E7\u200F في دول الخليج)',
           'مساهمة القنوات الرقمية في الإيرادات: \u200E9.4%\u200F (مقارنة بـ \u200E1.4%\u200F في \u200E2019\u200F)',
@@ -43,8 +43,8 @@ class _StrategyRoadmapSectionState extends State<StrategyRoadmapSection> {
           '73 total showrooms (66 KSA, 7 GCC)',
           'Digital channel contribution: 9.4% of revenue (vs. 1.4% in 2019)',
           'Delivery SLAs: Riyadh 1–3 days | Nationwide 3–5 days | International 5–10 days',
-          'Owned and exclusive brand structure complete',
-          'Central warehouse operations as primary inventory hub',
+          'Owned and exclusive brand structure complete across core categories',
+          '•	Central warehouse operations as primary inventory hub with unified replenishment',
         ],
       ),
       _Phase(
@@ -53,11 +53,11 @@ class _StrategyRoadmapSectionState extends State<StrategyRoadmapSection> {
         badgeBg: const Color(0xFFFFE4E6),
         borderColor: const Color(0xFFC62030),
         phaseLabel: isArabic ? 'المرحلة الثانية' : 'Phase 2',
-        title: isArabic ? 'التوسع المدروس' : 'Measured Expansion',
+        title: isArabic ? 'التوسع المدروس' : 'Measured Expansion (2025 to 2026, Active)',
         description: isArabic
             ? 'توسع انتقائي في شبكة الفروع نحو المدن والمناطق السعودية ذات الاختراق المنخفض، مع مواقع خليجية إضافية حيث تثبت العوائد التجارية جدواها. توسيع المحفظة لتشمل أجهزة المطبخ الكبيرة المختارة وفئات المنزل المكمّلة. تسريع تكامل قنوات البيع. تعزيز إدارة سلسلة التوريد ودوران المخزون عبر منظومة اللوجستيات بين الرياض وجدة.'
-            : 'Selective expansion of the showroom network into lower-penetration Saudi cities and regions; additional GCC locations where commercial returns are established. Portfolio expansion to include selected large kitchen appliances and compatible home categories.',
-        kpiTitle: isArabic ? 'مؤشرات أداء المرحلة الثانية:' : 'Key Performance Indicators:',
+            : 'Selective expansion of the showroom network into lower-penetration Saudi cities and regions; additional GCC locations where commercial returns are established. Portfolio expansion to include selected large kitchen appliances and compatible home categories. Acceleration of omni-channel integration. Strengthening supply management and inventory turns through the Riyadh to Jeddah logistics system.',
+        kpiTitle: isArabic ? 'مؤشرات أداء المرحلة الثانية:' : 'Phase 2 Performance Indicators (Safe-to-publish formulation):',
         kpis: isArabic ? [
           'حصة التجارة الإلكترونية من الإيرادات ومقاييس استخدام التطبيق',
           'معدلات الامتثال لاتفاقيات مستوى خدمة التوصيل',
@@ -68,9 +68,10 @@ class _StrategyRoadmapSectionState extends State<StrategyRoadmapSection> {
         ] : [
           'E-commerce share of revenue and app engagement',
           'Delivery SLA compliance rates',
-          'Product mix: small vs. large appliances',
-          'Owned and exclusive brand revenue mix',
+          'Product mix: small vs. large appliances contribution',
+          'Owned and exclusive brand revenue mix and gross margin',
           'Inventory turns and working capital cycle',
+          'Repeat purchase and customer return rate indicators',
         ],
       ),
       _Phase(
@@ -79,10 +80,10 @@ class _StrategyRoadmapSectionState extends State<StrategyRoadmapSection> {
         badgeBg: const Color(0xFFF3F4F6),
         borderColor: const Color(0xFFE5E7EB),
         phaseLabel: isArabic ? 'المرحلة الثالثة' : 'Phase 3',
-        title: isArabic ? 'الإمكانات المثلى' : 'Optimal Potential',
+        title: isArabic ? 'الإمكانات المثلى' : 'Optimal Potential (2026 onwards)',
         description: isArabic
             ? 'أفضل تغطية جغرافية في المدن السعودية ذات الأولوية. نضج تكامل القنوات: مخزون موحّد وتوصيل وخدمة ما بعد البيع تمتد عبر المادية والرقمية معاً. ابتكار عميق في العلامات الخاصة والحصرية. إطار منضبط لتوليد النقد وتخصيص رأس المال يدعم كلاً من النمو والعوائد للمساهمين. تقييم الفرص غير العضوية الانتقائية على أساس مرتكز على العائد المحقق.'
-            : 'Best-coverage position across priority Saudi cities. Full channel integration maturity: unified inventory, delivery, and after-sales infrastructure across physical and digital. Deep brand innovation under owned and exclusive labels.',
+            : 'Best-coverage position across priority Saudi cities. Full channel integration maturity: unified inventory, delivery, and after-sales infrastructure across physical and digital. Deep brand innovation under owned and exclusive labels. Disciplined cash generation and capital allocation framework supporting both growth and returns to shareholders. Selective inorganic growth opportunities evaluated on a return-focused basis.',
         kpiTitle: isArabic ? 'مؤشرات الأداء الرئيسية:' : 'Key Performance Indicators:',
         kpis: isArabic ? [
           'توليد نقدي منضبط',

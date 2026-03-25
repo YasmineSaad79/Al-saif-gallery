@@ -47,7 +47,7 @@ class _StrategyRiskSectionState extends State<StrategyRiskSection> {
               child: Text(
                 isArabic
                     ? 'تُدير السيف غاليري المخاطر عبر إطار عملي وشفاف مصمّم لحماية موظفينا وعملائنا ومساهمينا واستمرارية أعمالنا. بوصفنا شركة مدرجة في تداول، مُلزَمون بالحفاظ على منظومة فعّالة لإدارة المخاطر والإفصاح عنها وفق اللوائح التنظيمية المعمول بها. ونهجنا استباقي لا ردّ فعل دفاعي: نُحدّد المخاطر بوضوح، نُعيّن المسؤولية، ونُطبّق ضوابط متناسبة مع مستوى كل خطر.'
-                    : 'Al Saif Gallery manages risk through a practical, transparent framework designed to protect our employees, customers, shareholders, and business continuity. As a Tadawul-listed company, we are required to maintain and disclose an effective risk management system.',
+                    : 'Al Saif Gallery manages risk through a practical, transparent framework designed to protect our employees, customers, shareholders, and business continuity. As a Tadawul-listed company, we are required to maintain and disclose an effective risk management system. Our approach is active, not defensive: we identify risks clearly, assign ownership, and implement controls that are proportionate to the exposure.',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 14,
@@ -74,7 +74,7 @@ class _StrategyRiskSectionState extends State<StrategyRiskSection> {
             Text(
               isArabic
                   ? 'بيان الضوابط: بناءً على العمل المنجز خلال العام، ترى الإدارة أن ضوابط المخاطر وإطار إدارتها كانا فعّالَين في جميع الجوانب الجوهرية. تشمل مجالات التحسين المستمر: أساسيات الأمن السيبراني، وتنويع الموردين للعناصر الأعلى طلباً، وممارسات الحد من الفقد داخل شبكة صالات العرض.'
-                  : 'Controls Statement: Based on work performed during the year, management considers that our risk controls and management framework were effective in all material respects.',
+                  : 'Controls Statement: Based on work performed during the year, management considers that our risk controls and management framework were effective in all material respects. Areas of continuous improvement include cybersecurity fundamentals and supplier diversification for highest-demand items.',
               textAlign: isArabic ? TextAlign.right : TextAlign.left,
               style: const TextStyle(
                 fontSize: 11,
