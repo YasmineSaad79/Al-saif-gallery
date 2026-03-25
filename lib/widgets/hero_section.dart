@@ -12,12 +12,13 @@ Widget _heroBtn(BuildContext context, String label, Color bg, Color fg, VoidCall
         onTap: onTap,
         child: Container(
           height: 48,
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
           child: Center(
             child: Text(
               label,
-              style: TextStyle(color: fg, fontSize: 16, fontWeight: FontWeight.w700),
+              textAlign: TextAlign.center,
+              style: TextStyle(color: fg, fontSize: 14, fontWeight: FontWeight.w700),
             ),
           ),
         ),
