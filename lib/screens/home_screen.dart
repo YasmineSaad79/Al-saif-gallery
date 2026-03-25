@@ -58,9 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: localeProvider.isArabic
-          ? SelectionContainer.disabled(child: content)
-          : SelectionArea(child: content),
+      body: SelectionContainer.disabled(child: content),
     );
   }
 }
+

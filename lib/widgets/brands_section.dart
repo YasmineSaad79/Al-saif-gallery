@@ -99,7 +99,7 @@ class BrandsSection extends StatelessWidget {
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     if (constraints.maxWidth > 900) {
-                      final cardWidth = (constraints.maxWidth - 14 - (3 * 24)) / 4;
+                      final cardWidth = ((constraints.maxWidth - 14 - (3 * 24)) / 4).clamp(0.0, double.infinity);
                       return IntrinsicHeight(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,

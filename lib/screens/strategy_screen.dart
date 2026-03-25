@@ -56,12 +56,11 @@ class _StrategyScreenState extends State<StrategyScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: localeProvider.isArabic
-          ? SelectionContainer.disabled(child: content)
-          : SelectionArea(child: content),
+      body: SelectionContainer.disabled(child: content),
     );
   }
 }
+
 
 
 

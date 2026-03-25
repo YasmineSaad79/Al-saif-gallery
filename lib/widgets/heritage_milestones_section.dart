@@ -68,18 +68,22 @@ class _HeritageMilestonesSectionState extends State<HeritageMilestonesSection>
   }
 
   void _applyScroll(double delta) {
-    for (final ctrl in [_cardsController, _timelineController]) {
-      if (!ctrl.hasClients) continue;
-      final pos = ctrl.position;
-      final max = pos.maxScrollExtent;
-      if (max <= 0) continue;
-      final next = pos.pixels + delta;
-      if (next >= max) {
-        ctrl.jumpTo(0);
-      } else {
-        ctrl.jumpTo(next);
+    if (!mounted) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _userInteracting) return;
+      for (final ctrl in [_cardsController, _timelineController]) {
+        if (!ctrl.hasClients) continue;
+        final pos = ctrl.position;
+        final max = pos.maxScrollExtent;
+        if (max <= 0) continue;
+        final next = pos.pixels + delta;
+        if (next >= max) {
+          ctrl.jumpTo(0);
+        } else {
+          ctrl.jumpTo(next);
+        }
       }
-    }
+    });
   }
 
   void _onLocaleChanged() {

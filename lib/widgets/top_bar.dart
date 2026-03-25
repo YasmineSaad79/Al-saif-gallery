@@ -80,29 +80,31 @@ class _TopBarState extends State<TopBar> {
     final isArabic = localeProvider.isArabic;
     showDialog(
       context: context,
-      builder: (_) => Directionality(
-        textDirection: TextDirection.ltr,
-        child: SimpleDialog(
-          title: const Text('Language', textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-          children: [
-            const Divider(height: 1),
-            RadioListTile<bool>(
-              value: true,
-              groupValue: isArabic,
-              onChanged: (_) { Navigator.pop(context); if (!isArabic) localeProvider.toggleLanguage(); },
-              title: const Text('العربية'),
-              activeColor: AppColors.primary,
-            ),
-            const Divider(height: 1),
-            RadioListTile<bool>(
-              value: false,
-              groupValue: isArabic,
-              onChanged: (_) { Navigator.pop(context); if (isArabic) localeProvider.toggleLanguage(); },
-              title: const Text('English'),
-              activeColor: AppColors.primary,
-            ),
-          ],
+      builder: (_) => SelectionContainer.disabled(
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: SimpleDialog(
+            title: const Text('Language', textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            children: [
+              const Divider(height: 1),
+              RadioListTile<bool>(
+                value: true,
+                groupValue: isArabic,
+                onChanged: (_) { Navigator.pop(context); if (!isArabic) localeProvider.toggleLanguage(); },
+                title: const Text('العربية'),
+                activeColor: AppColors.primary,
+              ),
+              const Divider(height: 1),
+              RadioListTile<bool>(
+                value: false,
+                groupValue: isArabic,
+                onChanged: (_) { Navigator.pop(context); if (isArabic) localeProvider.toggleLanguage(); },
+                title: const Text('English'),
+                activeColor: AppColors.primary,
+              ),
+            ],
+          ),
         ),
       ),
     );

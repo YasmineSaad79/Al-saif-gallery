@@ -2,7 +2,7 @@
 set -e
 
 # Install Flutter 3.22.3 (matches .fvmrc)
-git clone https://github.com/flutter/flutter.git -b 3.22.3 --depth 1 /tmp/flutter
+git clone https://github.com/flutter/flutter.git -b 3.24.5 --depth 1 /tmp/flutter
 export PATH="$PATH:/tmp/flutter/bin"
 
 flutter pub get

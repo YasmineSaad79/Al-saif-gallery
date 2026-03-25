@@ -69,9 +69,7 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: localeProvider.isArabic
-          ? SelectionContainer.disabled(child: content)
-          : SelectionArea(child: content),
+      body: SelectionContainer.disabled(child: content),
     );
   }
 }
@@ -193,6 +191,7 @@ class _IRWidgetsSectionState extends State<_IRWidgetsSection> {
     );
   }
 }
+
 
 
 

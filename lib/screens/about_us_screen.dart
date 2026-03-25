@@ -58,12 +58,11 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: localeProvider.isArabic
-          ? SelectionContainer.disabled(child: content)
-          : SelectionArea(child: content),
+      body: SelectionContainer.disabled(child: content),
     );
   }
 }
+
 
 
 

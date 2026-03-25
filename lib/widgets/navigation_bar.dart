@@ -49,7 +49,8 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
           (l.navInvestors, '/investors-governance'),
           (l.navNewsroom, '/news-careers'),
         ];
-        return Directionality(
+        return SelectionContainer.disabled(
+          child: Directionality(
           textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
           child: SafeArea(
             child: Column(
@@ -94,6 +95,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
               ],
             ),
           ),
+        ),
         );
       },
     );
