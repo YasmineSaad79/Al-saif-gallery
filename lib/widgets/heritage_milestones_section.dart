@@ -135,7 +135,6 @@ class _HeritageMilestonesSectionState extends State<HeritageMilestonesSection>
       (year: l.m2023year,  title: l.m2023title,  desc: l.m2023desc),
       (year: l.m2024year,  title: l.m2024title,  desc: l.m2024desc),
       (year: l.m2024bYear, title: l.m2024bTitle, desc: l.m2024bDesc),
-      (year: l.m2025year,  title: l.m2025title,  desc: l.m2025desc),
     ];
 
     return Container(
