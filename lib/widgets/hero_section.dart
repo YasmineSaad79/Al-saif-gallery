@@ -57,8 +57,8 @@ class HeroSection extends StatelessWidget {
               width: double.infinity,
               height: height,
               constraints:
-                  isMobile ? const BoxConstraints(minHeight: 420) : null,
-              padding: EdgeInsets.fromLTRB(hPad, 80, hPad, 32),
+                  isMobile ? const BoxConstraints(minHeight: 280) : null,
+              padding: EdgeInsets.fromLTRB(hPad, isMobile ? 40 : 80, hPad, 32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,

@@ -10,21 +10,22 @@ class AboutHeroSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final isArabic = l.isArabic;
+    final isMobile = Responsive.isMobile(context);
 
     return Container(
       width: double.infinity,
-      height: 240,
+      height: isMobile ? 160 : 240,
       decoration: const BoxDecoration(
         color: AppColors.primary,
         image: DecorationImage(
           image: AssetImage('assets/images/Background_HorizontalBorder.png'),
           fit: BoxFit.cover,
-          alignment: const Alignment(1.0, 0.44),
+          alignment: Alignment(1.0, 0.44),
         ),
       ),
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.getHorizontalPadding(context),
-        vertical: 60,
+        vertical: isMobile ? 32 : 60,
       ),
       child: Directionality(
         textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
@@ -34,18 +35,18 @@ class AboutHeroSection extends StatelessWidget {
           children: [
             Text(
               l.aboutHeroTitle,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 32,
+                fontSize: isMobile ? 22 : 32,
                 fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               l.aboutHeroSubtitle,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 14,
+                fontSize: isMobile ? 12 : 14,
                 fontWeight: FontWeight.w400,
               ),
             ),

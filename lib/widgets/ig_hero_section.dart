@@ -31,10 +31,11 @@ class _IGHeroSectionState extends State<IGHeroSection> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final isArabic = localeProvider.isArabic;
+    final isMobile = Responsive.isMobile(context);
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final height = constraints.maxWidth / (1600 / 475);
+        final height = isMobile ? 160.0 : constraints.maxWidth / (1600 / 475);
         final horizontalPadding = Responsive.getHorizontalPadding(context);
 
         return SizedBox(
@@ -67,16 +68,16 @@ class _IGHeroSectionState extends State<IGHeroSection> {
                           child: Text(
                             l.igHeroTitle,
                             textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                            style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w700),
+                            style: TextStyle(color: Colors.white, fontSize: isMobile ? 20 : 28, fontWeight: FontWeight.w700),
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 6),
                         SizedBox(
                           width: double.infinity,
                           child: Text(
                             l.igHeroSubtitle,
                             textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                            style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400, height: 1.5),
+                            style: TextStyle(color: Colors.white, fontSize: isMobile ? 12 : 14, fontWeight: FontWeight.w400, height: 1.5),
                           ),
                         ),
                       ],

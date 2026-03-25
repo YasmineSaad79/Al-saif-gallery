@@ -20,10 +20,11 @@ class _NCHeroSectionState extends State<NCHeroSection> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final isArabic = localeProvider.isArabic;
+    final isMobile = Responsive.isMobile(context);
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final height = constraints.maxWidth / (1600 / 475);
+        final height = isMobile ? 160.0 : constraints.maxWidth / (1600 / 475);
         final horizontalPadding = Responsive.getHorizontalPadding(context);
 
         return SizedBox(
@@ -37,7 +38,6 @@ class _NCHeroSectionState extends State<NCHeroSection> {
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
               ),
-
               Padding(
                 padding: EdgeInsets.only(
                   left: isArabic ? 0 : horizontalPadding,
@@ -56,22 +56,22 @@ class _NCHeroSectionState extends State<NCHeroSection> {
                           child: Text(
                             l.ncHeroTitle,
                             textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
-                              fontSize: 28,
+                              fontSize: isMobile ? 20 : 28,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 6),
                         SizedBox(
                           width: double.infinity,
                           child: Text(
                             l.ncHeroSubtitle,
                             textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
-                              fontSize: 14,
+                              fontSize: isMobile ? 12 : 14,
                               fontWeight: FontWeight.w400,
                               height: 1.5,
                             ),
