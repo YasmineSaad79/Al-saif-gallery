@@ -31,6 +31,17 @@
   </style>
 
   <script>
+    // Unregister any old service workers to prevent stale cache issues
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (var r of registrations) { r.unregister(); }
+      });
+      caches.keys().then(function(keys) {
+        keys.forEach(function(key) { caches.delete(key); });
+      });
+    }
+  </script>
+  <script>
     // Fix: Flutter's flt-glass-pane sits on top of platform views (iframes) and
     // blocks all mouse/touch events including text selection.
     // We temporarily disable pointer-events on the glass pane when the cursor

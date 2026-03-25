@@ -38,7 +38,7 @@ class _TopBarState extends State<TopBar> {
     final docLabel  = isArabic ? 'مكتبة الوثائق' : 'Documents Library';
     final conLabel  = isArabic ? 'تواصل معنا'    : 'Contact';
     final srchLabel = isArabic ? 'بحث'           : 'Search';
-    final langLabel = isArabic ? 'English'        : 'العربية';
+    final langLabel = 'عربي / EN';
 
     return Container(
       width: double.infinity,
@@ -50,8 +50,8 @@ class _TopBarState extends State<TopBar> {
             child: Padding(
               padding: EdgeInsets.only(left: horizontalPadding, right: horizontalPadding, bottom: 1),
               child: Row(
-                textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-                mainAxisAlignment: MainAxisAlignment.end,
+                textDirection: TextDirection.ltr,
+                mainAxisAlignment: isArabic ? MainAxisAlignment.end : MainAxisAlignment.start,
                 children: [
                   if (!isMobile) ...[
                     _buildItem(docLabel,  'assets/images/document.svg',  () => context.go('/documents-library')),

@@ -120,30 +120,50 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
         ],
       ),
       child: Directionality(
-        textDirection: l.isArabic ? TextDirection.rtl : TextDirection.ltr,
+        textDirection: TextDirection.ltr,
         child: Row(
           children: [
+            if (!l.isArabic) ...[
+              if (!isMobile) ...[
+                _NavItem(text: l.navHome, isActive: currentRoute == '/', onTap: () => context.go('/')),
+                const SizedBox(width: 32),
+                _NavItem(text: l.navAboutUs, isActive: currentRoute == '/about-us', onTap: () => context.go('/about-us')),
+                const SizedBox(width: 32),
+                _NavItem(text: l.navStrategy, isActive: currentRoute == '/strategy-operations', onTap: () => context.go('/strategy-operations')),
+                const SizedBox(width: 32),
+                _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: () => context.go('/investors-governance')),
+                const SizedBox(width: 32),
+                _NavItem(text: l.navNewsroom, isActive: currentRoute == '/news-careers', onTap: () => context.go('/news-careers')),
+              ] else
+                IconButton(
+                  icon: const Icon(Icons.menu, color: AppColors.textPrimary),
+                  onPressed: () => _openMenu(context),
+                ),
+              const Spacer(),
+            ],
             SizedBox(
               width: 144,
               height: 59,
               child: SvgPicture.asset('assets/images/Al_Saif_Logo.svg', fit: BoxFit.contain),
             ),
-            const Spacer(),
-            if (!isMobile) ...[
-              _NavItem(text: l.navHome, isActive: currentRoute == '/', onTap: () => context.go('/')),
-              const SizedBox(width: 32),
-              _NavItem(text: l.navAboutUs, isActive: currentRoute == '/about-us', onTap: () => context.go('/about-us')),
-              const SizedBox(width: 32),
-              _NavItem(text: l.navStrategy, isActive: currentRoute == '/strategy-operations', onTap: () => context.go('/strategy-operations')),
-              const SizedBox(width: 32),
-              _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: () => context.go('/investors-governance')),
-              const SizedBox(width: 32),
-              _NavItem(text: l.navNewsroom, isActive: currentRoute == '/news-careers', onTap: () => context.go('/news-careers')),
-            ] else
-              IconButton(
-                icon: const Icon(Icons.menu, color: AppColors.textPrimary),
-                onPressed: () => _openMenu(context),
-              ),
+            if (l.isArabic) ...[
+              const Spacer(),
+              if (!isMobile) ...[
+                _NavItem(text: l.navNewsroom, isActive: currentRoute == '/news-careers', onTap: () => context.go('/news-careers')),
+                const SizedBox(width: 32),
+                _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: () => context.go('/investors-governance')),
+                const SizedBox(width: 32),
+                _NavItem(text: l.navStrategy, isActive: currentRoute == '/strategy-operations', onTap: () => context.go('/strategy-operations')),
+                const SizedBox(width: 32),
+                _NavItem(text: l.navAboutUs, isActive: currentRoute == '/about-us', onTap: () => context.go('/about-us')),
+                const SizedBox(width: 32),
+                _NavItem(text: l.navHome, isActive: currentRoute == '/', onTap: () => context.go('/')),
+              ] else
+                IconButton(
+                  icon: const Icon(Icons.menu, color: AppColors.textPrimary),
+                  onPressed: () => _openMenu(context),
+                ),
+            ],
           ],
         ),
       ),

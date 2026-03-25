@@ -47,7 +47,6 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
   Widget build(BuildContext context) {
     final content = Center(
       child: Container(
-        margin: const EdgeInsets.all(20),
         constraints: const BoxConstraints(maxWidth: 1880),
         color: const Color(0xFFF8FAFB),
         child: const SingleChildScrollView(

@@ -8,4 +8,5 @@ export PATH="$PATH:/tmp/flutter/bin"
 flutter pub get
 flutter build web --release \
   --web-renderer html \
+  --pwa-strategy none \
   --dart-define=IR_PAGE_URL="${IR_PAGE_URL:-http://localhost:3001/ir}"
