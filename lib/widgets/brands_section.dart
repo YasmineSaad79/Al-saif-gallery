@@ -28,8 +28,8 @@ class BrandsSection extends StatelessWidget {
                 opacity: 0.08,
                 child: SvgPicture.asset(
                   'assets/images/JUG.svg',
-                  width: 700,
-                  height: 700,
+                  width: isMobile ? 300 : 700,
+                  height: isMobile ? 300 : 700,
                   fit: BoxFit.contain,
                   colorFilter: const ColorFilter.mode(Color(0xFFD91F36), BlendMode.srcIn),
                 ),
