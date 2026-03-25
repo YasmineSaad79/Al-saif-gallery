@@ -24,7 +24,7 @@ class BrandsSection extends StatelessWidget {
           if (isMobile)
             Positioned.fill(
               child: Align(
-                alignment: const Alignment(0, -0.5),
+                alignment: const Alignment(0, -0.6),
                 child: Opacity(
                   opacity: 0.08,
                   child: SvgPicture.asset(
@@ -78,7 +78,7 @@ class BrandsSection extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     SizedBox(
-                      width: screenWidth > 1600 ? 1000 : screenWidth * 0.6,
+                      width: screenWidth > 1600 ? 1000 : (isMobile ? screenWidth * 0.9 : screenWidth * 0.6),
                       child: Text(
                         l.brandsDesc1,
                         textAlign: l.isArabic ? TextAlign.right : (isMobile ? TextAlign.start : TextAlign.justify),
@@ -92,7 +92,7 @@ class BrandsSection extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     SizedBox(
-                      width: screenWidth > 1600 ? 1000 : screenWidth * 0.6,
+                      width: screenWidth > 1600 ? 1000 : (isMobile ? screenWidth * 0.9 : screenWidth * 0.6),
                       child: Text(
                         l.brandsDesc2,
                         textAlign: l.isArabic ? TextAlign.right : (isMobile ? TextAlign.start : TextAlign.justify),
