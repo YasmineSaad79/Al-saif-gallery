@@ -44,8 +44,8 @@ class AppLocalizations {
   // ── Stats Section ────────────────────────────────────────────────────────
   String get statsShowrooms         => isArabic ? '\u200E73\u200F صالة عرض'                     : 'Showrooms';
   String get statsShowroomsSubtitle => isArabic ? 'في \u200E5\u200F أسواق خليجية'               : 'Across 5 GCC markets';
-  String get statsRevenue           => isArabic ? '\u200E758.8\u200F مليون ريال إيرادات'         : 'Net Profit';
-  String get statsRevenueSubtitle   => isArabic ? 'الأداء المالي لعام \u200E2025\u200F'          : 'SAR 758.8M Revenue';
+  String get statsRevenue           => isArabic ? '\u200E758.8\u200F مليون ريال إيرادات'         : 'SAR 758.8M Revenue';
+  String get statsRevenueSubtitle   => isArabic ? 'الأداء المالي لعام \u200E2025\u200F'          : 'FY 2025 Performance';
   String get statsPropRevenue       => isArabic ? 'نحو \u200E88%\u200F إيرادات العلامات الخاصة' : '~88% Proprietary Revenue';
   String get statsPropRevenueSubtitle => isArabic ? 'علامات مملوكة وحصرية'                      : 'Owned & exclusive brands';
   String get statsEcommerce         => isArabic ? '\u200E37%\u200F نمو التجارة الإلكترونية'     : '37% E-Commerce Growth';
@@ -128,7 +128,7 @@ class AppLocalizations {
   String get heritageTitle    => isArabic ? 'المسيرة والمحطات الكبرى' : 'Heritage & Milestones';
   String get heritageSubtitle => isArabic
       ? 'ثلاثة عقود من النمو والتطور في قطاع التجزئة المتخصص'
-      : 'Three decades of growth and evolution in specialized retail';
+      : 'Thirty years of building, expanding, and deepening.';
 
   // milestones
   String get m1993year  => '1993';
@@ -137,71 +137,69 @@ class AppLocalizations {
       ? 'أسّس سليمان بن محمد السيف الشركة كمنشأة فردية، جمعت خبرة المنتجات المستوردة مع المعرفة العميقة باحتياجات الأسرة السعودية.'
       : 'Suleiman Al Saif establishes the business as a sole proprietorship, combining imported product expertise with deep knowledge of Saudi household needs.';
 
-  String get m2006year  => '2006';
+  String get m2006year  => isArabic ? 'العقد الأول' : '2000s';
   String get m2006title => isArabic ? 'التوسع الوطني' : 'National Expansion';
   String get m2006desc  => isArabic
       ? 'بُنيت ريادة الفئة في أدوات المطبخ والأجهزة المنزلية. توسّعت شبكة الفروع عبر المدن السعودية الكبرى، مرسّخةً قاعدة عملاء وفية مبنية على القيمة والموثوقية.'
       : 'Category leadership built in kitchen appliances and serveware. The store network grows across major Saudi cities, establishing a loyal customer base built on value and reliability.';
 
-  String get m2010year  => '2010';
-  String get m2010title => isArabic ? 'الشبكة تبلغ 10 صالات عرض' : 'Network Reaches 10 Showrooms';
+  String get m2010year  => '2014';
+  String get m2010title => isArabic ? 'التحوّل المؤسسي' : 'Corporate Transformation';
   String get m2010desc  => isArabic
-      ? 'أثبت النموذج التجاري قابليته للتكرار والتوسع.'
-      : 'The business model proves its scalability and replicability across the Kingdom.';
-
-  String get m2014year  => '2014';
-  String get m2014title => isArabic ? 'التحوّل المؤسسي' : 'Corporate Transformation';
-  String get m2014desc  => isArabic
       ? 'تحويل الشركة إلى شركة مساهمة سعودية مقفلة مع البدء في تطوير إطار الحوكمة تمهيداً للإدراج.'
       : 'Conversion to a closed joint stock company. Governance infrastructure begins formal development ahead of eventual public listing.';
 
-  String get m2015year  => '2015';
-  String get m2015title => isArabic ? 'إطلاق علامة إيدسون' : 'Edison Brand Launch';
-  String get m2015desc  => isArabic
+  String get m2014year  => '2015';
+  String get m2014title => isArabic ? 'إطلاق علامة إيدسون' : 'Edison Brand Launch';
+  String get m2014desc  => isArabic
       ? 'نقطة تحوّل استراتيجية نحو ملكية العلامات التجارية وابتكار المنتجات المُعدّة للبيت السعودي والخليجي.'
       : 'The Edison proprietary brand is introduced, a strategic pivot toward brand ownership and product innovation tailored for Gulf households.';
 
-  String get m2016year  => '2016';
-  String get m2016title => isArabic ? 'منصة التجارة الإلكترونية' : 'E-Commerce Platform';
-  String get m2016desc  => isArabic
+  String get m2015year  => '2016';
+  String get m2015title => isArabic ? 'منصة التجارة الإلكترونية' : 'E-Commerce Platform';
+  String get m2015desc  => isArabic
       ? 'إطلاق الموقع والتطبيق إلى جانب برنامج ولاء العملاء، مما أرسى أسس نموذج متعدد القنوات.'
       : 'The online platform and mobile application are launched alongside a customer loyalty program, establishing the foundation for omni-channel operations.';
 
-  String get m2018year  => isArabic ? '\u200E2018\u200F-\u200E2022\u200F' : '2018-2022';
-  String get m2018title => isArabic ? 'ريادة إيدسون في الأجهزة المنزلية الكبيرة' : 'Edison Brand Leadership';
-  String get m2018desc  => isArabic
+  String get m2016year  => isArabic ? '\u200E2018\u200F-\u200E2022\u200F' : '2018-2022';
+  String get m2016title => isArabic ? 'ريادة إيدسون في الأجهزة المنزلية الكبيرة' : 'Edison Brand Leadership';
+  String get m2016desc  => isArabic
       ? 'توسّع وتعمّق منصة العلامات الخاصة. إطلاق إيدسون للأجهزة الكبيرة، من ثلاجات وغسالات ومكيفات هواء، يُوسّع المنظومة من الأجهزة الصغيرة إلى حلول المنزل كاملاً.'
       : 'Proprietary brand platform scaled and deepened. Launch of the Edison large appliance extension, including refrigerators, washing machines, and air conditioning, expands the offering from small appliances into whole-home solutions.';
 
-  String get m2022year  => isArabic ? '\u200E27\u200F ديسمبر \u200E2022\u200F' : '27 December 2022';
-  String get m2022title => isArabic ? 'الطرح العام الأولي في تداول' : 'Tadawul IPO';
-  String get m2022desc  => isArabic
+  String get m2018year  => isArabic ? '\u200E27\u200F ديسمبر \u200E2022\u200F' : 'December 27, 2022';
+  String get m2018title => isArabic ? 'الطرح العام الأولي في تداول' : 'Tadawul IPO';
+  String get m2018desc  => isArabic
       ? 'إدراج السيف غاليري في السوق الرئيسية للسوق المالية السعودية بسعر \u200E115\u200F ريالاً للسهم قبل التجزئة، بتغطية \u200E269%\u200F، مما يعكس الطلب الواسع من السوق على متخصص متميز في مستلزمات المنزل السعودي.'
       : 'Al Saif Gallery lists on the Saudi Exchange Main Market at SAR 115 per share (pre-split). The offering is 269% oversubscribed, reflecting strong market demand for a pure-play specialist in Saudi household essentials.';
 
-  String get m2023year  => isArabic ? 'يوليو \u200E2023\u200F' : 'July 2023';
-  String get m2023title => isArabic ? 'توسيع الهيكل الرأسمالي' : 'Capital Structure Expansion';
-  String get m2023desc  => isArabic
+  String get m2022year  => isArabic ? 'يوليو \u200E2023\u200F' : 'July 2023';
+  String get m2022title => isArabic ? 'توسيع الهيكل الرأسمالي' : 'Capital Structure Expansion';
+  String get m2022desc  => isArabic
       ? 'تجزئة الأسهم بنسبة \u200E10\u200F إلى \u200E1\u200F ترفع عدد الأسهم إلى \u200E350\u200F مليون سهم، مما يُعزز سيولة السهم في السوق.'
       : '10-for-1 stock split increases shares outstanding to 350 million, improving market liquidity.';
 
-  String get m2024year  => '2024';
-  String get m2024title => isArabic ? 'التوسع الخليجي' : 'GCC Expansion';
-  String get m2024desc  => isArabic
+  String get m2023year  => '2024';
+  String get m2023title => isArabic ? 'التوسع الخليجي' : 'GCC Expansion';
+  String get m2023desc  => isArabic
       ? 'افتتاح صالات عرض جديدة في الدوحة (ديسمبر \u200E2024\u200F، \u200E1,392\u200F م²) والعين (ديسمبر \u200E2024\u200F، \u200E1,700\u200F م²) ومسقط، ليبلغ مجموع صالات دول الخليج سبعة مواقع في الإمارات والكويت وعُمان وقطر.'
       : 'New showrooms open in Doha (December 2024, 1,392 m²), Al Ain (December 2024, 1,700 m²), and Muscat, bringing the GCC network to seven locations across UAE, Kuwait, Oman, and Qatar.';
 
-  String get m2024bYear  => isArabic ? 'ديسمبر \u200E2024\u200F' : 'Dec 2024';
-  String get m2024bTitle => isArabic ? 'مرحلة قيادة جديدة' : 'Leadership Transition';
-  String get m2024bDesc  => isArabic
+  String get m2024year  => isArabic ? 'ديسمبر \u200E2024\u200F' : 'December 2024';
+  String get m2024title => isArabic ? 'مرحلة قيادة جديدة' : 'Leadership Transition';
+  String get m2024desc  => isArabic
       ? 'تعيين أحمد بن صالح آل سلطان رئيساً تنفيذياً، وهو أول رئيس تنفيذي محترف من خارج الأسرة المؤسِّسة في تاريخ الشركة، إيذاناً بمرحلة جديدة من التركيز التشغيلي ونضج الحوكمة.'
       : 'Ahmed bin Saleh Al Sultan appointed as CEO, the first professional, non-family CEO in the Company\'s history, marking a new phase of operational focus and governance maturity.';
 
-  String get m2025year  => '2025';
-  String get m2025title => isArabic ? 'الانتعاش المالي والتسارع الرقمي' : 'Financial Recovery & Digital Acceleration';
-  String get m2025desc  => isArabic
+  String get m2024bYear  => '2025';
+  String get m2024bTitle => isArabic ? 'الانتعاش المالي والتسارع الرقمي' : 'Financial Recovery & Digital Acceleration';
+  String get m2024bDesc  => isArabic
       ? 'إيرادات \u200E758.8\u200F مليون ريال، وصافي ربح \u200E58\u200F مليون ريال بنمو \u200E54.6%\u200F مقارنة بالعام السابق، ونمو التجارة الإلكترونية \u200E37%\u200F لتبلغ \u200E94\u200F مليون ريال، مما يجسّد متانة النموذج التشغيلي وزخم التحول الرقمي.'
       : 'Revenue of SAR 758.8M, net profit of SAR 58M (+54.6% year-on-year), and e-commerce growth of 37% to SAR 94M demonstrate the platform\'s operational resilience and digital momentum.';
+
+  String get m2025year  => '';
+  String get m2025title => '';
+  String get m2025desc  => '';
 
   // ── Leadership Section ───────────────────────────────────────────────────
   String get leadershipTitle => isArabic ? 'القيادة' : 'Leadership';

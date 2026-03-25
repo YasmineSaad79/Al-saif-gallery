@@ -169,6 +169,9 @@ class _HeritageMilestonesSectionState extends State<HeritageMilestonesSection>
             ),
           ),
           const SizedBox(height: 30),
+          if (Responsive.isMobile(context))
+            _VerticalTimeline(milestones: milestones, isArabic: isArabic)
+          else ...[
           SizedBox(
             height: 10,
             child: SingleChildScrollView(
@@ -227,6 +230,7 @@ class _HeritageMilestonesSectionState extends State<HeritageMilestonesSection>
               ),
             ),
           ),
+          ], // end else desktop
         ],
       ),
     );
@@ -298,6 +302,100 @@ class _MilestoneCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _VerticalTimeline extends StatelessWidget {
+  final List<({String year, String title, String desc})> milestones;
+  final bool isArabic;
+
+  const _VerticalTimeline({required this.milestones, required this.isArabic});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (int i = 0; i < milestones.length; i++)
+          _VerticalTimelineItem(
+            year: milestones[i].year,
+            title: milestones[i].title,
+            desc: milestones[i].desc,
+            isArabic: isArabic,
+            isLast: i == milestones.length - 1,
+          ),
+      ],
+    );
+  }
+}
+
+class _VerticalTimelineItem extends StatelessWidget {
+  final String year;
+  final String title;
+  final String desc;
+  final bool isArabic;
+  final bool isLast;
+
+  const _VerticalTimelineItem({
+    required this.year,
+    required this.title,
+    required this.desc,
+    required this.isArabic,
+    required this.isLast,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Timeline line + dot
+          SizedBox(
+            width: 32,
+            child: Column(
+              children: [
+                Container(
+                  width: 12,
+                  height: 12,
+                  decoration: const BoxDecoration(
+                    color: AppColors.primary,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                if (!isLast)
+                  Container(width: 2, height: 80, color: const Color(0xFFE5E7EB)),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          // Card
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: isLast ? 0 : 16),
+              child: Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFFE5E7EB)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(year, style: const TextStyle(color: AppColors.primary, fontSize: 16, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 4),
+                    Text(title, style: const TextStyle(color: AppColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 4),
+                    Text(desc, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, height: 1.4)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

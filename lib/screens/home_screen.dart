@@ -5,6 +5,7 @@ import '../widgets/hero_section.dart';
 import '../widgets/stats_section.dart';
 import '../widgets/brands_section.dart';
 import '../widgets/footer_section.dart';
+import '../utils/page_meta.dart';
 import '../main.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,6 +20,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     localeProvider.addListener(_rebuild);
+    setPageMeta(
+      title: "Al Saif Gallery | Saudi Arabia's Home & Kitchen Retail Leader | Tadawul 4192",
+      description: "Al Saif Gallery -- Saudi Arabia's dominant specialty retailer in household and kitchen appliances. 73 stores, SAR 758.8M revenue, approximately 88% proprietary brands. Tadawul-listed since 2022.",
+    );
   }
 
   @override
