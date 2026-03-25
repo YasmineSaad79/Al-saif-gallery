@@ -13,6 +13,7 @@ class BrandsSection extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final horizontalPadding = Responsive.getHorizontalPadding(context);
     final l = AppLocalizations.of(context);
+    final isMobile = Responsive.isMobile(context);
 
     return Container(
       width: double.infinity,
@@ -63,7 +64,7 @@ class BrandsSection extends StatelessWidget {
                       width: screenWidth > 1600 ? 1000 : screenWidth * 0.6,
                       child: Text(
                         l.brandsDesc1,
-                        textAlign: l.isArabic ? TextAlign.right : TextAlign.justify,
+                        textAlign: l.isArabic ? TextAlign.right : (isMobile ? TextAlign.start : TextAlign.justify),
                         style: const TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 15,
@@ -77,7 +78,7 @@ class BrandsSection extends StatelessWidget {
                       width: screenWidth > 1600 ? 1000 : screenWidth * 0.6,
                       child: Text(
                         l.brandsDesc2,
-                        textAlign: l.isArabic ? TextAlign.right : TextAlign.justify,
+                        textAlign: l.isArabic ? TextAlign.right : (isMobile ? TextAlign.start : TextAlign.justify),
                         style: const TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 15,

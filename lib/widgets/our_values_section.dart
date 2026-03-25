@@ -44,13 +44,27 @@ class OurValuesSection extends StatelessWidget {
               } else {
                 return Column(
                   children: [
-                    _ValueCard(iconPath: 'assets/images/Quality.svg', title: l.valueQualityTitle, description: l.valueQualityDesc),
-                    const SizedBox(height: 20),
-                    _ValueCard(iconPath: 'assets/images/Customer.svg', title: l.valueCustomerTitle, description: l.valueCustomerDesc),
-                    const SizedBox(height: 20),
-                    _ValueCard(iconPath: 'assets/images/Integrity.svg', title: l.valueIntegrityTitle, description: l.valueIntegrityDesc),
-                    const SizedBox(height: 20),
-                    _ValueCard(iconPath: 'assets/images/strategy.svg', title: l.valueImprovementTitle, description: l.valueImprovementDesc),
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(child: _ValueCard(iconPath: 'assets/images/Quality.svg', title: l.valueQualityTitle, description: l.valueQualityDesc)),
+                          const SizedBox(width: 16),
+                          Expanded(child: _ValueCard(iconPath: 'assets/images/Customer.svg', title: l.valueCustomerTitle, description: l.valueCustomerDesc)),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(child: _ValueCard(iconPath: 'assets/images/Integrity.svg', title: l.valueIntegrityTitle, description: l.valueIntegrityDesc)),
+                          const SizedBox(width: 16),
+                          Expanded(child: _ValueCard(iconPath: 'assets/images/strategy.svg', title: l.valueImprovementTitle, description: l.valueImprovementDesc)),
+                        ],
+                      ),
+                    ),
                   ],
                 );
               }

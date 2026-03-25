@@ -35,12 +35,15 @@ class LeadershipSection extends StatelessWidget {
                   ),
                 );
               } else {
-                return Column(
-                  children: [
-                    _LeadershipCard(title: l.boardTitle, description: l.boardDesc, linkText: l.boardLink),
-                    const SizedBox(height: 24),
-                    _LeadershipCard(title: l.execTitle, description: l.execDesc, linkText: l.execLink),
-                  ],
+                return IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: _LeadershipCard(title: l.boardTitle, description: l.boardDesc, linkText: l.boardLink)),
+                      const SizedBox(width: 16),
+                      Expanded(child: _LeadershipCard(title: l.execTitle, description: l.execDesc, linkText: l.execLink)),
+                    ],
+                  ),
                 );
               }
             },

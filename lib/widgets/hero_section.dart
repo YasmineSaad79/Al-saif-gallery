@@ -141,22 +141,11 @@ class HeroSection extends StatelessWidget {
                         ? Alignment.centerRight
                         : Alignment.centerLeft,
                     child: isMobile
-                        ? Wrap(
-                            spacing: 16,
-                            runSpacing: 12,
+                        ? Row(
                             children: [
-                              _heroBtn(
-                                  context,
-                                  l.heroExploreStory,
-                                  Colors.white,
-                                  AppColors.primary,
-                                  () => context.go('/about-us')),
-                              _heroBtn(
-                                  context,
-                                  l.heroInvestorRelations,
-                                  const Color(0xFF8B0000),
-                                  Colors.white,
-                                  () => context.go('/investors-governance')),
+                              Expanded(child: _heroBtn(context, l.heroExploreStory, Colors.white, AppColors.primary, () => context.go('/about-us'))),
+                              const SizedBox(width: 12),
+                              Expanded(child: _heroBtn(context, l.heroInvestorRelations, const Color(0xFF8B0000), Colors.white, () => context.go('/investors-governance'))),
                             ],
                           )
                         : Row(

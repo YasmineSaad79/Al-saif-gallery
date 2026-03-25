@@ -38,13 +38,27 @@ class StatsSection extends StatelessWidget {
           } else {
             return Column(
               children: [
-                _StatCard(number: '73', title: l.statsShowrooms, subtitle: l.statsShowroomsSubtitle),
-                const SizedBox(height: 24),
-                _StatCard(number: 'SAR 758.8M', title: l.statsRevenue, subtitle: l.statsRevenueSubtitle),
-                const SizedBox(height: 24),
-                _StatCard(number: '~88%', title: l.statsPropRevenue, subtitle: l.statsPropRevenueSubtitle),
-                const SizedBox(height: 24),
-                _StatCard(number: '37%', title: l.statsEcommerce, subtitle: l.statsEcommerceSubtitle),
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: _StatCard(number: '73', title: l.statsShowrooms, subtitle: l.statsShowroomsSubtitle)),
+                      const SizedBox(width: 16),
+                      Expanded(child: _StatCard(number: 'SAR 758.8M', title: l.statsRevenue, subtitle: l.statsRevenueSubtitle)),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: _StatCard(number: '~88%', title: l.statsPropRevenue, subtitle: l.statsPropRevenueSubtitle)),
+                      const SizedBox(width: 16),
+                      Expanded(child: _StatCard(number: '37%', title: l.statsEcommerce, subtitle: l.statsEcommerceSubtitle)),
+                    ],
+                  ),
+                ),
               ],
             );
           }
