@@ -60,11 +60,11 @@ class _TopBarState extends State<TopBar> {
                     const SizedBox(width: 24),
                     _buildItem(srchLabel, 'assets/images/search.svg',    null),
                     const SizedBox(width: 24),
-                    _buildItem(langLabel, 'assets/images/language.svg',  () => localeProvider.toggleLanguage()),
+                    _buildItem(langLabel, 'assets/images/language.svg',  () => _showLanguageDialog(context)),
                   ] else ...[
                     _buildItem('', 'assets/images/search.svg', null),
                     const SizedBox(width: 16),
-                    _buildItem(langLabel, 'assets/images/language.svg', () => localeProvider.toggleLanguage()),
+                    _buildItem(langLabel, 'assets/images/language.svg', () => _showLanguageDialog(context)),
                   ],
                 ],
               ),
@@ -76,13 +76,45 @@ class _TopBarState extends State<TopBar> {
     );
   }
 
+  void _showLanguageDialog(BuildContext context) {
+    final isArabic = localeProvider.isArabic;
+    showDialog(
+      context: context,
+      builder: (_) => Directionality(
+        textDirection: TextDirection.ltr,
+        child: SimpleDialog(
+          title: const Text('Language', textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          children: [
+            const Divider(height: 1),
+            RadioListTile<bool>(
+              value: true,
+              groupValue: isArabic,
+              onChanged: (_) { Navigator.pop(context); if (!isArabic) localeProvider.toggleLanguage(); },
+              title: const Text('العربية'),
+              activeColor: AppColors.primary,
+            ),
+            const Divider(height: 1),
+            RadioListTile<bool>(
+              value: false,
+              groupValue: isArabic,
+              onChanged: (_) { Navigator.pop(context); if (isArabic) localeProvider.toggleLanguage(); },
+              title: const Text('English'),
+              activeColor: AppColors.primary,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildItem(String text, String iconPath, VoidCallback? onTap) {
     return SelectionContainer.disabled(
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: MouseRegion(
-          cursor: onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
+      child: MouseRegion(
+        cursor: onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
+        child: GestureDetector(
+          onTap: onTap,
+          behavior: HitTestBehavior.opaque,
           child: SizedBox(
             height: 14,
             child: Row(

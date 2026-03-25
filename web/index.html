@@ -22,6 +22,16 @@
     ::selection { background: #1f415c; color: inherit; }
     ::-moz-selection { background: #406583; color: inherit; }
 
+    /* Remove 300ms tap delay on all elements */
+    * { touch-action: manipulation; }
+
+    html, body { touch-action: manipulation; }
+
+    /* CSS cursor for clickable Flutter elements - faster than Dart MouseRegion */
+    flt-glass-pane { cursor: default; }
+    [flt-semantics-role="button"],
+    [aria-role="button"] { cursor: pointer; }
+
     /* Allow text selection inside iframes embedded via Flutter Web */
     iframe {
       user-select: text;
