@@ -43,20 +43,26 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
       child: Container(
         constraints: const BoxConstraints(maxWidth: 1880),
         color: const Color(0xFFF8FAFB),
-        child: SingleChildScrollView(
-          child: Column(
-            children: const [
-              TopBar(),
-              CustomNavigationBar(),
-              AboutHeroSection(),
-              OurPurposeSection(),
-              InvestmentCaseSection(),
-              OurValuesSection(),
-              HeritageMilestonesSection(),
-              LeadershipSection(),
-              FooterSection(),
-            ],
-          ),
+        child: Column(
+          children: [
+            const TopBar(),
+            const CustomNavigationBar(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: const [
+                    AboutHeroSection(),
+                    OurPurposeSection(),
+                    InvestmentCaseSection(),
+                    OurValuesSection(),
+                    HeritageMilestonesSection(),
+                    LeadershipSection(),
+                    FooterSection(),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -54,20 +54,26 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
       child: Container(
         constraints: const BoxConstraints(maxWidth: 1880),
         color: const Color(0xFFF8FAFB),
-        child: const SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TopBar(),
-              CustomNavigationBar(),
-              IGHeroSection(),
-              IGIntroSection(),
-              IGInvestmentCaseSection(),
-              _StockTickerSection(),
-              _IRWidgetsSection(),
-              FooterSection(),
-            ],
-          ),
+        child: Column(
+          children: const [
+            TopBar(),
+            CustomNavigationBar(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IGHeroSection(),
+                    IGIntroSection(),
+                    IGInvestmentCaseSection(),
+                    _StockTickerSection(),
+                    _IRWidgetsSection(),
+                    FooterSection(),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

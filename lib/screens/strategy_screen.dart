@@ -42,19 +42,25 @@ class _StrategyScreenState extends State<StrategyScreen> {
       child: Container(
         constraints: const BoxConstraints(maxWidth: 1880),
         color: const Color(0xFFF8FAFB),
-        child: const SingleChildScrollView(
-          child: Column(
-            children: [
-              TopBar(),
-              CustomNavigationBar(),
-              StrategyHeroSection(),
-              StrategyIntroSection(),
-              StrategyPillarsSection(),
-              StrategyRoadmapSection(),
-              StrategyRiskSection(),
-              FooterSection(),
-            ],
-          ),
+        child: Column(
+          children: const [
+            TopBar(),
+            CustomNavigationBar(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    StrategyHeroSection(),
+                    StrategyIntroSection(),
+                    StrategyPillarsSection(),
+                    StrategyRoadmapSection(),
+                    StrategyRiskSection(),
+                    FooterSection(),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

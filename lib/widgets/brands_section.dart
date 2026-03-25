@@ -24,13 +24,13 @@ class BrandsSection extends StatelessWidget {
           if (isMobile)
             Positioned.fill(
               child: Align(
-                alignment: const Alignment(0, -0.6),
+                alignment: const Alignment(0, -0.63),
                 child: Opacity(
                   opacity: 0.08,
                   child: SvgPicture.asset(
                     'assets/images/JUG.svg',
-                    width: 450,
-                    height: 450,
+                    width: 500,
+                    height: 500,
                     fit: BoxFit.contain,
                     colorFilter: const ColorFilter.mode(Color(0xFFD91F36), BlendMode.srcIn),
                   ),

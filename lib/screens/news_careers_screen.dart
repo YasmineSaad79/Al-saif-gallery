@@ -41,18 +41,24 @@ class _NewsCareersScreenState extends State<NewsCareersScreen> {
       child: Container(
         constraints: const BoxConstraints(maxWidth: 1880),
         color: const Color(0xFFF8FAFB),
-        child: const SingleChildScrollView(
-          child: Column(
-            children: [
-              TopBar(),
-              CustomNavigationBar(),
-              NCHeroSection(),
-              NCNewsSection(),
-              NCCareersSection(),
-              NCContactSection(),
-              FooterSection(),
-            ],
-          ),
+        child: Column(
+          children: const [
+            TopBar(),
+            CustomNavigationBar(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    NCHeroSection(),
+                    NCNewsSection(),
+                    NCCareersSection(),
+                    NCContactSection(),
+                    FooterSection(),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
