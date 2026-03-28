@@ -80,7 +80,7 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SelectionContainer.disabled(child: content),
+      body: SelectionArea(child: content),
     );
   }
 }

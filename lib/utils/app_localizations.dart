@@ -20,7 +20,7 @@ class AppLocalizations {
   String get navHome      => isArabic ? 'الرئيسية'              : 'Home';
   String get navAboutUs   => isArabic ? 'من نحن'                : 'About Us';
   String get navStrategy  => isArabic ? 'الاستراتيجية والعمليات' : 'Strategy & Operations';
-  String get navInvestors => isArabic ? 'المستثمرون والحوكمة'   : 'Investors & Governance';
+  String get navInvestors => isArabic ? 'علاقات المستثمرين'   : 'Investor Relations';
   String get navNewsroom  => isArabic ? 'الأخبار والوظائف'      : 'Newsroom & Careers';
 
 

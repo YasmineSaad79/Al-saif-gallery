@@ -24,14 +24,16 @@ class LeadershipSection extends StatelessWidget {
             builder: (context, constraints) {
               if (constraints.maxWidth > 900) {
                 return Center(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(width: 320, child: _LeadershipCard(title: l.boardTitle, description: l.boardDesc, linkText: l.boardLink)),
-                      const SizedBox(width: 24),
-                      SizedBox(width: 320, child: _LeadershipCard(title: l.execTitle, description: l.execDesc, linkText: l.execLink)),
-                    ],
+                  child: IntrinsicHeight(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(width: 320, child: _LeadershipCard(title: l.boardTitle, description: l.boardDesc, linkText: l.boardLink)),
+                        const SizedBox(width: 24),
+                        SizedBox(width: 320, child: _LeadershipCard(title: l.execTitle, description: l.execDesc, linkText: l.execLink)),
+                      ],
+                    ),
                   ),
                 );
               } else {
@@ -72,13 +74,11 @@ class _LeadershipCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: const Color(0xFFE5E7EB),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
         children: [
           Text(
             title,

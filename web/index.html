@@ -20,8 +20,11 @@
 
   <link rel="manifest" href="manifest.json">
   <style>
-    ::selection { background: #1f415c; color: inherit; }
-    ::-moz-selection { background: #406583; color: inherit; }
+    /* Enable text selection for all Flutter text elements */
+    flt-paragraph, flt-span, flutter-view * {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+    }
 
     /* Remove 300ms tap delay on all elements */
     * { touch-action: manipulation; }

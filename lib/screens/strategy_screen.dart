@@ -67,7 +67,7 @@ class _StrategyScreenState extends State<StrategyScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SelectionContainer.disabled(child: content),
+      body: SelectionArea(child: content),
     );
   }
 }

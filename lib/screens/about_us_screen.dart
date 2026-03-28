@@ -69,7 +69,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SelectionContainer.disabled(child: content),
+      body: SelectionArea(child: content),
     );
   }
 }

@@ -65,7 +65,7 @@ class _NewsCareersScreenState extends State<NewsCareersScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SelectionContainer.disabled(child: content),
+      body: SelectionArea(child: content),
     );
   }
 }
