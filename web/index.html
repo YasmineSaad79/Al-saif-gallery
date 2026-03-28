@@ -9,34 +9,19 @@
   <link rel="canonical" href="https://alsaifgallery.com/en/">
   <title>Al Saif Gallery | Saudi Arabia's Home & Kitchen Retail Leader | Tadawul 4192</title>
 
-  <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Al Saif Gallery">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%238B0000' stroke='%23600000' stroke-width='2'/><ellipse cx='50' cy='50' rx='20' ry='48' fill='none' stroke='white' stroke-width='2.5'/><line x1='2' y1='50' x2='98' y2='50' stroke='white' stroke-width='2.5'/><line x1='10' y1='25' x2='90' y2='25' stroke='white' stroke-width='2'/><line x1='10' y1='75' x2='90' y2='75' stroke='white' stroke-width='2'/><circle cx='50' cy='50' r='48' fill='none' stroke='%23600000' stroke-width='2'/></svg>"/>
 
   <link rel="manifest" href="manifest.json">
   <style>
-    /* Enable text selection for all Flutter text elements */
-    flt-paragraph, flt-span, flutter-view * {
-      user-select: text !important;
-      -webkit-user-select: text !important;
-    }
-
-    /* Remove 300ms tap delay on all elements */
+    ::selection { background: #1f415c; color: inherit; }
+    ::-moz-selection { background: #406583; color: inherit; }
     * { touch-action: manipulation; }
-
     html, body { touch-action: manipulation; }
-
-    /* CSS cursor for clickable Flutter elements - faster than Dart MouseRegion */
-    flt-glass-pane { cursor: default; }
-    [flt-semantics-role="button"],
-    [aria-role="button"] { cursor: pointer; }
-
-    /* Allow text selection inside iframes embedded via Flutter Web */
     iframe {
       user-select: text;
       -webkit-user-select: text;
@@ -45,7 +30,6 @@
   </style>
 
   <script>
-    // Unregister any old service workers to prevent stale cache issues
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(registrations) {
         for (var r of registrations) { r.unregister(); }
@@ -56,29 +40,45 @@
     }
   </script>
   <script>
-    // Fix: Flutter's flt-glass-pane sits on top of platform views (iframes) and
-    // blocks all mouse/touch events including text selection.
-    // We temporarily disable pointer-events on the glass pane when the cursor
-    // is over an iframe, restoring them when it leaves.
     document.addEventListener('DOMContentLoaded', function () {
       var observer = new MutationObserver(function () {
         var glassPane = document.querySelector('flt-glass-pane');
         if (!glassPane) return;
         observer.disconnect();
 
+        // Mirror cursor from Flutter's internal div to the glass pane
+        var innerObserver = new MutationObserver(function () {
+          var shadow = glassPane.shadowRoot;
+          if (!shadow) return;
+          var cursorEl = shadow.querySelector('[style*="cursor"]');
+          if (cursorEl) {
+            var cur = cursorEl.style.cursor;
+            if (cur && cur !== glassPane.style.cursor) {
+              glassPane.style.cursor = cur;
+            }
+          }
+        });
+
+        // Observe shadow DOM for cursor changes
+        setTimeout(function() {
+          var shadow = glassPane.shadowRoot;
+          if (shadow) {
+            innerObserver.observe(shadow, { subtree: true, attributes: true, attributeFilter: ['style'] });
+          }
+        }, 1000);
+
+        // iframe pointer events
         document.addEventListener('mouseover', function (e) {
           if (e.target && e.target.tagName === 'IFRAME') {
             glassPane.style.pointerEvents = 'none';
           }
         }, true);
-
         document.addEventListener('mouseout', function (e) {
           if (e.target && e.target.tagName === 'IFRAME') {
             glassPane.style.pointerEvents = '';
           }
         }, true);
       });
-
       observer.observe(document.body, { childList: true, subtree: true });
     });
   </script>

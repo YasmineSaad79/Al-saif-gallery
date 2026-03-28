@@ -93,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SelectionArea(child: content),
+      body: content,
     );
   }
 }

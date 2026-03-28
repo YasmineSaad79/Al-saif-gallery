@@ -98,13 +98,14 @@ class _LeadershipCard extends StatelessWidget {
               height: 1.4,
             ),
           ),
-          const SizedBox(height: 8), // تقليل المسافة
-          InkWell(
-            mouseCursor: SystemMouseCursors.click,
-            onTap: () {
-              // TODO: Navigate to profiles page
-            },
-            child: Row(
+          const SizedBox(height: 8),
+          SelectionContainer.disabled(
+            child: InkWell(
+              mouseCursor: SystemMouseCursors.click,
+              onTap: () {
+                // TODO: Navigate to profiles page
+              },
+              child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
@@ -127,6 +128,7 @@ class _LeadershipCard extends StatelessWidget {
                 ),
               ],
             ),
+          ),
           ),
         ],
       ),

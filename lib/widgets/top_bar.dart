@@ -51,7 +51,7 @@ class _TopBarState extends State<TopBar> {
               padding: EdgeInsets.only(left: horizontalPadding, right: horizontalPadding, bottom: 1),
               child: Row(
                 textDirection: TextDirection.ltr,
-                mainAxisAlignment: isArabic ? MainAxisAlignment.end : MainAxisAlignment.start,
+                mainAxisAlignment: isArabic ? MainAxisAlignment.start : MainAxisAlignment.end,
                 children: [
                   if (!isMobile) ...[
                     _buildItem(docLabel,  'assets/images/document.svg',  () => context.go('/documents-library')),

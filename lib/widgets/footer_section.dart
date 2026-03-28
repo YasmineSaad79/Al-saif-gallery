@@ -2,6 +2,7 @@
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
@@ -71,11 +72,11 @@ class _BlackFooter extends StatelessWidget {
                   children: [
                     Expanded(child: _FooterAbout(l: l)),
                     const SizedBox(width: 24),
-                    Expanded(child: _FooterColumn(title: l.footerCompany, items: [l.footerAboutUs, l.footerStrategy, l.footerCareers])),
+                    Expanded(child: _FooterColumn(title: l.footerCompany, items: [l.footerAboutUs, l.footerStrategy, l.footerCareers], routes: ['/about-us', '/strategy-operations', '/news-careers'])),
                     const SizedBox(width: 24),
-                    Expanded(child: _FooterColumn(title: l.footerInvestors, items: [l.footerAnnualReports, l.footerGovernance, l.footerReports])),
+                    Expanded(child: _FooterColumn(title: l.footerInvestors, items: [l.footerAnnualReports, l.footerGovernance, l.footerReports], routes: ['/investors-governance', '/investors-governance', '/investors-governance'])),
                     const SizedBox(width: 24),
-                    Expanded(child: _FooterColumn(title: l.footerContact, items: [l.footerIR, 'ir@alsaifgallery.com', '+966 11 406 4444'])),
+                    Expanded(child: _FooterColumn(title: l.footerContact, items: [l.footerIR, 'ir@alsaifgallery.com', '+966 11 406 4444'], routes: ['/investors-governance', 'mailto:ir@alsaifgallery.com', 'tel:+966114064444'])),
                   ],
                 );
               } else {
@@ -86,15 +87,15 @@ class _BlackFooter extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(child: _FooterAbout(l: l)),
-                        Expanded(child: _FooterColumn(title: l.footerCompany, items: [l.footerAboutUs, l.footerStrategy, l.footerCareers])),
+                        Expanded(child: _FooterColumn(title: l.footerCompany, items: [l.footerAboutUs, l.footerStrategy, l.footerCareers], routes: ['/about-us', '/strategy-operations', '/news-careers'])),
                       ],
                     ),
                     const SizedBox(height: 28),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(child: _FooterColumn(title: l.footerInvestors, items: [l.footerAnnualReports, l.footerGovernance, l.footerReports])),
-                        Expanded(child: _FooterColumn(title: l.footerContact, items: [l.footerIR, 'ir@alsaifgallery.com', '+966 11 406 4444'])),
+                        Expanded(child: _FooterColumn(title: l.footerInvestors, items: [l.footerAnnualReports, l.footerGovernance, l.footerReports], routes: ['/investors-governance', '/investors-governance', '/investors-governance'])),
+                        Expanded(child: _FooterColumn(title: l.footerContact, items: [l.footerIR, 'ir@alsaifgallery.com', '+966 11 406 4444'], routes: ['/investors-governance', 'mailto:ir@alsaifgallery.com', 'tel:+966114064444'])),
                       ],
                     ),
                   ],
@@ -134,39 +135,53 @@ class _FooterAbout extends StatelessWidget {
 class _FooterColumn extends StatelessWidget {
   final String title;
   final List<String> items;
+  final List<String?> routes;
 
   const _FooterColumn({
     required this.title,
     required this.items,
+    this.routes = const [],
   });
+
+  void _handleTap(BuildContext context, String route) {
+    if (route.startsWith('mailto:') || route.startsWith('tel:')) {
+      html.window.location.href = route;
+    } else if (route.startsWith('http')) {
+      html.window.open(route, '_blank');
+    } else {
+      context.go(route);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text(title, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500)),
         const SizedBox(height: 10),
-        ...items.map(
-          (item) => Padding(
+        ...List.generate(items.length, (i) {
+          final route = i < routes.length ? routes[i] : null;
+          return Padding(
             padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-              item,
-              style: const TextStyle(
-                color: Color(0xFF9CA3AF),
-                fontSize: 11,
-                fontWeight: FontWeight.w400,
+            child: SelectionContainer.disabled(
+              child: MouseRegion(
+                cursor: route != null ? SystemMouseCursors.click : MouseCursor.defer,
+                child: GestureDetector(
+                  onTap: route != null ? () => _handleTap(context, route) : null,
+                  child: Text(
+                    items[i],
+                    style: TextStyle(
+                      color: route != null ? const Color(0xFFD1D5DB) : const Color(0xFF9CA3AF),
+                      fontSize: 11,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        }),
       ],
     );
   }
