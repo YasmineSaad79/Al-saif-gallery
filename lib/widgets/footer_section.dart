@@ -145,7 +145,7 @@ class _FooterColumn extends StatelessWidget {
 
   void _handleTap(BuildContext context, String route) {
     if (route.startsWith('mailto:') || route.startsWith('tel:')) {
-      html.window.location.href = route;
+      final anchor = html.AnchorElement(href: route)..click();
     } else if (route.startsWith('http')) {
       html.window.open(route, '_blank');
     } else {

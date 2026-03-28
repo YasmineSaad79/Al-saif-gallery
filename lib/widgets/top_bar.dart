@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../utils/app_colors.dart';
 import '../utils/responsive.dart';
 import '../main.dart';
+import 'search_dialog.dart';
 
 class TopBar extends StatefulWidget {
   const TopBar({super.key});
@@ -58,11 +59,11 @@ class _TopBarState extends State<TopBar> {
                     const SizedBox(width: 24),
                     _buildItem(conLabel,  'assets/images/contact.svg',   () => context.go('/contact')),
                     const SizedBox(width: 24),
-                    _buildItem(srchLabel, 'assets/images/search.svg',    null),
+                    _buildItem(srchLabel, 'assets/images/search.svg',    () => _showSearchDialog(context)),
                     const SizedBox(width: 24),
                     _buildItem(langLabel, 'assets/images/language.svg',  () => _showLanguageDialog(context)),
                   ] else ...[
-                    _buildItem('', 'assets/images/search.svg', null),
+                    _buildItem('', 'assets/images/search.svg', () => _showSearchDialog(context)),
                     const SizedBox(width: 16),
                     _buildItem(langLabel, 'assets/images/language.svg', () => _showLanguageDialog(context)),
                   ],
@@ -73,6 +74,13 @@ class _TopBarState extends State<TopBar> {
           Container(height: 1, color: AppColors.border),
         ],
       ),
+    );
+  }
+
+  void _showSearchDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => const SearchDialog(),
     );
   }
 
