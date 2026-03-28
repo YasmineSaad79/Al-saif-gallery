@@ -117,6 +117,9 @@ class _StrategyRoadmapSectionState extends State<StrategyRoadmapSection> {
             ),
           ),
           const SizedBox(height: 32),
+          // ── Horizontal connector with status indicators ──────────────────
+          if (!isMobile) _RoadmapConnector(phases: phases, isArabic: isArabic),
+          if (!isMobile) const SizedBox(height: 24),
           isMobile
               ? Column(
                   children: phases
@@ -140,6 +143,72 @@ class _StrategyRoadmapSectionState extends State<StrategyRoadmapSection> {
                   ),
                 ),
         ],
+      ),
+    );
+  }
+}
+
+class _RoadmapConnector extends StatelessWidget {
+  final List<_Phase> phases;
+  final bool isArabic;
+  const _RoadmapConnector({required this.phases, required this.isArabic});
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+      child: SizedBox(
+        height: 60,
+        child: Row(
+          children: List.generate(phases.length * 2 - 1, (i) {
+            if (i.isOdd) {
+              // Connector line between phases
+              return Expanded(
+                child: Container(
+                  height: 3,
+                  margin: const EdgeInsets.only(bottom: 24),
+                  color: phases[i ~/ 2].borderColor.withOpacity(0.4),
+                ),
+              );
+            }
+            final p = phases[i ~/ 2];
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                // Status circle
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: p.badgeBg,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: p.borderColor, width: 2),
+                  ),
+                  child: Center(
+                    child: Icon(
+                      i == 0
+                          ? Icons.check
+                          : i == 2
+                              ? Icons.play_arrow
+                              : Icons.schedule,
+                      size: 16,
+                      color: p.badgeColor,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  p.phaseLabel,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: p.badgeColor,
+                  ),
+                ),
+              ],
+            );
+          }),
+        ),
       ),
     );
   }

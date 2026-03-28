@@ -9,6 +9,7 @@ import '../widgets/heritage_milestones_section.dart';
 import '../widgets/leadership_section.dart';
 import '../widgets/footer_section.dart';
 import '../utils/page_meta.dart';
+import '../utils/scroll_keys.dart';
 import '../main.dart';
 
 class AboutUsScreen extends StatefulWidget {
@@ -50,14 +51,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
-                  children: const [
-                    AboutHeroSection(),
-                    OurPurposeSection(),
-                    InvestmentCaseSection(),
-                    OurValuesSection(),
-                    HeritageMilestonesSection(),
-                    LeadershipSection(),
-                    FooterSection(),
+                  children: [
+                    const AboutHeroSection(),
+                    KeyedSubtree(key: ScrollKeys.get('our-purpose'),    child: const OurPurposeSection()),
+                    KeyedSubtree(key: ScrollKeys.get('investment-case'), child: const InvestmentCaseSection()),
+                    KeyedSubtree(key: ScrollKeys.get('our-values'),     child: const OurValuesSection()),
+                    KeyedSubtree(key: ScrollKeys.get('heritage'),       child: const HeritageMilestonesSection()),
+                    KeyedSubtree(key: ScrollKeys.get('leadership'),     child: const LeadershipSection()),
+                    const FooterSection(),
                   ],
                 ),
               ),

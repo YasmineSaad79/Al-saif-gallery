@@ -20,6 +20,7 @@ import '../widgets/email_subscription_widget.dart';
 import '../widgets/footer_section.dart';
 import '../utils/responsive.dart';
 import '../utils/page_meta.dart';
+import '../utils/scroll_keys.dart';
 import '../main.dart';
 
 class InvestorsGovernanceScreen extends StatefulWidget {
@@ -144,31 +145,31 @@ class _IRWidgetsSectionState extends State<_IRWidgetsSection> {
     final isAr = localeProvider.isArabic;
 
     final sections = isAr ? [
-      ('نظرة عامة عن الشركة',        const CompanySnapshotWidget()),
-      ('الإعلانات',                   const CorporateNewsWidget()),
-      ('نشرة المعلومات',              const FactSheetWidget()),
-      ('نشاط السهم',                  const StockActivityWidget()),
-      ('الإجراءات النظامية',          const CorporateActionsWidget()),
-      ('البيانات المالية',            const CompanyFinancialsWidget()),
-      ('حاسبة الاستثمار',             const InvestmentCalculatorWidget()),
-      ('سعر السهم',                   const SharePriceWidget()),
-      ('تحليل المجموعة المماثلة',     const PeerGroupAnalysisWidget()),
-      ('الأداء',                      const PerformanceWidget()),
-      ('سلسلة الأسهم',                const ShareSeriesWidget()),
-      ('الاشتراك بالبريد الإلكتروني', const EmailSubscriptionWidget()),
+      ('نظرة عامة عن الشركة',        const CompanySnapshotWidget(),   'company-snapshot'),
+      ('الإعلانات',                   const CorporateNewsWidget(),     'announcements'),
+      ('نشرة المعلومات',              const FactSheetWidget(),         'fact-sheet'),
+      ('نشاط السهم',                  const StockActivityWidget(),     'stock-activity'),
+      ('الإجراءات النظامية',          const CorporateActionsWidget(),  'corporate-actions'),
+      ('البيانات المالية',            const CompanyFinancialsWidget(), 'financials'),
+      ('حاسبة الاستثمار',             const InvestmentCalculatorWidget(), 'investment-calculator'),
+      ('سعر السهم',                   const SharePriceWidget(),        'share-price'),
+      ('تحليل المجموعة المماثلة',     const PeerGroupAnalysisWidget(), 'peer-group'),
+      ('الأداء',                      const PerformanceWidget(),       'performance'),
+      ('سلسلة الأسهم',                const ShareSeriesWidget(),       'share-series'),
+      ('الاشتراك بالبريد الإلكتروني', const EmailSubscriptionWidget(), 'email-subscription'),
     ] : [
-      ('Company Snapshot',       const CompanySnapshotWidget()),
-      ('Announcements',          const CorporateNewsWidget()),
-      ('Fact Sheet',             const FactSheetWidget()),
-      ('Stock Activity',         const StockActivityWidget()),
-      ('Corporate Actions',      const CorporateActionsWidget()),
-      ('Company Financials',     const CompanyFinancialsWidget()),
-      ('Investment Calculator',  const InvestmentCalculatorWidget()),
-      ('Share Price',            const SharePriceWidget()),
-      ('Peer Group Analysis',    const PeerGroupAnalysisWidget()),
-      ('Performance',            const PerformanceWidget()),
-      ('Share Series',           const ShareSeriesWidget()),
-      ('Email Subscription',     const EmailSubscriptionWidget()),
+      ('Company Snapshot',       const CompanySnapshotWidget(),    'company-snapshot'),
+      ('Announcements',          const CorporateNewsWidget(),      'announcements'),
+      ('Fact Sheet',             const FactSheetWidget(),          'fact-sheet'),
+      ('Stock Activity',         const StockActivityWidget(),      'stock-activity'),
+      ('Corporate Actions',      const CorporateActionsWidget(),   'corporate-actions'),
+      ('Company Financials',     const CompanyFinancialsWidget(),  'financials'),
+      ('Investment Calculator',  const InvestmentCalculatorWidget(), 'investment-calculator'),
+      ('Share Price',            const SharePriceWidget(),         'share-price'),
+      ('Peer Group Analysis',    const PeerGroupAnalysisWidget(),  'peer-group'),
+      ('Performance',            const PerformanceWidget(),        'performance'),
+      ('Share Series',           const ShareSeriesWidget(),        'share-series'),
+      ('Email Subscription',     const EmailSubscriptionWidget(),  'email-subscription'),
     ];
 
     return Container(
@@ -182,6 +183,7 @@ class _IRWidgetsSectionState extends State<_IRWidgetsSection> {
           children: sections.map((s) => Padding(
             padding: const EdgeInsets.only(top: 32),
             child: Column(
+              key: ScrollKeys.get(s.$3),
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(

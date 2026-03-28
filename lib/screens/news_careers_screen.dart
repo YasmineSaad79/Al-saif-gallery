@@ -7,6 +7,7 @@ import '../widgets/nc_careers_section.dart';
 import '../widgets/nc_contact_section.dart';
 import '../widgets/footer_section.dart';
 import '../utils/page_meta.dart';
+import '../utils/scroll_keys.dart';
 import '../main.dart';
 
 class NewsCareersScreen extends StatefulWidget {
@@ -42,18 +43,18 @@ class _NewsCareersScreenState extends State<NewsCareersScreen> {
         constraints: const BoxConstraints(maxWidth: 1880),
         color: const Color(0xFFF8FAFB),
         child: Column(
-          children: const [
-            TopBar(),
-            CustomNavigationBar(),
+          children: [
+            const TopBar(),
+            const CustomNavigationBar(),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    NCHeroSection(),
-                    NCNewsSection(),
-                    NCCareersSection(),
-                    NCContactSection(),
-                    FooterSection(),
+                    const NCHeroSection(),
+                    KeyedSubtree(key: ScrollKeys.get('news'),    child: const NCNewsSection()),
+                    KeyedSubtree(key: ScrollKeys.get('careers'), child: const NCCareersSection()),
+                    KeyedSubtree(key: ScrollKeys.get('contact'), child: const NCContactSection()),
+                    const FooterSection(),
                   ],
                 ),
               ),

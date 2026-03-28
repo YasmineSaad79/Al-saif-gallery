@@ -137,7 +137,7 @@ class AppLocalizations {
       ? 'أسّس سليمان بن محمد السيف الشركة كمنشأة فردية، جمعت خبرة المنتجات المستوردة مع المعرفة العميقة باحتياجات الأسرة السعودية.'
       : 'Suleiman Al Saif establishes the business as a sole proprietorship, combining imported product expertise with deep knowledge of Saudi household needs.';
 
-  String get m2006year  => isArabic ? 'العقد الأول' : '2000s';
+  String get m2006year  => isArabic ? '2000s' : '2000s';
   String get m2006title => isArabic ? 'التوسع الوطني' : 'National Expansion';
   String get m2006desc  => isArabic
       ? 'بُنيت ريادة الفئة في أدوات المطبخ والأجهزة المنزلية. توسّعت شبكة الفروع عبر المدن السعودية الكبرى، مرسّخةً قاعدة عملاء وفية مبنية على القيمة والموثوقية.'

@@ -144,8 +144,11 @@ class _FooterColumn extends StatelessWidget {
   });
 
   void _handleTap(BuildContext context, String route) {
-    if (route.startsWith('mailto:') || route.startsWith('tel:')) {
-      final anchor = html.AnchorElement(href: route)..click();
+    if (route.startsWith('mailto:')) {
+      final email = route.replaceFirst('mailto:', '');
+      html.window.open('https://mail.google.com/mail/?view=cm&to=$email', '_blank');
+    } else if (route.startsWith('tel:')) {
+      html.window.location.assign(route);
     } else if (route.startsWith('http')) {
       html.window.open(route, '_blank');
     } else {

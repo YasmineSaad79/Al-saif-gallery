@@ -128,8 +128,8 @@ class _ContactCard extends StatelessWidget {
           const SizedBox(height: 16),
           ...rows.map((r) => Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: RichText(
-                  text: TextSpan(
+                child: SelectableText.rich(
+                  TextSpan(
                     style: const TextStyle(
                       fontSize: 13,
                       color: Color(0xFF444444),

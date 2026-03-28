@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../utils/search_data.dart';
 import '../utils/app_colors.dart';
+import '../utils/scroll_keys.dart';
 import '../main.dart';
 
 class SearchDialog extends StatefulWidget {
@@ -15,6 +16,7 @@ class _SearchDialogState extends State<SearchDialog> {
   final TextEditingController _controller = TextEditingController();
   List<SearchResult> _results = [];
   bool _loading = false;
+  bool _searchedAsArabic = false;
 
   void _onChanged(String value) {
     if (value.trim().isEmpty) {
@@ -22,11 +24,14 @@ class _SearchDialogState extends State<SearchDialog> {
       return;
     }
     setState(() => _loading = true);
-    // Simulate async search with small delay for UX
     Future.delayed(const Duration(milliseconds: 400), () {
       if (!mounted) return;
+      // Auto-detect language from input text
+      final hasArabic = RegExp(r'[\u0600-\u06FF]').hasMatch(value);
+      final searchAsArabic = hasArabic || localeProvider.isArabic;
       setState(() {
-        _results = SearchData.search(value, localeProvider.isArabic);
+        _searchedAsArabic = searchAsArabic;
+        _results = SearchData.search(value, searchAsArabic);
         _loading = false;
       });
     });
@@ -81,7 +86,8 @@ class _SearchDialogState extends State<SearchDialog> {
                 child: TextField(
                   controller: _controller,
                   autofocus: true,
-                  textDirection: dir,
+                  textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                  textAlign: isArabic ? TextAlign.right : TextAlign.left,
                   onChanged: _onChanged,
                   decoration: InputDecoration(
                     hintText: isArabic ? 'ابحث عن صفحة أو موضوع...' : 'Search pages, topics...',
@@ -130,7 +136,7 @@ class _SearchDialogState extends State<SearchDialog> {
                           ? const SizedBox(key: ValueKey('loading'))
                           : _results.isEmpty
                               ? _buildNoResults(isArabic)
-                              : _buildResults(isArabic),
+                              : _buildResults(_searchedAsArabic),
                 ),
               ),
               const SizedBox(height: 8),
@@ -192,6 +198,11 @@ class _SearchDialogState extends State<SearchDialog> {
                 onTap: () {
                   Navigator.pop(context);
                   context.go(r.route);
+                  if (r.fragment != null) {
+                    Future.delayed(const Duration(milliseconds: 600), () {
+                      ScrollKeys.scrollTo(r.fragment!);
+                    });
+                  }
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),

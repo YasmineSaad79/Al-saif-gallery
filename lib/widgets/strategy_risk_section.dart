@@ -57,6 +57,36 @@ class _StrategyRiskSectionState extends State<StrategyRiskSection> {
               ),
             ),
             const SizedBox(height: 36),
+            // Disclaimer note above table
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              margin: const EdgeInsets.only(bottom: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF0F9FF),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: const Color(0xFFBAE6FD)),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.info_outline, size: 15, color: Color(0xFF0284C7)),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      isArabic
+                          ? 'يلخّص الجدول التالي فئات المخاطر الرئيسية. تُضمَّن الإفصاحات الكاملة للمخاطر في التقرير السنوي والبيانات المالية الفصلية.'
+                          : 'The following table summarizes principal risk categories. Full risk disclosures are included in the Annual Report and quarterly financial statements.',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF0369A1),
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             // Table
             Container(
               width: double.infinity,

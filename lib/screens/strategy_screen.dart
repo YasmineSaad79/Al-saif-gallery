@@ -7,6 +7,7 @@ import '../widgets/strategy_pillars_section.dart';
 import '../widgets/strategy_roadmap_section.dart';
 import '../widgets/strategy_risk_section.dart';
 import '../utils/page_meta.dart';
+import '../utils/scroll_keys.dart';
 import '../main.dart';
 import '../widgets/footer_section.dart';
 
@@ -43,19 +44,19 @@ class _StrategyScreenState extends State<StrategyScreen> {
         constraints: const BoxConstraints(maxWidth: 1880),
         color: const Color(0xFFF8FAFB),
         child: Column(
-          children: const [
-            TopBar(),
-            CustomNavigationBar(),
+          children: [
+            const TopBar(),
+            const CustomNavigationBar(),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    StrategyHeroSection(),
-                    StrategyIntroSection(),
-                    StrategyPillarsSection(),
-                    StrategyRoadmapSection(),
-                    StrategyRiskSection(),
-                    FooterSection(),
+                    const StrategyHeroSection(),
+                    KeyedSubtree(key: ScrollKeys.get('strategy-intro'),   child: const StrategyIntroSection()),
+                    KeyedSubtree(key: ScrollKeys.get('strategy-pillars'), child: const StrategyPillarsSection()),
+                    KeyedSubtree(key: ScrollKeys.get('strategy-roadmap'), child: const StrategyRoadmapSection()),
+                    KeyedSubtree(key: ScrollKeys.get('strategy-risk'),    child: const StrategyRiskSection()),
+                    const FooterSection(),
                   ],
                 ),
               ),
