@@ -107,12 +107,72 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
     if (!_show) {
       return _SkeletonPlaceholder(key: _key, height: widget.fallbackHeight);
     }
-    return ExternalScriptWidget(
-      key: ValueKey(widget.viewId),
-      viewId: widget.viewId,
-      widgetType: widget.widgetType,
-      fallbackHeight: widget.fallbackHeight,
-      lang: widget.lang,
+    return _HoverWrapper(
+      child: ExternalScriptWidget(
+        key: ValueKey(widget.viewId),
+        viewId: widget.viewId,
+        widgetType: widget.widgetType,
+        fallbackHeight: widget.fallbackHeight,
+        lang: widget.lang,
+      ),
+    );
+  }
+}
+
+class _HoverWrapper extends StatefulWidget {
+  final Widget child;
+  const _HoverWrapper({required this.child});
+
+  @override
+  State<_HoverWrapper> createState() => _HoverWrapperState();
+}
+
+class _HoverWrapperState extends State<_HoverWrapper>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _shadow;
+  bool _hovered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
+    _shadow = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) { setState(() => _hovered = true); _ctrl.forward(); },
+      onExit:  (_) { setState(() => _hovered = false); _ctrl.reverse(); },
+      child: AnimatedBuilder(
+        animation: _shadow,
+        builder: (_, child) => Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFC62030).withOpacity(0.08 * _shadow.value),
+                blurRadius: 16 * _shadow.value,
+                offset: Offset(0, 4 * _shadow.value),
+              ),
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04 * _shadow.value),
+                blurRadius: 8 * _shadow.value,
+                offset: Offset(0, 2 * _shadow.value),
+              ),
+            ],
+          ),
+          child: child,
+        ),
+        child: widget.child,
+      ),
     );
   }
 }
@@ -206,6 +266,7 @@ class ExternalScriptWidget extends StatefulWidget {
 
 class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   html.IFrameElement? _iframe;
+  html.DivElement? _wrapper;
   double _height = 0;
   html.EventListener? _messageListener;
   Timer? _debounce;
@@ -222,9 +283,18 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
       ..style.border = 'none'
       ..style.width = '100%'
       ..style.height = '100%'
-      // ✅ FIX: pointerEvents = 'auto' so clicks/taps work on ALL devices
       ..style.pointerEvents = 'auto'
+      ..style.transition = 'box-shadow 0.2s ease'
       ..srcdoc = _buildHtml();
+
+    // Wrap iframe in hover div
+    _wrapper = html.DivElement()
+      ..className = 'iframe-hover-wrapper'
+      ..style.width = '100%'
+      ..style.height = '100%'
+      ..style.transition = 'box-shadow 0.25s ease'
+      ..style.borderRadius = '8px'
+      ..append(_iframe!);
 
     _messageListener = (event) {
       final msg = (event as html.MessageEvent).data;
@@ -246,13 +316,23 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
           }
         }
 
+        // Hover shadow effect
+        if (type == 'iframe-hover' && id == widget.viewId) {
+          final hovered = msg['hovered'] == true;
+          _wrapper?.style.boxShadow = hovered
+              ? '0 4px 24px rgba(198,32,48,0.13), 0 2px 8px rgba(0,0,0,0.07)'
+              : 'none';
+        }
+
         // ✅ FIX: Forward vertical scroll from iframe to Flutter page
         if (type == 'iframe-wheel') {
           final dy = (msg['deltaY'] as num?)?.toDouble() ?? 0;
-          js_util.callMethod(html.window, 'dispatchEvent', [
+          final glassPane = html.document.querySelector('flt-glass-pane');
+          final target = glassPane ?? html.window as dynamic;
+          js_util.callMethod(target, 'dispatchEvent', [
             js_util.callConstructor(
               js_util.getProperty(html.window, 'WheelEvent') as Object,
-              ['wheel', js_util.jsify({'deltaY': dy, 'deltaMode': 0, 'bubbles': true})],
+              ['wheel', js_util.jsify({'deltaY': dy, 'deltaMode': 0, 'bubbles': true, 'cancelable': true})],
             ),
           ]);
         }
@@ -263,7 +343,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     try {
       ui.platformViewRegistry.registerViewFactory(
         widget.viewId,
-        (int id) => _iframe!,
+        (int id) => _wrapper!,
       );
     } catch (_) {}
   }
@@ -277,11 +357,11 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html {
-    overflow-x: auto;   /* ✅ horizontal scroll on mobile */
+    overflow-x: auto;
     overflow-y: hidden;
     background: #ffffff;
     width: 100%;
-    -webkit-overflow-scrolling: touch; /* smooth iOS scroll */
+    -webkit-overflow-scrolling: touch;
   }
   body {
     overflow-x: auto;
@@ -290,7 +370,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     margin: 0; padding: 0;
     width: 100%;
     -webkit-overflow-scrolling: touch;
-    touch-action: pan-x pan-y; /* ✅ allow both directions on touch */
+    touch-action: pan-x pan-y;
   }
   body > div {
     margin: 0 !important;
@@ -313,6 +393,14 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   window.addEventListener('wheel', function(e) {
     window.parent.postMessage({ type: 'iframe-wheel', id: ID, deltaY: e.deltaY }, '*');
   }, { passive: true });
+
+  // Hover events - send to parent to apply shadow
+  document.documentElement.addEventListener('mouseenter', function() {
+    window.parent.postMessage({ type: 'iframe-hover', id: ID, hovered: true }, '*');
+  });
+  document.documentElement.addEventListener('mouseleave', function() {
+    window.parent.postMessage({ type: 'iframe-hover', id: ID, hovered: false }, '*');
+  });
 
   // ✅ Forward vertical touch scroll to Flutter ONLY when gesture is vertical
   // Horizontal gestures are handled natively by the browser (pan-x)

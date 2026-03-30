@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import '../widgets/top_bar.dart';
 import '../widgets/navigation_bar.dart';
 import '../widgets/ig_hero_section.dart';
@@ -31,6 +32,8 @@ class InvestorsGovernanceScreen extends StatefulWidget {
 }
 
 class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +47,7 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
   @override
   void dispose() {
     localeProvider.removeListener(_rebuild);
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -56,20 +60,21 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
         constraints: const BoxConstraints(maxWidth: 1880),
         color: const Color(0xFFF8FAFB),
         child: Column(
-          children: const [
-            TopBar(),
-            CustomNavigationBar(),
+          children: [
+            const TopBar(),
+            const CustomNavigationBar(),
             Expanded(
               child: SingleChildScrollView(
+                controller: _scrollController,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    IGHeroSection(),
-                    IGIntroSection(),
-                    IGInvestmentCaseSection(),
-                    _StockTickerSection(),
-                    _IRWidgetsSection(),
-                    FooterSection(),
+                    const IGHeroSection(),
+                    const IGIntroSection(),
+                    const IGInvestmentCaseSection(),
+                    const _StockTickerSection(),
+                    _IRWidgetsSection(scrollController: _scrollController),
+                    const FooterSection(),
                   ],
                 ),
               ),
@@ -118,7 +123,8 @@ class _StockTickerSection extends StatelessWidget {
 
 // ── All IR Widgets ────────────────────────────────────────────────────────────
 class _IRWidgetsSection extends StatefulWidget {
-  const _IRWidgetsSection();
+  final ScrollController scrollController;
+  const _IRWidgetsSection({required this.scrollController});
 
   @override
   State<_IRWidgetsSection> createState() => _IRWidgetsSectionState();
@@ -186,16 +192,18 @@ class _IRWidgetsSectionState extends State<_IRWidgetsSection> {
               key: ScrollKeys.get(s.$3),
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  s.$1,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF101727),
-                  ),
-                ),
+                Text(s.$1, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xFF101727))),
                 const SizedBox(height: 12),
-                s.$2,
+                Listener(
+                  onPointerSignal: (event) {
+                    if (event is PointerScrollEvent) {
+                      final newOffset = (widget.scrollController.offset + event.scrollDelta.dy)
+                          .clamp(0.0, widget.scrollController.position.maxScrollExtent);
+                      widget.scrollController.jumpTo(newOffset);
+                    }
+                  },
+                  child: s.$2,
+                ),
               ],
             ),
           )).toList(),

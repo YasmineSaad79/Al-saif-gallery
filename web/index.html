@@ -42,34 +42,24 @@
     }
   </script>
   <script>
+    // Forward iframe-wheel messages to Flutter glass pane for scrolling
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.type === 'iframe-wheel') {
+        var dy = e.data.deltaY || 0;
+        var target = document.querySelector('flt-glass-pane') || document.body;
+        target.dispatchEvent(new WheelEvent('wheel', {
+          deltaY: dy, deltaMode: 0, bubbles: true, cancelable: true
+        }));
+      }
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
       var observer = new MutationObserver(function () {
         var glassPane = document.querySelector('flt-glass-pane');
         if (!glassPane) return;
         observer.disconnect();
 
-        // Mirror cursor from Flutter's internal div to the glass pane
-        var innerObserver = new MutationObserver(function () {
-          var shadow = glassPane.shadowRoot;
-          if (!shadow) return;
-          var cursorEl = shadow.querySelector('[style*="cursor"]');
-          if (cursorEl) {
-            var cur = cursorEl.style.cursor;
-            if (cur && cur !== glassPane.style.cursor) {
-              glassPane.style.cursor = cur;
-            }
-          }
-        });
-
-        // Observe shadow DOM for cursor changes
-        setTimeout(function() {
-          var shadow = glassPane.shadowRoot;
-          if (shadow) {
-            innerObserver.observe(shadow, { subtree: true, attributes: true, attributeFilter: ['style'] });
-          }
-        }, 1000);
-
-        // iframe pointer events
+        // iframe pointer events for iframes
         document.addEventListener('mouseover', function (e) {
           if (e.target && e.target.tagName === 'IFRAME') {
             glassPane.style.pointerEvents = 'none';

@@ -108,12 +108,14 @@ class _LeadershipCard extends StatelessWidget {
               child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  linkText,
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
+                Flexible(
+                  child: Text(
+                    linkText,
+                    style: const TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 6),
