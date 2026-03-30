@@ -264,8 +264,8 @@ export default function IRPage() {
 
       <Script src="https://irp.atnmo.com/v2/widget/widget-loader.js" strategy="afterInteractive" onReady={() => setScriptReady(true)} />
 
-      <div dir={isAr ? 'rtl' : 'ltr'} style={{ fontFamily: 'Inter, sans-serif', background: '#ffffff', minHeight: '100vh', padding: '20px' }}>
-        <div style={{ maxWidth: 1880, margin: '0 auto', background: '#F8FAFB', minHeight: 'calc(100vh - 40px)' }}>
+      <div dir={isAr ? 'rtl' : 'ltr'} style={{ fontFamily: 'Inter, sans-serif', background: '#ffffff', minHeight: '100vh' }}>
+        <div style={{ maxWidth: 1880, margin: '0 auto', background: '#F8FAFB', minHeight: '100vh' }}>
 
         {/* ── Top Bar ── */}
         <div style={{ background: COLORS.bg, borderBottom: `1px solid ${COLORS.border}`, height: 26 }}>
@@ -486,6 +486,15 @@ export default function IRPage() {
         .widget-section:first-of-type {
           border-top: none !important;
           margin-top: 0 !important;
+        }
+
+        /* Allow horizontal scroll on widgets that overflow on mobile */
+        [id$="-widget"] {
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch;
+        }
+        [id$="-widget"] > * {
+          min-width: 0;
         }
       `}</style>
     </>
