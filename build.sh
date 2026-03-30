@@ -1,11 +1,18 @@
 #!/bin/bash
 set -e
 
-# Install Flutter 3.22.3 (matches .fvmrc)
-git clone https://github.com/flutter/flutter.git -b 3.24.5 --depth 1 /tmp/flutter
-export PATH="$PATH:/tmp/flutter/bin"
+FLUTTER_VERSION="3.24.5"
+FLUTTER_DIR="$HOME/flutter"
 
+if [ ! -d "$FLUTTER_DIR" ]; then
+  echo "==> Downloading Flutter $FLUTTER_VERSION..."
+  curl -fsSL "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz" \
+    -o /tmp/flutter.tar.xz
+  tar -xf /tmp/flutter.tar.xz -C "$HOME"
+fi
+
+export PATH="$PATH:$FLUTTER_DIR/bin"
+
+flutter config --no-analytics
 flutter pub get
-flutter build web --release \
-  --pwa-strategy none \
-  --dart-define=IR_PAGE_URL="${IR_PAGE_URL:-http://localhost:3001/ir}"
+flutter build web --release --pwa-strategy none

@@ -37,11 +37,8 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
     super.dispose();
   }
 
-  void _goToIR() {
-    final lang = localeProvider.isArabic ? 'ar' : 'en';
-    final origin = Uri.encodeComponent(html.window.location.origin);
-    const irUrl = 'https://al-saif-ir-widgets.onrender.com/ir';
-    html.window.location.href = '$irUrl?lang=$lang&origin=$origin';
+  void _goToIR(BuildContext context) {
+    context.go('/investors-governance');
   }
 
   void _openMenu(BuildContext context) {
@@ -69,7 +66,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                   _mobileItem(l.navHome, '/', currentRoute, isArabic, () { Navigator.pop(context); context.go('/'); }),
                   _mobileItem(l.navAboutUs, '/about-us', currentRoute, isArabic, () { Navigator.pop(context); context.go('/about-us'); }),
                   _mobileItem(l.navStrategy, '/strategy-operations', currentRoute, isArabic, () { Navigator.pop(context); context.go('/strategy-operations'); }),
-                  _mobileItem(l.navInvestors, '/investors-governance', currentRoute, isArabic, () { Navigator.pop(context); _goToIR(); }),
+                  _mobileItem(l.navInvestors, '/investors-governance', currentRoute, isArabic, () { Navigator.pop(context); _goToIR(context); }),
                   _mobileItem(l.navNewsroom, '/news-careers', currentRoute, isArabic, () { Navigator.pop(context); context.go('/news-careers'); }),
                   const SizedBox(height: 8),
                 ],
@@ -140,7 +137,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                 const SizedBox(width: 32),
                 _NavItem(text: l.navStrategy, isActive: currentRoute == '/strategy-operations', onTap: () => context.go('/strategy-operations')),
                 const SizedBox(width: 32),
-                _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: _goToIR),
+                _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: () => _goToIR(context)),
                 const SizedBox(width: 32),
                 _NavItem(text: l.navNewsroom, isActive: currentRoute == '/news-careers', onTap: () => context.go('/news-careers')),
               ] else
@@ -156,7 +153,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
               if (!isMobile) ...[
                 _NavItem(text: l.navNewsroom, isActive: currentRoute == '/news-careers', onTap: () => context.go('/news-careers')),
                 const SizedBox(width: 32),
-                _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: _goToIR),
+                _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: () => _goToIR(context)),
                 const SizedBox(width: 32),
                 _NavItem(text: l.navStrategy, isActive: currentRoute == '/strategy-operations', onTap: () => context.go('/strategy-operations')),
                 const SizedBox(width: 32),

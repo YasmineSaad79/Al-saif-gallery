@@ -30,35 +30,42 @@ class InvestorsGovernanceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Container(
-          margin: const EdgeInsets.all(20),
-          constraints: const BoxConstraints(maxWidth: 1880),
-          color: const Color(0xFFF8FAFB),
-          child: SingleChildScrollView(
-            controller: globalScrollController,
+      body: SelectionArea(
+        child: Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 1880),
+            color: const Color(0xFFF8FAFB),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                TopBar(),
-                CustomNavigationBar(),
-                IGHeroSection(),
-                IGIntroSection(),
-                IGInvestmentCaseSection(),
-                _StockTickerSection(),
-                _CompanySnapshotSection(),
-                _CorporateNewsSection(),
-                _FactSheetSection(),
-                _StockActivitySection(),
-                _CorporateActionsSection(),
-                _CompanyFinancialsSection(),
-                _InvestmentCalculatorSection(),
-                _SharePriceSection(),
-                _PeerGroupAnalysisSection(),
-                _PerformanceSection(),
-                _ShareSeriesSection(),
-                _EmailSubscriptionSection(),
-                FooterSection(),
+              children: [
+                const TopBar(),
+                const CustomNavigationBar(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    controller: irScrollController,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        IGHeroSection(),
+                        IGIntroSection(),
+                        IGInvestmentCaseSection(),
+                        _StockTickerSection(),
+                        _CompanySnapshotSection(),
+                        _CorporateNewsSection(),
+                        _FactSheetSection(),
+                        _StockActivitySection(),
+                        _CorporateActionsSection(),
+                        _CompanyFinancialsSection(),
+                        _InvestmentCalculatorSection(),
+                        _SharePriceSection(),
+                        _PeerGroupAnalysisSection(),
+                        _PerformanceSection(),
+                        _ShareSeriesSection(),
+                        _EmailSubscriptionSection(),
+                        FooterSection(),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

@@ -5,15 +5,7 @@ services:
     env: static
     buildCommand: bash build.sh
     staticPublishPath: build/web
-    envVars:
-      - key: IR_PAGE_URL
-        fromService:
-          name: al-saif-ir-widgets
-          type: web
-          property: host
-          transform: "https://{value}/ir"
     headers:
-      # index.html و service worker — لا كاش أبداً
       - path: /index.html
         name: Cache-Control
         value: no-store, no-cache, must-revalidate
@@ -23,7 +15,6 @@ services:
       - path: /flutter.js
         name: Cache-Control
         value: no-store, no-cache, must-revalidate
-      # باقي الملفات (JS, assets) — كاش طويل لأن أسماءها تتغير مع كل build
       - path: /main.dart.js
         name: Cache-Control
         value: public, max-age=31536000, immutable
@@ -37,18 +28,3 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
-
-  # ── IR Widgets (Next.js) ───────────────────────────────────────────────────
-  - type: web
-    name: al-saif-ir-widgets
-    env: node
-    rootDir: ir-widgets
-    buildCommand: npm install && npm run build
-    startCommand: npm start
-    envVars:
-      - key: NODE_ENV
-        value: production
-    headers:
-      - path: /*
-        name: Access-Control-Allow-Origin
-        value: "*"
