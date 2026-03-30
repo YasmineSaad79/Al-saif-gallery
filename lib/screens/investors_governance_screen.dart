@@ -32,7 +32,8 @@ class InvestorsGovernanceScreen extends StatefulWidget {
 }
 
 class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
-  final ScrollController _scrollController = ScrollController();
+  // Use global controller so iframe wheel events can scroll the page
+  ScrollController get _scrollController => irScrollController;
 
   @override
   void initState() {
@@ -47,7 +48,6 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
   @override
   void dispose() {
     localeProvider.removeListener(_rebuild);
-    _scrollController.dispose();
     super.dispose();
   }
 

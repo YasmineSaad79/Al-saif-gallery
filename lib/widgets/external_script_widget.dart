@@ -394,6 +394,11 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     window.parent.postMessage({ type: 'iframe-wheel', id: ID, deltaY: e.deltaY }, '*');
   }, { passive: true });
 
+  // Also capture wheel on document to catch all cases
+  document.addEventListener('wheel', function(e) {
+    window.parent.postMessage({ type: 'iframe-wheel', id: ID, deltaY: e.deltaY }, '*');
+  }, { passive: true, capture: true });
+
   // Hover events - send to parent to apply shadow
   document.documentElement.addEventListener('mouseenter', function() {
     window.parent.postMessage({ type: 'iframe-hover', id: ID, hovered: true }, '*');

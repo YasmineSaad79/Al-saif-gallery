@@ -13,6 +13,9 @@ void main() {
 // Global LocaleProvider instance accessible from widgets
 final LocaleProvider localeProvider = LocaleProvider();
 
+// Global scroll controller for IR page - receives iframe wheel events
+final ScrollController irScrollController = ScrollController();
+
 class AlSaifGalleryApp extends StatefulWidget {
   const AlSaifGalleryApp({super.key});
 
@@ -32,17 +35,12 @@ class _AlSaifGalleryAppState extends State<AlSaifGalleryApp> {
       final msg = (event as html.MessageEvent).data;
       if (msg is Map && msg['type'] == 'iframe-wheel') {
         final dy = (msg['deltaY'] as num?)?.toDouble() ?? 0;
-        final canvas = html.document.querySelector('flt-glass-pane') ??
-            html.document.querySelector('flutter-view') ??
-            html.document.body;
-        if (canvas != null) {
-          final wheelEvent = html.WheelEvent('wheel',
-            deltaY: dy,
-            deltaMode: 0,
-            canBubble: true,
-            cancelable: true,
-          );
-          canvas.dispatchEvent(wheelEvent);
+        // Directly scroll the IR page controller
+        if (irScrollController.hasClients) {
+          final current = irScrollController.offset;
+          final max = irScrollController.position.maxScrollExtent;
+          final next = (current + dy).clamp(0.0, max);
+          irScrollController.jumpTo(next);
         }
       }
     };
