@@ -125,61 +125,37 @@ const T = {
 function IRWidget({ widgetId, lang, minHeight = 300 }: { widgetId: string; lang: Lang; minHeight?: number }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState(minHeight);
   const [showSkeleton, setShowSkeleton] = useState(true);
   const loaded = useRef(false);
 
   useEffect(() => {
-    const wrap = wrapRef.current;
-    if (!wrap) return;
-
-    const io = new IntersectionObserver((entries) => {
-      if (!entries[0].isIntersecting) return;
-      io.disconnect();
-
-      const el = innerRef.current;
-      if (!el || loaded.current) return;
-      const w = window as any;
-      if (typeof w.loadWidget !== 'function') return;
-      loaded.current = true;
-      w.loadWidget(widgetId, CLIENT_ID, lang, THEME_ID, VERSION);
-
-      setTimeout(() => setShowSkeleton(false), 1500);
-
-      // Always track real height dynamically - never fixed
-      const updateHeight = () => {
-        const h = el.scrollHeight;
-        if (h > 60) {
-          setHeight(h);
-          setShowSkeleton(false);
-        }
-      };
-
-      const ro = new ResizeObserver(updateHeight);
-      ro.observe(el);
-
-      const mo = new MutationObserver(updateHeight);
-      mo.observe(el, { childList: true, subtree: true, attributes: true });
-
-      // Poll for 15 seconds to catch late-loading content
-      let polls = 0;
+    const el = innerRef.current;
+    if (!el || loaded.current) return;
+    const w = window as any;
+    if (typeof w.loadWidget !== 'function') {
+      // Wait for script to load
       const interval = setInterval(() => {
-        updateHeight();
-        polls++;
-        if (polls > 30) clearInterval(interval);
-      }, 500);
-
-    }, { rootMargin: '200px' });
-
-    io.observe(wrap);
-    return () => io.disconnect();
+        if (typeof (window as any).loadWidget === 'function') {
+          clearInterval(interval);
+          if (!loaded.current) {
+            loaded.current = true;
+            (window as any).loadWidget(widgetId, CLIENT_ID, lang, THEME_ID, VERSION);
+            setTimeout(() => setShowSkeleton(false), 1500);
+          }
+        }
+      }, 200);
+      return () => clearInterval(interval);
+    }
+    loaded.current = true;
+    w.loadWidget(widgetId, CLIENT_ID, lang, THEME_ID, VERSION);
+    setTimeout(() => setShowSkeleton(false), 1500);
   }, [widgetId, lang]);
 
   return (
-    <div ref={wrapRef} style={{ position: 'relative', minHeight: height, overflow: 'visible' }}>
+    <div ref={wrapRef} style={{ position: 'relative', minHeight }}>
       {showSkeleton && (
         <div style={{
-          position: 'absolute', inset: 0,
+          position: 'absolute', top: 0, left: 0, right: 0, height: minHeight,
           background: 'linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%)',
           backgroundSize: '200% 100%',
           animation: 'shimmer 1.4s infinite',
@@ -191,7 +167,6 @@ function IRWidget({ widgetId, lang, minHeight = 300 }: { widgetId: string; lang:
       <div
         ref={innerRef}
         id={`${widgetId}-widget`}
-        style={{ overflow: 'visible' }}
       />
     </div>
   );
