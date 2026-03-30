@@ -32,22 +32,36 @@ class InvestorsGovernanceScreen extends StatefulWidget {
 }
 
 class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
-  // Use global controller so iframe wheel events can scroll the page
   ScrollController get _scrollController => irScrollController;
+  final GlobalKey _irSectionKey = GlobalKey();
+  bool _showFab = false;
 
   @override
   void initState() {
     super.initState();
     localeProvider.addListener(_rebuild);
+    _scrollController.addListener(_checkFabVisibility);
     setPageMeta(
       title: 'Al Saif Gallery Investor Relations | Tadawul 4192 | السيف غاليري',
       description: 'Official investor relations for Al Saif Gallery (Tadawul: 4192). Financial results, governance documents, shareholder services, and regulatory disclosures for Saudi Exchange investors.',
     );
   }
 
+  void _checkFabVisibility() {
+    final ctx = _irSectionKey.currentContext;
+    if (ctx == null) return;
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null) return;
+    final pos = box.localToGlobal(Offset.zero);
+    final screenH = MediaQuery.of(context).size.height;
+    final visible = pos.dy < screenH && pos.dy + box.size.height > 0;
+    if (visible != _showFab) setState(() => _showFab = visible);
+  }
+
   @override
   void dispose() {
     localeProvider.removeListener(_rebuild);
+    _scrollController.removeListener(_checkFabVisibility);
     super.dispose();
   }
 
@@ -73,7 +87,7 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
                     const IGIntroSection(),
                     const IGInvestmentCaseSection(),
                     const _StockTickerSection(),
-                    _IRWidgetsSection(scrollController: _scrollController),
+                    _IRWidgetsSection(key: _irSectionKey, scrollController: _scrollController),
                     const FooterSection(),
                   ],
                 ),
@@ -87,6 +101,8 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SelectionArea(child: content),
+      floatingActionButton: _showFab ? _ScrollFab(scrollController: _scrollController) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
@@ -121,10 +137,67 @@ class _StockTickerSection extends StatelessWidget {
   }
 }
 
+// ── Scroll FAB ────────────────────────────────────────────────────────────────
+class _ScrollFab extends StatefulWidget {
+  final ScrollController scrollController;
+  const _ScrollFab({required this.scrollController});
+
+  @override
+  State<_ScrollFab> createState() => _ScrollFabState();
+}
+
+class _ScrollFabState extends State<_ScrollFab> {
+  bool _atBottom = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final atBottom = widget.scrollController.offset >=
+        widget.scrollController.position.maxScrollExtent - 100;
+    if (atBottom != _atBottom) setState(() => _atBottom = atBottom);
+  }
+
+  @override
+  void dispose() {
+    widget.scrollController.removeListener(_onScroll);
+    super.dispose();
+  }
+
+  void _scroll() {
+    final current = widget.scrollController.offset;
+    final max = widget.scrollController.position.maxScrollExtent;
+    final target = _atBottom ? 0.0 : (current + 400).clamp(0.0, max);
+    widget.scrollController.animateTo(
+      target,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SelectionContainer.disabled(
+      child: FloatingActionButton.small(
+        onPressed: _scroll,
+        backgroundColor: const Color(0xFFC62030),
+        tooltip: _atBottom ? 'Scroll to top' : 'Scroll down',
+        child: Icon(
+          _atBottom ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+}
+
 // ── All IR Widgets ────────────────────────────────────────────────────────────
 class _IRWidgetsSection extends StatefulWidget {
   final ScrollController scrollController;
-  const _IRWidgetsSection({required this.scrollController});
+  const _IRWidgetsSection({super.key, required this.scrollController});
 
   @override
   State<_IRWidgetsSection> createState() => _IRWidgetsSectionState();
