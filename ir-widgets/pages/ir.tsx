@@ -281,19 +281,31 @@ export default function IRPage() {
 
         {/* ── Nav Bar ── */}
         <nav style={{ background: '#fff', borderBottom: `1px solid ${COLORS.border}`, boxShadow: '0 1px 3px rgba(0,0,0,0.08)', height: 70, position: 'sticky', top: 0, zIndex: 100 }}>
-          <div style={{ maxWidth: 1880, margin: '0 auto', padding: `0 ${HP}`, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            {/* Logo SVG */}
-            <img src="/Al_Saif_Logo.svg" alt="Al Saif Gallery" style={{ width: 144, height: 59, objectFit: 'contain' }} />
+          <div style={{ maxWidth: 1880, margin: '0 auto', padding: `0 ${HP}`, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', direction: 'ltr' }}>
+            {/* LTR: Logo left, nav right | RTL: Logo right, nav left — match Flutter */}
+            {!isAr && <img src="/Al_Saif_Logo.svg" alt="Al Saif Gallery" style={{ width: 144, height: 59, objectFit: 'contain' }} />}
             {/* Desktop nav */}
             <div className="desktop-nav" style={{ display: 'flex', gap: 32, alignItems: 'center' }}>
-              {[t.navHome, t.navAbout, t.navStrategy, t.navInvestors, t.navNews].map((item, i) => (
-                <div key={i} onClick={() => { if (i !== 3) window.location.href = `${flutterUrl}${NAV_ROUTES[i]}`; }}
-                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer' }}>
-                  <span style={{ fontSize: 13, color: i === 3 ? COLORS.textPrimary : COLORS.textSec, fontWeight: i === 3 ? 500 : 400 }}>{item}</span>
-                  <div style={{ height: 2, width: 40, background: i === 3 ? COLORS.primary : 'transparent', marginTop: 4 }} />
-                </div>
-              ))}
+              {(isAr
+                ? [t.navNews, t.navInvestors, t.navStrategy, t.navAbout, t.navHome]
+                : [t.navHome, t.navAbout, t.navStrategy, t.navInvestors, t.navNews]
+              ).map((item, i) => {
+                const routeIndex = isAr ? [4,3,2,1,0][i] : i;
+                const isActive = routeIndex === 3;
+                return (
+                  <div key={i} onClick={() => {
+                    if (!isActive) {
+                      window.location.href = `${flutterUrl}${NAV_ROUTES[routeIndex]}`;
+                    }
+                  }}
+                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: isActive ? 'default' : 'pointer' }}>
+                    <span style={{ fontSize: 13, color: isActive ? COLORS.textPrimary : COLORS.textSec, fontWeight: isActive ? 500 : 400 }}>{item}</span>
+                    <div style={{ height: 2, width: 40, background: isActive ? COLORS.primary : 'transparent', marginTop: 4 }} />
+                  </div>
+                );
+              })}
             </div>
+            {isAr && <img src="/Al_Saif_Logo.svg" alt="Al Saif Gallery" style={{ width: 144, height: 59, objectFit: 'contain' }} />}
             {/* Mobile hamburger */}
             <button className="mobile-menu-btn" onClick={() => setMenuOpen(!menuOpen)}
               style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', padding: 8 }}>
@@ -306,9 +318,13 @@ export default function IRPage() {
           {menuOpen && (
             <div style={{ background: '#fff', borderTop: `1px solid ${COLORS.border}`, padding: '8px 0' }}>
               {[t.navHome, t.navAbout, t.navStrategy, t.navInvestors, t.navNews].map((item, i) => (
-                <div key={i} onClick={() => { setMenuOpen(false); if (i !== 3) window.location.href = `${flutterUrl}${NAV_ROUTES[i]}`; }}
+                <div key={i} onClick={() => {
+                  setMenuOpen(false);
+                  if (i !== 3) window.location.href = `${flutterUrl}${NAV_ROUTES[i]}`;
+                }}
                   style={{ padding: '14px 24px', fontSize: 15, color: i === 3 ? COLORS.primary : COLORS.textPrimary,
-                    fontWeight: i === 3 ? 600 : 400, borderBottom: `1px solid ${COLORS.bg}`, cursor: 'pointer' }}>
+                    fontWeight: i === 3 ? 600 : 400, borderBottom: `1px solid ${COLORS.bg}`, cursor: 'pointer',
+                    textAlign: isAr ? 'right' : 'left' }}>
                   {item}
                 </div>
               ))}
@@ -387,7 +403,9 @@ export default function IRPage() {
                 borderTop: `2px solid ${COLORS.primary}`,
                 borderBottom: `2px solid ${COLORS.primary}`,
                 overflow: 'hidden',
-                maxHeight: 52,
+                display: 'flex',
+                alignItems: 'center',
+                minHeight: 52,
               }}>
                 <IRWidget key={`stock-ticker-${lang}`} widgetId="stock-ticker" lang={lang} />
               </div>
@@ -403,10 +421,14 @@ export default function IRPage() {
                 className="widget-section">
                 <h2 style={{ fontSize: 20, fontWeight: 600, color: COLORS.textPrimary, marginBottom: 16,
                   textAlign: isAr ? 'right' : 'left' }}>{s.title}</h2>
-                {s.tabs
-                  ? <TabbedWidget key={`${s.id}-${lang}`} tabs={s.tabs} lang={lang} minHeight={s.minH} />
-                  : <IRWidget widgetId={s.id} lang={lang} minHeight={s.minH} />
-                }
+                <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' as any }}>
+                  <div style={{ minWidth: 600 }}>
+                  {s.tabs
+                    ? <TabbedWidget key={`${s.id}-${lang}`} tabs={s.tabs} lang={lang} minHeight={s.minH} />
+                    : <IRWidget widgetId={s.id} lang={lang} minHeight={s.minH} />
+                  }
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -495,6 +517,17 @@ export default function IRPage() {
         }
         [id$="-widget"] > * {
           min-width: 0;
+        }
+        /* Match Flutter iframe CSS for widget containers */
+        [id$="-widget"] * {
+          touch-action: pan-x pan-y;
+          -webkit-overflow-scrolling: touch;
+        }
+        [id$="-widget"] table,
+        [id$="-widget"] .chart-container,
+        [id$="-widget"] canvas {
+          overflow-x: auto !important;
+          max-width: 100%;
         }
       `}</style>
     </>
