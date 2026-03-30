@@ -263,6 +263,17 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     window.parent.postMessage({ type: 'iframe-wheel', deltaY: e.deltaY }, '*');
   }, { passive: true });
 
+  // Forward touch scroll to parent Flutter page
+  var _touchStartY = 0;
+  window.addEventListener('touchstart', function(e) {
+    _touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  window.addEventListener('touchmove', function(e) {
+    var dy = _touchStartY - e.touches[0].clientY;
+    _touchStartY = e.touches[0].clientY;
+    window.parent.postMessage({ type: 'iframe-wheel', deltaY: dy }, '*');
+  }, { passive: true });
+
   var ID = '${widget.viewId}';
   var debounceTimer = null;
   var lastSent = 0;
