@@ -211,7 +211,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
       ..style.border = 'none'
       ..style.width = '100%'
       ..style.height = '100%'
-      ..style.pointerEvents = 'none'
+      ..style.pointerEvents = 'auto'
       ..srcdoc = _buildHtml();
 
     _messageListener = (event) {
@@ -353,14 +353,10 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   Widget build(BuildContext context) {
     if (!kIsWeb) return const SizedBox.shrink();
 
-    return MouseRegion(
-      onEnter: (_) => _setPointerEvents(true),
-      onExit: (_) => _setPointerEvents(false),
-      child: SizedBox(
-        width: double.infinity,
-        height: _height,
-        child: HtmlElementView(viewType: widget.viewId),
-      ),
+    return SizedBox(
+      width: double.infinity,
+      height: _height,
+      child: HtmlElementView(viewType: widget.viewId),
     );
   }
 }
