@@ -35,12 +35,15 @@ class _AlSaifGalleryAppState extends State<AlSaifGalleryApp> {
       final msg = (event as html.MessageEvent).data;
       if (msg is Map && msg['type'] == 'iframe-wheel') {
         final dy = (msg['deltaY'] as num?)?.toDouble() ?? 0;
-        // Directly scroll the IR page controller
         if (irScrollController.hasClients) {
           final current = irScrollController.offset;
           final max = irScrollController.position.maxScrollExtent;
           final next = (current + dy).clamp(0.0, max);
-          irScrollController.jumpTo(next);
+          irScrollController.animateTo(
+            next,
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.linear,
+          );
         }
       }
     };
