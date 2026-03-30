@@ -3,12 +3,11 @@
 import 'dart:async';
 import 'dart:html' as html;
 import 'dart:ui_web' as ui;
-import 'dart:js_util' as js_util;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-// ── Global load queue: stagger loads to avoid hammering the CDN ─────────────
+// ── Global load queue: max 1 iframe loaded every 1.5s ──────────────────────
 final List<VoidCallback> _loadQueue = [];
 bool _queueRunning = false;
 
@@ -22,16 +21,12 @@ void _processQueue() {
   _queueRunning = true;
   final next = _loadQueue.removeAt(0);
   next();
-  // Desktop: 800ms stagger — fast enough to feel instant
-  // Mobile: same, widgets are loaded lazily so fewer concurrent loads
-  Future.delayed(const Duration(milliseconds: 800), _processQueue);
+  Future.delayed(const Duration(milliseconds: 1500), _processQueue);
 }
 // ────────────────────────────────────────────────────────────────────────────
 
 /// Wraps [ExternalScriptWidget] and only initializes the iframe
 /// once the placeholder enters the viewport (lazy loading).
-/// On mobile the iframe is KEPT ALIVE once loaded — never destroyed — to
-/// prevent cache-miss reloads when the user scrolls back.
 class LazyExternalScriptWidget extends StatefulWidget {
   final String viewId;
   final String widgetType;
@@ -51,10 +46,9 @@ class LazyExternalScriptWidget extends StatefulWidget {
 }
 
 class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
-  bool _show = false;
+  bool _visible = false;
   bool _queued = false;
   final _key = GlobalKey();
-  Timer? _visibilityTimer;
 
   @override
   void initState() {
@@ -62,117 +56,44 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkVisibility());
   }
 
-  @override
-  void dispose() {
-    _visibilityTimer?.cancel();
-    super.dispose();
-  }
-
-  bool _isNearViewport(BuildContext ctx) {
-    final box = ctx.findRenderObject() as RenderBox?;
-    if (box == null || !box.hasSize) return false;
-    final pos = box.localToGlobal(Offset.zero);
-    final screenH = MediaQuery.of(ctx).size.height;
-    // Load when within 400px of viewport
-    return pos.dy < screenH + 400 && pos.dy > -(widget.fallbackHeight + 400);
-  }
-
   void _checkVisibility() {
-    if (!mounted) return;
-
+    if (!mounted || _queued) return;
     final ctx = _key.currentContext;
     if (ctx == null) {
-      _scheduleCheck(300);
+      Future.delayed(const Duration(milliseconds: 400), _checkVisibility);
       return;
     }
-
-    final near = _isNearViewport(ctx);
-
-    if (!_queued && near) {
-      _queued = true;
-      _enqueueLoad(() { if (mounted) setState(() => _show = true); });
-      return; // once loaded, never destroy — fixes cache issue on mobile
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) {
+      Future.delayed(const Duration(milliseconds: 400), _checkVisibility);
+      return;
     }
-
-    if (!_show) _scheduleCheck(500);
-  }
-
-  void _scheduleCheck(int ms) {
-    _visibilityTimer?.cancel();
-    _visibilityTimer = Timer(Duration(milliseconds: ms), _checkVisibility);
+    final pos = box.localToGlobal(Offset.zero);
+    final screenH = MediaQuery.of(ctx).size.height;
+    if (pos.dy < screenH + 600) {
+      // visible — add to queue instead of loading immediately
+      _queued = true;
+      _enqueueLoad(() {
+        if (mounted) setState(() => _visible = true);
+      });
+    } else {
+      Future.delayed(const Duration(milliseconds: 600), _checkVisibility);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_show) {
-      return _SkeletonPlaceholder(key: _key, height: widget.fallbackHeight);
-    }
-    return _HoverWrapper(
-      child: ExternalScriptWidget(
-        key: ValueKey(widget.viewId),
+    if (_visible) {
+      return ExternalScriptWidget(
         viewId: widget.viewId,
         widgetType: widget.widgetType,
         fallbackHeight: widget.fallbackHeight,
         lang: widget.lang,
-      ),
-    );
-  }
-}
-
-class _HoverWrapper extends StatefulWidget {
-  final Widget child;
-  const _HoverWrapper({required this.child});
-
-  @override
-  State<_HoverWrapper> createState() => _HoverWrapperState();
-}
-
-class _HoverWrapperState extends State<_HoverWrapper>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _ctrl;
-  late Animation<double> _shadow;
-  bool _hovered = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
-    _shadow = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
-  }
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) { setState(() => _hovered = true); _ctrl.forward(); },
-      onExit:  (_) { setState(() => _hovered = false); _ctrl.reverse(); },
-      child: AnimatedBuilder(
-        animation: _shadow,
-        builder: (_, child) => Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFFC62030).withOpacity(0.08 * _shadow.value),
-                blurRadius: 16 * _shadow.value,
-                offset: Offset(0, 4 * _shadow.value),
-              ),
-              BoxShadow(
-                color: Colors.black.withOpacity(0.04 * _shadow.value),
-                blurRadius: 8 * _shadow.value,
-                offset: Offset(0, 2 * _shadow.value),
-              ),
-            ],
-          ),
-          child: child,
-        ),
-        child: widget.child,
-      ),
+      );
+    }
+    return _SkeletonPlaceholder(
+      key: _key,
+      height: widget.fallbackHeight,
     );
   }
 }
@@ -266,11 +187,18 @@ class ExternalScriptWidget extends StatefulWidget {
 
 class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   html.IFrameElement? _iframe;
-  html.DivElement? _wrapper;
   double _height = 0;
   html.EventListener? _messageListener;
   Timer? _debounce;
   double _pendingHeight = 0;
+  bool _hovered = false;
+
+  void _setPointerEvents(bool enabled) {
+    _iframe?.style.pointerEvents = enabled ? 'auto' : 'none';
+    if (_hovered != enabled) {
+      setState(() => _hovered = enabled);
+    }
+  }
 
   @override
   void initState() {
@@ -283,58 +211,23 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
       ..style.border = 'none'
       ..style.width = '100%'
       ..style.height = '100%'
-      ..style.pointerEvents = 'auto'
-      ..style.transition = 'box-shadow 0.2s ease'
+      ..style.pointerEvents = 'none'
       ..srcdoc = _buildHtml();
-
-    // Wrap iframe in hover div
-    _wrapper = html.DivElement()
-      ..className = 'iframe-hover-wrapper'
-      ..style.width = '100%'
-      ..style.height = '100%'
-      ..style.transition = 'box-shadow 0.25s ease'
-      ..style.borderRadius = '8px'
-      ..append(_iframe!);
 
     _messageListener = (event) {
       final msg = (event as html.MessageEvent).data;
-      if (msg is Map) {
-        final id = msg['id'];
-        final type = msg['type'];
-
-        // Height reporting
-        if (type == 'widget-height' && id == widget.viewId) {
-          final h = (msg['height'] as num).toDouble();
-          if (h > 20) {
-            _pendingHeight = h;
-            _debounce?.cancel();
-            _debounce = Timer(const Duration(milliseconds: 300), () {
-              if (mounted && (_pendingHeight - _height).abs() > 2) {
-                setState(() => _height = _pendingHeight);
-              }
-            });
-          }
-        }
-
-        // Hover shadow effect
-        if (type == 'iframe-hover' && id == widget.viewId) {
-          final hovered = msg['hovered'] == true;
-          _wrapper?.style.boxShadow = hovered
-              ? '0 4px 24px rgba(198,32,48,0.13), 0 2px 8px rgba(0,0,0,0.07)'
-              : 'none';
-        }
-
-        // ✅ FIX: Forward vertical scroll from iframe to Flutter page
-        if (type == 'iframe-wheel') {
-          final dy = (msg['deltaY'] as num?)?.toDouble() ?? 0;
-          final glassPane = html.document.querySelector('flt-glass-pane');
-          final target = glassPane ?? html.window as dynamic;
-          js_util.callMethod(target, 'dispatchEvent', [
-            js_util.callConstructor(
-              js_util.getProperty(html.window, 'WheelEvent') as Object,
-              ['wheel', js_util.jsify({'deltaY': dy, 'deltaMode': 0, 'bubbles': true, 'cancelable': true})],
-            ),
-          ]);
+      if (msg is Map &&
+          msg['type'] == 'widget-height' &&
+          msg['id'] == widget.viewId) {
+        final h = (msg['height'] as num).toDouble();
+        if (h > 20) {
+          _pendingHeight = h;
+          _debounce?.cancel();
+          _debounce = Timer(const Duration(milliseconds: 400), () {
+            if (mounted && (_pendingHeight - _height).abs() > 2) {
+              setState(() => _height = _pendingHeight);
+            }
+          });
         }
       }
     };
@@ -343,7 +236,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     try {
       ui.platformViewRegistry.registerViewFactory(
         widget.viewId,
-        (int id) => _wrapper!,
+        (int id) => _iframe!,
       );
     } catch (_) {}
   }
@@ -353,31 +246,11 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html {
-    overflow-x: auto;
-    overflow-y: hidden;
-    background: #ffffff;
-    width: 100%;
-    -webkit-overflow-scrolling: touch;
-  }
-  body {
-    overflow-x: auto;
-    overflow-y: hidden;
-    background: #ffffff;
-    margin: 0; padding: 0;
-    width: 100%;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-x pan-y;
-  }
-  body > div {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-  }
+  html, body { overflow: hidden; background: #ffffff; margin: 0; padding: 0; }
+  body > div { margin: 0 !important; padding: 0 !important; }
 </style>
 <script src="https://irp.atnmo.com/v2/widget/widget-loader.js"></script>
 </head>
@@ -385,58 +258,14 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
 <div id="${widget.widgetType}-widget"></div>
 <script>
 (function() {
+  // Forward wheel events to parent Flutter page
+  window.addEventListener('wheel', function(e) {
+    window.parent.postMessage({ type: 'iframe-wheel', deltaY: e.deltaY }, '*');
+  }, { passive: true });
+
   var ID = '${widget.viewId}';
   var debounceTimer = null;
   var lastSent = 0;
-
-  // ✅ Forward vertical wheel to Flutter so page scrolls normally
-  window.addEventListener('wheel', function(e) {
-    window.parent.postMessage({ type: 'iframe-wheel', id: ID, deltaY: e.deltaY }, '*');
-  }, { passive: true });
-
-  // Also capture wheel on document to catch all cases
-  document.addEventListener('wheel', function(e) {
-    window.parent.postMessage({ type: 'iframe-wheel', id: ID, deltaY: e.deltaY }, '*');
-  }, { passive: true, capture: true });
-
-  // Hover events - send to parent to apply shadow
-  document.documentElement.addEventListener('mouseenter', function() {
-    window.parent.postMessage({ type: 'iframe-hover', id: ID, hovered: true }, '*');
-  });
-  document.documentElement.addEventListener('mouseleave', function() {
-    window.parent.postMessage({ type: 'iframe-hover', id: ID, hovered: false }, '*');
-  });
-
-  // ✅ Forward vertical touch scroll to Flutter ONLY when gesture is vertical
-  // Horizontal gestures are handled natively by the browser (pan-x)
-  var touchStartX = 0;
-  var touchStartY = 0;
-  var scrollDirection = null; // 'v' | 'h' | null
-
-  window.addEventListener('touchstart', function(e) {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-    scrollDirection = null;
-  }, { passive: true });
-
-  window.addEventListener('touchmove', function(e) {
-    var dx = Math.abs(e.touches[0].clientX - touchStartX);
-    var dy = e.touches[0].clientY - touchStartY;
-    var absDy = Math.abs(dy);
-
-    // Lock direction on first significant move
-    if (scrollDirection === null && (dx > 5 || absDy > 5)) {
-      scrollDirection = dx > absDy ? 'h' : 'v';
-    }
-
-    // Only forward to Flutter if vertical gesture
-    if (scrollDirection === 'v') {
-      var delta = touchStartY - e.touches[0].clientY;
-      touchStartY = e.touches[0].clientY;
-      window.parent.postMessage({ type: 'iframe-wheel', id: ID, deltaY: delta }, '*');
-    }
-    // Horizontal: let browser handle it natively (pan-x)
-  }, { passive: true });
 
   function getTrueHeight() {
     var h = Math.max(
@@ -465,7 +294,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
         lastSent = h;
         window.parent.postMessage({ type: 'widget-height', id: ID, height: h }, '*');
       }
-    }, 200);
+    }, 300);
   }
 
   new MutationObserver(function() {
@@ -474,9 +303,9 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
       if (!f._w) {
         f._w = true;
         f.addEventListener('load', function() {
-          setTimeout(reportDebounced, 300);
-          setTimeout(reportDebounced, 1000);
-          setTimeout(reportDebounced, 2500);
+          setTimeout(reportDebounced, 500);
+          setTimeout(reportDebounced, 1500);
+          setTimeout(reportDebounced, 3000);
         });
       }
     });
@@ -487,8 +316,8 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   }
 
   document.addEventListener('click', function() {
-    setTimeout(reportDebounced, 400);
-    setTimeout(reportDebounced, 1200);
+    setTimeout(reportDebounced, 500);
+    setTimeout(reportDebounced, 1500);
   });
 
   window.addEventListener('load', function() {
@@ -501,7 +330,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
         "v2"
       );
     }
-    [500, 1500, 3000, 6000].forEach(function(t) {
+    [1000, 2000, 4000, 7000, 12000].forEach(function(t) {
       setTimeout(reportDebounced, t);
     });
   });
@@ -524,14 +353,14 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   Widget build(BuildContext context) {
     if (!kIsWeb) return const SizedBox.shrink();
 
-    return SizedBox(
-      width: double.infinity,
-      height: _height,
-      child: HtmlElementView(viewType: widget.viewId),
+    return MouseRegion(
+      onEnter: (_) => _setPointerEvents(true),
+      onExit: (_) => _setPointerEvents(false),
+      child: SizedBox(
+        width: double.infinity,
+        height: _height,
+        child: HtmlElementView(viewType: widget.viewId),
+      ),
     );
   }
 }
-
-
-
-
