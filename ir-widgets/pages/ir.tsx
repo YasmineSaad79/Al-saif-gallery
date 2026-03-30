@@ -125,6 +125,7 @@ const T = {
 function IRWidget({ widgetId, lang, minHeight = 300 }: { widgetId: string; lang: Lang; minHeight?: number }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(minHeight);
   const [showSkeleton, setShowSkeleton] = useState(true);
   const loaded = useRef(false);
 
@@ -143,17 +144,31 @@ function IRWidget({ widgetId, lang, minHeight = 300 }: { widgetId: string; lang:
       loaded.current = true;
       w.loadWidget(widgetId, CLIENT_ID, lang, THEME_ID, VERSION);
 
-      // Hide skeleton after 1.5s regardless — widget is always visible
       setTimeout(() => setShowSkeleton(false), 1500);
 
-      // Hide sooner if content appears
-      const mo = new MutationObserver(() => {
-        if (el.scrollHeight > 60) {
+      // Always track real height dynamically - never fixed
+      const updateHeight = () => {
+        const h = el.scrollHeight;
+        if (h > 60) {
+          setHeight(h);
           setShowSkeleton(false);
-          mo.disconnect();
         }
-      });
-      mo.observe(el, { childList: true, subtree: true });
+      };
+
+      const ro = new ResizeObserver(updateHeight);
+      ro.observe(el);
+
+      const mo = new MutationObserver(updateHeight);
+      mo.observe(el, { childList: true, subtree: true, attributes: true });
+
+      // Poll for 15 seconds to catch late-loading content
+      let polls = 0;
+      const interval = setInterval(() => {
+        updateHeight();
+        polls++;
+        if (polls > 30) clearInterval(interval);
+      }, 500);
+
     }, { rootMargin: '200px' });
 
     io.observe(wrap);
@@ -161,8 +176,7 @@ function IRWidget({ widgetId, lang, minHeight = 300 }: { widgetId: string; lang:
   }, [widgetId, lang]);
 
   return (
-    <div ref={wrapRef} style={{ position: 'relative', minHeight }}>
-      {/* Skeleton overlay — widget is always visible underneath */}
+    <div ref={wrapRef} style={{ position: 'relative', minHeight: height, overflow: 'visible' }}>
       {showSkeleton && (
         <div style={{
           position: 'absolute', inset: 0,
@@ -177,7 +191,7 @@ function IRWidget({ widgetId, lang, minHeight = 300 }: { widgetId: string; lang:
       <div
         ref={innerRef}
         id={`${widgetId}-widget`}
-        style={{ minHeight, height: 'auto', overflow: 'visible' }}
+        style={{ overflow: 'visible' }}
       />
     </div>
   );
@@ -267,7 +281,7 @@ export default function IRPage() {
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{t.navInvestors} — Al Saif Gallery</title>
+        <title>{`${t.navInvestors} — Al Saif Gallery`}</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -469,7 +483,7 @@ export default function IRPage() {
       </div>{/* end wrapper maxWidth */}
 
       {/* ── Responsive CSS ── */}
-      <style>{`
+      <style suppressHydrationWarning>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { background: #ffffff; min-height: 100%; }
         body { overflow-x: hidden; }
