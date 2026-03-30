@@ -40,15 +40,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
   void _goToIR() {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
     final origin = Uri.encodeComponent(html.window.location.origin);
-    // Use dart-define URL if available, otherwise derive from current host
-    String irUrl = _irPageBase;
-    if (irUrl.contains('localhost:3001')) {
-      // On production, replace with the ir-widgets subdomain pattern
-      final host = html.window.location.host;
-      if (!host.contains('localhost')) {
-        irUrl = 'https://al-saif-ir-widgets.onrender.com/ir';
-      }
-    }
+    const irUrl = 'https://al-saif-ir-widgets.onrender.com/ir';
     html.window.location.href = '$irUrl?lang=$lang&origin=$origin';
   }
 
