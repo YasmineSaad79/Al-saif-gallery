@@ -92,26 +92,25 @@
           }, 300);
         }, { passive: true });
 
-        // Smart iframe pointer-events management
-        document.addEventListener('mousemove', function(e) {
-          if (window._iframesManuallyDisabled) return;
-
-          // استخدم elementsFromPoint عشان نعرف إذا في Flutter widget تحت الماوس
-          var els = document.elementsFromPoint(e.clientX, e.clientY);
-          var topEl = els[0];
-
-          // إذا أول عنصر هو iframe، فعّل الـ iframes
-          if (topEl && topEl.tagName === 'IFRAME') {
-            document.querySelectorAll('iframe').forEach(function(f) {
-              f.style.pointerEvents = 'auto';
-            });
-          } else {
-            // Flutter element فوق، عطّل الـ iframes
-            document.querySelectorAll('iframe').forEach(function(f) {
-              f.style.pointerEvents = 'none';
-            });
-          }
-        });
+        // Smart iframe pointer-events: only disable during scroll
+        // On mobile, iframes stay enabled unless manually disabled by Dart
+        var isMobile = /Mobi|Android/i.test(navigator.userAgent);
+        if (!isMobile) {
+          document.addEventListener('mousemove', function(e) {
+            if (window._iframesManuallyDisabled) return;
+            var els = document.elementsFromPoint(e.clientX, e.clientY);
+            var topEl = els[0];
+            if (topEl && topEl.tagName === 'IFRAME') {
+              document.querySelectorAll('iframe').forEach(function(f) {
+                f.style.pointerEvents = 'auto';
+              });
+            } else {
+              document.querySelectorAll('iframe').forEach(function(f) {
+                f.style.pointerEvents = 'none';
+              });
+            }
+          });
+        }
 
       });
       observer.observe(document.body, { childList: true, subtree: true });
