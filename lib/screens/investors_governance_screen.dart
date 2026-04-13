@@ -191,9 +191,9 @@ class _IRTabBarDelegate extends SliverPersistentHeaderDelegate {
   _IRTabBarDelegate({required this.tabBodyKey});
 
   @override
-  double get minExtent => 64;
+  double get minExtent => 56;
   @override
-  double get maxExtent => 64;
+  double get maxExtent => 56;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
@@ -256,9 +256,9 @@ class _IRStickyTabBarState extends State<_IRStickyTabBar> {
     // كل الـ tabs مجمعة
     final allTabs = [
       ...tabs,
-      isArabic ? 'تحليلات: حاسبة الاستثمار' : 'Analytics: Investment Calculator',
-      isArabic ? 'تحليلات: سلسلة الأسهم' : 'Analytics: Share Series',
-      isArabic ? 'تحليلات: تحليل المجموعة' : 'Analytics: Peer Group Analysis',
+      isArabic ? 'حاسبة الاستثمار' : 'Investment Calculator',
+      isArabic ? 'سلسلة الأسهم' : 'Share Series',
+      isArabic ? 'تحليل المجموعة' : 'Peer Group Analysis',
       isArabic ? 'الاشتراك' : 'Subscribe',
     ];
 
@@ -347,78 +347,37 @@ class _MobileTabDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final label = selectedIndex < allTabs.length ? allTabs[selectedIndex] : allTabs[0];
-    return Padding(
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
       padding: EdgeInsets.symmetric(horizontal: hp, vertical: 8),
-      child: SelectionContainer.disabled(
-        child: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: GestureDetector(
-            onTap: () => _showSheet(context),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColors.primary, width: 1.5),
-              ),
-              child: Row(
-                mainAxisAlignment: isArabic ? MainAxisAlignment.end : MainAxisAlignment.spaceBetween,
-                children: [
-                  if (!isArabic) Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primary)),
-                  const Icon(Icons.keyboard_arrow_down, color: AppColors.primary, size: 18),
-                  if (isArabic) Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primary)),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-      builder: (_) => SelectionContainer.disabled(
-        child: Directionality(
-          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 8),
-              Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2))),
-              const SizedBox(height: 8),
-              ...List.generate(allTabs.length, (i) {
-                final isActive = selectedIndex == i;
-                return InkWell(
-                  onTap: () { Navigator.pop(context); onSelect(i); },
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                    decoration: BoxDecoration(
-                      color: isActive ? AppColors.primary.withOpacity(0.05) : Colors.white,
-                      border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
-                    ),
-                    child: Row(
-                      children: [
-                        if (isActive) Container(width: 3, height: 16, color: AppColors.primary, margin: const EdgeInsets.only(right: 10)),
-                        Text(allTabs[i], style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-                          color: isActive ? AppColors.primary : const Color(0xFF1A1A1A),
-                        )),
-                      ],
-                    ),
+      child: Directionality(
+        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+        child: Row(
+          children: List.generate(allTabs.length, (i) {
+            final isActive = selectedIndex == i;
+            return GestureDetector(
+              onTap: () => onSelect(i),
+              child: Container(
+                margin: const EdgeInsets.only(right: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                decoration: BoxDecoration(
+                  color: isActive ? AppColors.primary : Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isActive ? AppColors.primary : const Color(0xFFE5E7EB),
                   ),
-                );
-              }),
-              const SizedBox(height: 8),
-            ],
-          ),
+                ),
+                child: Text(
+                  allTabs[i],
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                    color: isActive ? Colors.white : const Color(0xFF6B7280),
+                  ),
+                ),
+              ),
+            );
+          }),
         ),
       ),
     );
