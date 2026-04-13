@@ -237,6 +237,17 @@ class _IRStickyTabBarState extends State<_IRStickyTabBar> {
       'Investment Calculator', 'Share Series', 'Peer Group Analysis',
     ];
 
+    // كل الـ tabs مجمعة
+    final allTabs = [
+      ...tabs,
+      isArabic ? 'تحليلات: حاسبة الاستثمار' : 'Analytics: Investment Calculator',
+      isArabic ? 'تحليلات: سلسلة الأسهم' : 'Analytics: Share Series',
+      isArabic ? 'تحليلات: تحليل المجموعة' : 'Analytics: Peer Group Analysis',
+      isArabic ? 'الاشتراك' : 'Subscribe',
+    ];
+
+    final isMobile = Responsive.isMobile(context);
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -251,38 +262,145 @@ class _IRStickyTabBarState extends State<_IRStickyTabBar> {
       ),
       child: Directionality(
         textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: hp),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: isMobile
+            ? _MobileTabDropdown(
+                selectedIndex: _selectedTab,
+                allTabs: allTabs,
+                onSelect: (i) {
+                  setState(() => _selectedTab = i);
+                  widget.tabBodyKey.currentState?.switchTab(i);
+                },
+                isArabic: isArabic,
+                hp: hp,
+              )
+            : Padding(
+                padding: EdgeInsets.symmetric(horizontal: hp),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ...List.generate(tabs.length, (i) {
+                      return _IRTab(
+                        label: tabs[i],
+                        isActive: _selectedTab == i,
+                        onTap: () {
+                          setState(() => _selectedTab = i);
+                          widget.tabBodyKey.currentState?.switchTab(i);
+                        },
+                      );
+                    }),
+                    _IRDropdownTab(
+                      label: isArabic ? 'تحليلات' : 'Analytics',
+                      isActive: _selectedTab >= 8 && _selectedTab <= 10,
+                      items: analyticsItems,
+                      onSelect: (i) {
+                        setState(() => _selectedTab = 8 + i);
+                        widget.tabBodyKey.currentState?.switchTab(8 + i);
+                      },
+                    ),
+                    _IRTab(
+                      label: isArabic ? 'الاشتراك' : 'Subscribe',
+                      isActive: _selectedTab == 11,
+                      onTap: () {
+                        setState(() => _selectedTab = 11);
+                        widget.tabBodyKey.currentState?.switchTab(11);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+// ── Mobile Tab Dropdown ───────────────────────────────────────────────────────
+class _MobileTabDropdown extends StatelessWidget {
+  final int selectedIndex;
+  final List<String> allTabs;
+  final void Function(int) onSelect;
+  final bool isArabic;
+  final double hp;
+
+  const _MobileTabDropdown({
+    required this.selectedIndex,
+    required this.allTabs,
+    required this.onSelect,
+    required this.isArabic,
+    required this.hp,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final label = selectedIndex < allTabs.length ? allTabs[selectedIndex] : allTabs[0];
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: hp, vertical: 8),
+      child: SelectionContainer.disabled(
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () => _showSheet(context),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppColors.primary, width: 1.5),
+              ),
+              child: Row(
+                mainAxisAlignment: isArabic ? MainAxisAlignment.end : MainAxisAlignment.spaceBetween,
+                children: [
+                  if (!isArabic) Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primary)),
+                  const Icon(Icons.keyboard_arrow_down, color: AppColors.primary, size: 18),
+                  if (isArabic) Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primary)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      builder: (_) => SelectionContainer.disabled(
+        child: Directionality(
+          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              ...List.generate(tabs.length, (i) {
-                return _IRTab(
-                  label: tabs[i],
-                  isActive: _selectedTab == i,
-                  onTap: () {
-                    setState(() => _selectedTab = i);
-                    widget.tabBodyKey.currentState?.switchTab(i);
-                  },
+              const SizedBox(height: 8),
+              Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2))),
+              const SizedBox(height: 8),
+              ...List.generate(allTabs.length, (i) {
+                final isActive = selectedIndex == i;
+                return InkWell(
+                  onTap: () { Navigator.pop(context); onSelect(i); },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                    decoration: BoxDecoration(
+                      color: isActive ? AppColors.primary.withOpacity(0.05) : Colors.white,
+                      border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+                    ),
+                    child: Row(
+                      children: [
+                        if (isActive) Container(width: 3, height: 16, color: AppColors.primary, margin: const EdgeInsets.only(right: 10)),
+                        Text(allTabs[i], style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                          color: isActive ? AppColors.primary : const Color(0xFF1A1A1A),
+                        )),
+                      ],
+                    ),
+                  ),
                 );
               }),
-              _IRDropdownTab(
-                label: isArabic ? 'تحليلات' : 'Analytics',
-                isActive: _selectedTab >= 8 && _selectedTab <= 10,
-                items: analyticsItems,
-                onSelect: (i) {
-                  setState(() => _selectedTab = 8 + i);
-                  widget.tabBodyKey.currentState?.switchTab(8 + i);
-                },
-              ),
-              _IRTab(
-                label: isArabic ? 'الاشتراك' : 'Subscribe',
-                isActive: _selectedTab == 11,
-                onTap: () {
-                  setState(() => _selectedTab = 11);
-                  widget.tabBodyKey.currentState?.switchTab(11);
-                },
-              ),
+              const SizedBox(height: 8),
             ],
           ),
         ),
