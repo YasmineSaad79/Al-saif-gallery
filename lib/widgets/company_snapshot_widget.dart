@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'external_script_widget.dart';
+import '../utils/responsive.dart';
 import '../main.dart';
 
 class CompanySnapshotWidget extends StatefulWidget {
@@ -18,11 +19,12 @@ class _CompanySnapshotWidgetState extends State<CompanySnapshotWidget> {
   @override
   Widget build(BuildContext context) {
     final isAr = localeProvider.isArabic;
+    final isMobile = Responsive.isMobile(context);
     return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 400),
+      constraints: BoxConstraints(minHeight: isMobile ? 600 : 400),
       child: Stack(children: [
-        Visibility(visible: !isAr, maintainState: true, child: const LazyExternalScriptWidget(viewId: 'company-snapshot-view-en', widgetType: 'company-snapshot', fallbackHeight: 400, lang: 'en')),
-        Visibility(visible: isAr,  maintainState: true, child: const LazyExternalScriptWidget(viewId: 'company-snapshot-view-ar', widgetType: 'company-snapshot', fallbackHeight: 400, lang: 'ar')),
+        Visibility(visible: !isAr, maintainState: true, child: LazyExternalScriptWidget(viewId: 'company-snapshot-view-en', widgetType: 'company-snapshot', fallbackHeight: isMobile ? 600 : 400, lang: 'en')),
+        Visibility(visible: isAr,  maintainState: true, child: LazyExternalScriptWidget(viewId: 'company-snapshot-view-ar', widgetType: 'company-snapshot', fallbackHeight: isMobile ? 600 : 400, lang: 'ar')),
       ]),
     );
   }
