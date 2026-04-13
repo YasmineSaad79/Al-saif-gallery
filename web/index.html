@@ -21,13 +21,49 @@
     ::-moz-selection { background: #406583; color: inherit; }
     * { touch-action: manipulation; }
     html, body { touch-action: manipulation; }
-    iframe { user-select: text; -webkit-user-select: text; pointer-events: auto; }
+    iframe { user-select: text; -webkit-user-select: text; }
+    /* Flutter always on top of iframes */
+    flt-glass-pane, flutter-view, flt-scene-host {
+      z-index: 9999 !important;
+      position: relative !important;
+    }
+    iframe {
+      z-index: 1 !important;
+      position: relative !important;
+    }
   </style>
+  <script>
+    // Global functions called directly from Dart via dart:html
+    window.disableAllIframes = function() {
+      window._iframesManuallyDisabled = true;
+      document.querySelectorAll('iframe').forEach(function(f) {
+        f.style.pointerEvents = 'none';
+      });
+    };
+    window.enableAllIframes = function() {
+      window._iframesManuallyDisabled = false;
+      document.querySelectorAll('iframe').forEach(function(f) {
+        f.style.pointerEvents = 'auto';
+      });
+    };
+    window._iframesManuallyDisabled = false;
+  </script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(r) { r.forEach(function(x){x.unregister();}); });
       caches.keys().then(function(k) { k.forEach(function(x){caches.delete(x);}); });
     }
+  </script>
+  <script>
+    // Preload IR widgets by prefetching the widget loader script
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        var link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.href = 'https://irp.atnmo.com/v2/widget/widget-loader.js';
+        document.head.appendChild(link);
+      }, 2000);
+    });
   </script>
   <script>
     // Forward iframe-wheel to irScrollController
@@ -47,26 +83,36 @@
 
         var scrollTimer = null;
 
-        // Disable iframe pointer-events during scroll so wheel reaches Flutter
+        // Disable iframe pointer-events during scroll
         gp.addEventListener('wheel', function(e) {
-          document.querySelectorAll('iframe').forEach(function(f) {
-            f.style.pointerEvents = 'none';
-          });
+          window.disableAllIframes();
           clearTimeout(scrollTimer);
           scrollTimer = setTimeout(function() {
-            document.querySelectorAll('iframe').forEach(function(f) {
-              f.style.pointerEvents = 'auto';
-            });
+            window.enableAllIframes();
           }, 300);
         }, { passive: true });
 
-        // iframe pointer events
-        document.addEventListener('mouseover', function(e) {
-          if (e.target && e.target.tagName === 'IFRAME') gp.style.pointerEvents = 'none';
-        }, true);
-        document.addEventListener('mouseout', function(e) {
-          if (e.target && e.target.tagName === 'IFRAME') gp.style.pointerEvents = '';
-        }, true);
+        // Smart iframe pointer-events management
+        document.addEventListener('mousemove', function(e) {
+          if (window._iframesManuallyDisabled) return;
+
+          // استخدم elementsFromPoint عشان نعرف إذا في Flutter widget تحت الماوس
+          var els = document.elementsFromPoint(e.clientX, e.clientY);
+          var topEl = els[0];
+
+          // إذا أول عنصر هو iframe، فعّل الـ iframes
+          if (topEl && topEl.tagName === 'IFRAME') {
+            document.querySelectorAll('iframe').forEach(function(f) {
+              f.style.pointerEvents = 'auto';
+            });
+          } else {
+            // Flutter element فوق، عطّل الـ iframes
+            document.querySelectorAll('iframe').forEach(function(f) {
+              f.style.pointerEvents = 'none';
+            });
+          }
+        });
+
       });
       observer.observe(document.body, { childList: true, subtree: true });
     });

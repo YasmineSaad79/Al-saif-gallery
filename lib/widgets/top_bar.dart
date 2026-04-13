@@ -5,6 +5,7 @@ import '../utils/app_colors.dart';
 import '../utils/responsive.dart';
 import '../main.dart';
 import 'search_dialog.dart';
+import 'external_script_widget.dart';
 
 class TopBar extends StatefulWidget {
   const TopBar({super.key});
@@ -85,9 +86,11 @@ class _TopBarState extends State<TopBar> {
   }
 
   void _showLanguageDialog(BuildContext context) {
+    setAllIframesPointerEvents(false);
     final isArabic = localeProvider.isArabic;
     showDialog(
       context: context,
+      barrierDismissible: true,
       builder: (_) => SelectionContainer.disabled(
         child: Directionality(
           textDirection: TextDirection.ltr,
@@ -115,7 +118,7 @@ class _TopBarState extends State<TopBar> {
           ),
         ),
       ),
-    );
+    ).then((_) => setAllIframesPointerEvents(true));
   }
 
   Widget _buildItem(String text, String iconPath, VoidCallback? onTap) {

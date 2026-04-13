@@ -45,7 +45,7 @@ class _NCCareersSectionState extends State<NCCareersSection> {
               child: Text(
                 isArabic
                     ? 'ابنِ مسيرتك المهنية مع الرائد السعودي في مستلزمات المنزل. نبحث عن أفراد موهوبين للانضمام إلى فريقنا المتنامي الذي يضم أكثر من \u200E1,280\u200F موظفاً في خمسة أسواق.'
-                    : "Build your career with Saudi Arabia's leading household essentials retailer. We're looking for talented individuals to join our growing team of 1,280+ employees across five markets.",
+                    : "Build your career with Saudi Arabia's leading household essentials retailer. We're looking for talented individuals to join our growing team of 1,280+ employees across Saudi Arabia and 4 GCC countries.",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 14,

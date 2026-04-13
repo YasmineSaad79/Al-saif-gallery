@@ -3,10 +3,12 @@ import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import '../utils/ir_section_keys.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
-
+import '../main.dart';
+import '../screens/investors_governance_screen.dart';
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
 
@@ -74,7 +76,7 @@ class _BlackFooter extends StatelessWidget {
                     const SizedBox(width: 24),
                     Expanded(child: _FooterColumn(title: l.footerCompany, items: [l.footerAboutUs, l.footerStrategy, l.footerCareers], routes: ['/about-us', '/strategy-operations', '/news-careers'])),
                     const SizedBox(width: 24),
-                    Expanded(child: _FooterColumn(title: l.footerInvestors, items: [l.footerAnnualReports, l.footerGovernance, l.footerReports], routes: ['/investors-governance', '/investors-governance', '/investors-governance'])),
+                    Expanded(child: _FooterColumn(title: l.footerInvestors, items: [l.footerAnnualReports, l.footerGovernance, l.footerReports], routes: ['/investors-governance', '/investors-governance', '/investors-governance'], scrollKeys: [IRSectionKeys.companyFinancials, IRSectionKeys.corporateActions, IRSectionKeys.announcements])),
                     const SizedBox(width: 24),
                     Expanded(child: _FooterColumn(title: l.footerContact, items: [l.footerIR, 'ir@alsaifgallery.com', '+966 11 406 4444'], routes: ['/investors-governance', 'mailto:ir@alsaifgallery.com', 'tel:+966114064444'])),
                   ],
@@ -94,7 +96,7 @@ class _BlackFooter extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(child: _FooterColumn(title: l.footerInvestors, items: [l.footerAnnualReports, l.footerGovernance, l.footerReports], routes: ['/investors-governance', '/investors-governance', '/investors-governance'])),
+                        Expanded(child: _FooterColumn(title: l.footerInvestors, items: [l.footerAnnualReports, l.footerGovernance, l.footerReports], routes: ['/investors-governance', '/investors-governance', '/investors-governance'], scrollKeys: [IRSectionKeys.companyFinancials, IRSectionKeys.corporateActions, IRSectionKeys.announcements])),
                         Expanded(child: _FooterColumn(title: l.footerContact, items: [l.footerIR, 'ir@alsaifgallery.com', '+966 11 406 4444'], routes: ['/investors-governance', 'mailto:ir@alsaifgallery.com', 'tel:+966114064444'])),
                       ],
                     ),
@@ -136,15 +138,23 @@ class _FooterColumn extends StatelessWidget {
   final String title;
   final List<String> items;
   final List<String?> routes;
+  final List<GlobalKey?> scrollKeys;
 
   const _FooterColumn({
     required this.title,
     required this.items,
     this.routes = const [],
+    this.scrollKeys = const [],
   });
 
-  void _handleTap(BuildContext context, String route) {
-    if (route.startsWith('mailto:')) {
+  int _footerTabIndex(GlobalKey key) {
+    if (key == IRSectionKeys.companyFinancials) return 5;
+    if (key == IRSectionKeys.corporateActions)  return 4;
+    if (key == IRSectionKeys.announcements)     return 1;
+    return 0;
+  }
+
+  void _handleTap(BuildContext context, String route, GlobalKey? scrollKey) {    if (route.startsWith('mailto:')) {
       final email = route.replaceFirst('mailto:', '');
       html.window.open('https://mail.google.com/mail/?view=cm&to=$email', '_blank');
     } else if (route.startsWith('tel:')) {
@@ -152,7 +162,21 @@ class _FooterColumn extends StatelessWidget {
     } else if (route.startsWith('http')) {
       html.window.open(route, '_blank');
     } else {
-      context.go(route);
+      if (scrollKey != null) {
+        final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+        // scrollKey هنا بيحمل الـ tab index كـ int في الـ hashCode
+        final tabIndex = _footerTabIndex(scrollKey);
+        if (currentPath != '/investors-governance') {
+          context.go('/investors-governance');
+          Future.delayed(const Duration(milliseconds: 400), () {
+            irTabBodyKey.currentState?.switchTab(tabIndex);
+          });
+        } else {
+          irTabBodyKey.currentState?.switchTab(tabIndex);
+        }
+      } else {
+        context.go(route);
+      }
     }
   }
 
@@ -171,7 +195,7 @@ class _FooterColumn extends StatelessWidget {
               child: MouseRegion(
                 cursor: route != null ? SystemMouseCursors.click : MouseCursor.defer,
                 child: GestureDetector(
-                  onTap: route != null ? () => _handleTap(context, route) : null,
+                  onTap: route != null ? () => _handleTap(context, route, i < scrollKeys.length ? scrollKeys[i] : null) : null,
                   child: Text(
                     items[i],
                     style: TextStyle(

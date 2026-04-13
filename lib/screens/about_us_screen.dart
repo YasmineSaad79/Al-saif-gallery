@@ -3,7 +3,6 @@ import '../widgets/top_bar.dart';
 import '../widgets/navigation_bar.dart';
 import '../widgets/about_hero_section.dart';
 import '../widgets/our_purpose_section.dart';
-import '../widgets/investment_case_section.dart';
 import '../widgets/our_values_section.dart';
 import '../widgets/heritage_milestones_section.dart';
 import '../widgets/leadership_section.dart';
@@ -54,9 +53,20 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                   children: [
                     const AboutHeroSection(),
                     KeyedSubtree(key: ScrollKeys.get('our-purpose'),    child: const OurPurposeSection()),
-                    KeyedSubtree(key: ScrollKeys.get('investment-case'), child: const InvestmentCaseSection()),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 48),
+                      child: Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                    ),
                     KeyedSubtree(key: ScrollKeys.get('our-values'),     child: const OurValuesSection()),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 48),
+                      child: Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                    ),
                     KeyedSubtree(key: ScrollKeys.get('heritage'),       child: const HeritageMilestonesSection()),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 48),
+                      child: Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                    ),
                     KeyedSubtree(key: ScrollKeys.get('leadership'),     child: const LeadershipSection()),
                     const FooterSection(),
                   ],

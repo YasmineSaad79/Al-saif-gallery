@@ -23,6 +23,19 @@ void _processQueue() {
   next();
   Future.delayed(const Duration(milliseconds: 1500), _processQueue);
 }
+
+/// Interface عام عشان نقدر نستدعي loadNow من ملفات ثانية
+abstract class LazyLoadable {
+  void loadNow();
+}
+
+/// تعطيل/تفعيل pointer events على كل الـ iframes في الصفحة
+void setAllIframesPointerEvents(bool enabled) {
+  final iframes = html.document.querySelectorAll('iframe');
+  for (final el in iframes) {
+    (el as html.HtmlElement).style.pointerEvents = enabled ? 'auto' : 'none';
+  }
+}
 // ────────────────────────────────────────────────────────────────────────────
 
 /// Wraps [ExternalScriptWidget] and only initializes the iframe
@@ -45,14 +58,25 @@ class LazyExternalScriptWidget extends StatefulWidget {
   State<LazyExternalScriptWidget> createState() => _LazyExternalScriptWidgetState();
 }
 
-class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
+class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> implements LazyLoadable {
   bool _visible = false;
   bool _queued = false;
   final _key = GlobalKey();
 
+  // public method للاستدعاء من الخارج
+  // ignore: library_private_types_in_public_api
+  void loadNow() {
+    if (_queued || _visible) return;
+    _queued = true;
+    _enqueueLoad(() {
+      if (mounted) setState(() => _visible = true);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    // لا تحمل تلقائياً، انتظر السكرول اليدوي أو الطلب من الـ dropdown
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkVisibility());
   }
 
@@ -70,16 +94,19 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> {
     }
     final pos = box.localToGlobal(Offset.zero);
     final screenH = MediaQuery.of(ctx).size.height;
-    if (pos.dy < screenH + 600) {
-      // visible — add to queue instead of loading immediately
+    // حمّل بس لما تكون على الشاشة فعلاً (بدون buffer)
+    if (pos.dy >= 0 && pos.dy < screenH) {
       _queued = true;
       _enqueueLoad(() {
         if (mounted) setState(() => _visible = true);
       });
     } else {
-      Future.delayed(const Duration(milliseconds: 600), _checkVisibility);
+      Future.delayed(const Duration(milliseconds: 800), _checkVisibility);
     }
   }
+
+  /// يُستدعى من الخارج عشان يحمل الـ widget فوراً (من الـ dropdown)
+  // (handled above in loadNow)
 
   @override
   Widget build(BuildContext context) {

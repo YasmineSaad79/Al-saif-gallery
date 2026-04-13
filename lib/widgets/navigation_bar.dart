@@ -5,9 +5,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
+import '../utils/ir_section_keys.dart';
 import '../utils/responsive.dart';
 import '../main.dart';
-
+import '../widgets/external_script_widget.dart';
+import '../screens/investors_governance_screen.dart';
 const String _irPageBase = String.fromEnvironment(
   'IR_PAGE_URL',
   defaultValue: 'http://localhost:3001/ir',
@@ -137,7 +139,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                 const SizedBox(width: 32),
                 _NavItem(text: l.navStrategy, isActive: currentRoute == '/strategy-operations', onTap: () => context.go('/strategy-operations')),
                 const SizedBox(width: 32),
-                _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: () => _goToIR(context)),
+                _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: () => context.go('/investors-governance')),
                 const SizedBox(width: 32),
                 _NavItem(text: l.navNewsroom, isActive: currentRoute == '/news-careers', onTap: () => context.go('/news-careers')),
               ] else
@@ -153,7 +155,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
               if (!isMobile) ...[
                 _NavItem(text: l.navNewsroom, isActive: currentRoute == '/news-careers', onTap: () => context.go('/news-careers')),
                 const SizedBox(width: 32),
-                _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: () => _goToIR(context)),
+                _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: () => context.go('/investors-governance')),
                 const SizedBox(width: 32),
                 _NavItem(text: l.navStrategy, isActive: currentRoute == '/strategy-operations', onTap: () => context.go('/strategy-operations')),
                 const SizedBox(width: 32),
@@ -170,8 +172,193 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
   }
 }
 
-class _NavItem extends StatelessWidget {
-  final String text;
+// ── IR Dropdown Nav Item ──────────────────────────────────────────────────────
+class _IRDropdownNavItem extends StatefulWidget {
+  final bool isActive;
+  final bool onPage;
+  final AppLocalizations l;
+  const _IRDropdownNavItem({required this.isActive, required this.l, required this.onPage});
+
+  @override
+  State<_IRDropdownNavItem> createState() => _IRDropdownNavItemState();
+}
+
+class _IRDropdownNavItemState extends State<_IRDropdownNavItem> {
+  bool _hovered = false;
+  OverlayEntry? _overlay;
+  final _key = GlobalKey();
+
+  void _showDropdown() {
+    _removeDropdown();
+    setAllIframesPointerEvents(false); // عطّل الـ iframes
+    final box = _key.currentContext!.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero);
+    final isArabic = widget.l.isArabic;
+
+    final items = isArabic ? [
+      ('نظرة عامة', 0),
+      ('الإعلانات', 1),
+      ('نشرة المعلومات', 2),
+      ('نشاط السهم', 3),
+      ('الإجراءات النظامية', 4),
+      ('البيانات المالية', 5),
+      ('سعر السهم', 6),
+      ('الأداء', 7),
+    ] : [
+      ('Company Snapshot', 0),
+      ('Announcements', 1),
+      ('Fact Sheet', 2),
+      ('Stock Activity', 3),
+      ('Corporate Actions', 4),
+      ('Company Financials', 5),
+      ('Share Price', 6),
+      ('Performance', 7),
+    ];
+
+    _overlay = OverlayEntry(
+      builder: (_) => Stack(
+        children: [
+          Positioned(
+            left: isArabic ? null : offset.dx,
+            right: isArabic ? MediaQuery.of(context).size.width - offset.dx - box.size.width : null,
+            top: offset.dy + box.size.height + 4,
+            child: MouseRegion(
+              onExit: (_) => _removeDropdown(),
+              child: Material(
+                elevation: 8,
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  width: 220,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFFE8E8E8)),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: items.map((item) {
+                      return InkWell(
+                        onTap: () {
+                          final tabIndex = item.$2;
+                          _removeDropdown();
+                          final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+                          if (currentPath != '/investors-governance') {
+                            GoRouter.of(context).go('/investors-governance');
+                            Future.delayed(const Duration(milliseconds: 600), () {
+                              irTabBodyKey.currentState?.switchTab(tabIndex);
+                            });
+                          } else {
+                            // تأخير بسيط عشان الـ overlay يختفي أولاً
+                            Future.delayed(const Duration(milliseconds: 50), () {
+                              irTabBodyKey.currentState?.switchTab(tabIndex);
+                            });
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          decoration: BoxDecoration(
+                            border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+                          ),
+                          child: Text(
+                            item.$1,
+                            textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                            style: const TextStyle(fontSize: 13, color: Color(0xFF1A1A1A)),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    Overlay.of(context).insert(_overlay!);
+  }
+
+  void _removeDropdown() {
+    _overlay?.remove();
+    _overlay = null;
+    setAllIframesPointerEvents(true); // أعد تفعيل الـ iframes
+  }
+
+  @override
+  void dispose() {
+    _removeDropdown();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // لما مش على صفحة IR، يتصرف كزر عادي بدون dropdown
+    if (!widget.onPage) {
+      return SelectionContainer.disabled(
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () => GoRouter.of(context).go('/investors-governance'),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.l.navInvestors,
+                  style: TextStyle(
+                    color: _hovered ? AppColors.textPrimary : AppColors.textSecondary,
+                    fontSize: 13.1,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Container(height: 2, width: 40, color: Colors.transparent),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // على صفحة IR: يظهر الـ dropdown
+    return SelectionContainer.disabled(
+      child: MouseRegion(
+        key: _key,
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) { setState(() => _hovered = true); _showDropdown(); },
+        onExit:  (_) { setState(() => _hovered = false); },
+        child: GestureDetector(
+          onTap: _showDropdown,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    widget.l.navInvestors,
+                    style: TextStyle(
+                      color: (widget.isActive || _hovered) ? AppColors.textPrimary : AppColors.textSecondary,
+                      fontSize: 13.1,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(width: 3),
+                  Icon(Icons.keyboard_arrow_down, size: 14,
+                    color: (widget.isActive || _hovered) ? AppColors.textPrimary : AppColors.textSecondary),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Container(height: 2, width: 40, color: widget.isActive ? AppColors.primary : Colors.transparent),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {  final String text;
   final bool isActive;
   final VoidCallback? onTap;
 

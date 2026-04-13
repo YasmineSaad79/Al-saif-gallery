@@ -75,7 +75,7 @@ class _StrategyPillarsSectionState extends State<StrategyPillarsSection> {
         paragraphs: isArabic ? [
           'يمثّل موظفو صالات العرض والمستودعات ومراكز الخدمة أكثر من \u200E1,280\u200F موظفاً في خمسة أسواق. أداؤهم اليومي هو الذي يُترجم الاستراتيجية إلى تجربة عميل حقيقية. نستثمر في التدريب المنظّم ومعايير الخدمة المحددة وإجراءات السلامة وأنظمة إدارة الأداء المصمّمة لمكافأة الاتساق والاهتمام والمساءلة. التميز التشغيلي ليس وثيقة تُحفظ في أدراج الإدارة، بل ما يحدث فعلياً حين يتبع المدرَّبون عمليات منضبطة في خدمة عملاء مُطالِبين.',
         ] : [
-          'Our showroom teams, warehouse operations, and service centers represent over 1,280 employees across five markets. Their daily performance is what translates strategy into customer experience. We invest in structured training, defined service standards, safety procedures, and performance management systems designed to reward consistency, care, and accountability. Operational excellence is not a management document. It is what happens when trained people follow disciplined processes in service of demanding customers.',
+          'Our showroom teams, warehouse operations, and service centers represent over 1,280 employees across Saudi Arabia and 4 GCC countries. Their daily performance is what translates strategy into customer experience. We invest in structured training, defined service standards, safety procedures, and performance management systems designed to reward consistency, care, and accountability. Operational excellence is not a management document. It is what happens when trained people follow disciplined processes in service of demanding customers.',
         ],
       ),
     ];

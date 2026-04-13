@@ -134,7 +134,6 @@ class _HeritageMilestonesSectionState extends State<HeritageMilestonesSection>
       (year: l.m2022year,  title: l.m2022title,  desc: l.m2022desc),
       (year: l.m2023year,  title: l.m2023title,  desc: l.m2023desc),
       (year: l.m2024year,  title: l.m2024title,  desc: l.m2024desc),
-      (year: l.m2024bYear, title: l.m2024bTitle, desc: l.m2024bDesc),
     ];
 
     return Container(
@@ -205,7 +204,7 @@ class _HeritageMilestonesSectionState extends State<HeritageMilestonesSection>
               onEnter: (_) => _onUserInteractionStart(),
               onExit: (_) => _onUserInteractionEnd(),
               child: SizedBox(
-                height: 260,
+                height: 200,
                 child: Listener(
                   onPointerDown: (_) => _onUserInteractionStart(),
                   onPointerUp: (_) => _onUserInteractionEnd(),

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import '../widgets/top_bar.dart';
 import '../widgets/navigation_bar.dart';
@@ -20,8 +22,14 @@ import '../widgets/peer_group_analysis_widget.dart';
 import '../widgets/performance_widget.dart';
 import '../widgets/share_series_widget.dart';
 import '../widgets/footer_section.dart';
+import '../utils/app_colors.dart';
+import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
 import '../main.dart';
+import '../widgets/external_script_widget.dart';
+
+// Global key عشان الـ navbar يقدر يغير الـ tab
+final GlobalKey<_IRTabBodyState> irTabBodyKey = GlobalKey<_IRTabBodyState>();
 
 class InvestorsGovernanceScreen extends StatelessWidget {
   const InvestorsGovernanceScreen({super.key});
@@ -40,30 +48,23 @@ class InvestorsGovernanceScreen extends StatelessWidget {
                 const TopBar(),
                 const CustomNavigationBar(),
                 Expanded(
-                  child: SingleChildScrollView(
+                  child: CustomScrollView(
                     controller: irScrollController,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        IGHeroSection(),
-                        IGIntroSection(),
-                        IGInvestmentCaseSection(),
-                        _StockTickerSection(),
-                        _CompanySnapshotSection(),
-                        _CorporateNewsSection(),
-                        _FactSheetSection(),
-                        _StockActivitySection(),
-                        _CorporateActionsSection(),
-                        _CompanyFinancialsSection(),
-                        _InvestmentCalculatorSection(),
-                        _SharePriceSection(),
-                        _PeerGroupAnalysisSection(),
-                        _PerformanceSection(),
-                        _ShareSeriesSection(),
-                        _EmailSubscriptionSection(),
-                        FooterSection(),
-                      ],
-                    ),
+                    slivers: [
+                      // ── Non-sticky content ──
+                      const SliverToBoxAdapter(child: IGHeroSection()),
+                      const SliverToBoxAdapter(child: IGIntroSection()),
+                      const SliverToBoxAdapter(child: IGInvestmentCaseSection()),
+                      const SliverToBoxAdapter(child: _StockTickerSection()),
+                      // ── Sticky Tab Bar ──
+                      SliverPersistentHeader(
+                        pinned: true,
+                        delegate: _IRTabBarDelegate(tabBodyKey: irTabBodyKey),
+                      ),
+                      // ── Tab Content ──
+                      SliverToBoxAdapter(child: _IRTabContent(key: irTabBodyKey)),
+                      const SliverToBoxAdapter(child: FooterSection()),
+                    ],
                   ),
                 ),
               ],
@@ -75,68 +76,504 @@ class InvestorsGovernanceScreen extends StatelessWidget {
   }
 }
 
-// ===== مساعد لبناء section بعنوان =====
-class _SectionWithTitle extends StatefulWidget {
-  final String titleEn;
-  final String titleAr;
-  final Widget child;
-  final double topPad;
-  final bool showTitle;
+// ── Shared Tab State ──────────────────────────────────────────────────────────
+class _IRTabBodyState extends State<_IRTabContent> {
+  int _selectedTab = 0;
 
-  const _SectionWithTitle({
-    required this.titleEn,
-    required this.titleAr,
-    required this.child,
-    this.topPad = 8,
-    this.showTitle = true,
-  });
+  void switchTab(int index) {
+    if (mounted) setState(() => _selectedTab = index);
+  }
 
   @override
-  State<_SectionWithTitle> createState() => _SectionWithTitleState();
-}
+  void initState() {
+    super.initState();
+    localeProvider.addListener(_rebuild);
+  }
 
-class _SectionWithTitleState extends State<_SectionWithTitle> {
-  @override
-  void initState() { super.initState(); localeProvider.addListener(_rebuild); }
   void _rebuild() { if (mounted) setState(() {}); }
+
   @override
-  void dispose() { localeProvider.removeListener(_rebuild); super.dispose(); }
+  void dispose() {
+    localeProvider.removeListener(_rebuild);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final isArabic = l.isArabic;
     final hp = Responsive.getHorizontalPadding(context);
-    final isArabic = localeProvider.isArabic;
-    final title = isArabic ? widget.titleAr : widget.titleEn;
 
     return Container(
       width: double.infinity,
-      color: Colors.white,
-      padding: EdgeInsets.fromLTRB(hp, widget.topPad, hp, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (widget.showTitle) ...[
-            SizedBox(
-              width: double.infinity,
-              child: Text(
-                title,
-                textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+      decoration: const BoxDecoration(color: Colors.white),
+      padding: EdgeInsets.symmetric(horizontal: hp, vertical: 16),
+      child: _buildTabContent(_selectedTab, isArabic),
+    );
+  }
+
+  Widget _buildTabContent(int index, bool isArabic) {
+    final titles = isArabic ? [
+      'نظرة عامة عن الشركة', 'الإعلانات', 'نشرة المعلومات', 'نشاط السهم',
+      'الإجراءات النظامية', 'البيانات المالية', 'سعر السهم', 'الأداء',
+      'حاسبة الاستثمار', 'سلسلة الأسهم', 'تحليل المجموعة المماثلة', 'الاشتراك بالبريد الإلكتروني',
+    ] : [
+      'Company Snapshot', 'Announcements', 'Fact Sheet', 'Stock Activity',
+      'Corporate Actions', 'Company Financials', 'Share Price', 'Performance',
+      'Investment Calculator', 'Share Series', 'Peer Group Analysis', 'Email Subscription',
+    ];
+
+    final widgets = [
+      const CompanySnapshotWidget(),
+      const CorporateNewsWidget(),
+      _FactSheetContent(isArabic: isArabic),
+      _StockActivityContent(isArabic: isArabic),
+      const CorporateActionsWidget(),
+      const CompanyFinancialsWidget(),
+      const SharePriceWidget(),
+      const PerformanceWidget(),
+      const InvestmentCalculatorWidget(),
+      const ShareSeriesWidget(),
+      const PeerGroupAnalysisWidget(),
+      const EmailSubscriptionWidget(),
+    ];
+
+    if (index < 0 || index >= titles.length) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Directionality(
+          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Text(
+              titles[index],
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF1A1A1A),
               ),
             ),
-            const SizedBox(height: 8),
-          ],
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: widget.child,
+          ),
+        ),
+        widgets[index],
+      ],
+    );
+  }
+}
+
+class _IRTabContent extends StatefulWidget {
+  const _IRTabContent({super.key});
+  @override
+  State<_IRTabContent> createState() => _IRTabBodyState();
+}
+
+// ── Tab Bar Delegate (Sticky) ─────────────────────────────────────────────────
+class _IRTabBarDelegate extends SliverPersistentHeaderDelegate {
+  final GlobalKey<_IRTabBodyState> tabBodyKey;
+  _IRTabBarDelegate({required this.tabBodyKey});
+
+  @override
+  double get minExtent => 64;
+  @override
+  double get maxExtent => 64;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return MouseRegion(
+      onEnter: (_) => setAllIframesPointerEvents(false),
+      onExit:  (_) => setAllIframesPointerEvents(true),
+      child: _IRStickyTabBar(tabBodyKey: tabBodyKey),
+    );
+  }
+
+  @override
+  bool shouldRebuild(_IRTabBarDelegate oldDelegate) => false;
+}
+
+// ── Sticky Tab Bar ────────────────────────────────────────────────────────────
+class _IRStickyTabBar extends StatefulWidget {
+  final GlobalKey<_IRTabBodyState> tabBodyKey;
+  const _IRStickyTabBar({required this.tabBodyKey});
+  @override
+  State<_IRStickyTabBar> createState() => _IRStickyTabBarState();
+}
+
+class _IRStickyTabBarState extends State<_IRStickyTabBar> {
+  int _selectedTab = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    localeProvider.addListener(_rebuild);
+  }
+
+  void _rebuild() { if (mounted) setState(() {}); }
+
+  @override
+  void dispose() {
+    localeProvider.removeListener(_rebuild);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final isArabic = l.isArabic;
+    final hp = Responsive.getHorizontalPadding(context);
+
+    final tabs = isArabic ? [
+      'نظرة عامة', 'الإعلانات', 'نشرة المعلومات', 'نشاط السهم',
+      'الإجراءات', 'البيانات المالية', 'سعر السهم', 'الأداء',
+    ] : [
+      'Company Snapshot', 'Announcements', 'Fact Sheet', 'Stock Activity',
+      'Corporate Actions', 'Company Financials', 'Share Price', 'Performance',
+    ];
+
+    final analyticsItems = isArabic ? [
+      'حاسبة الاستثمار', 'سلسلة الأسهم', 'تحليل المجموعة المماثلة',
+    ] : [
+      'Investment Calculator', 'Share Series', 'Peer Group Analysis',
+    ];
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFB),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
         ],
+      ),
+      child: Directionality(
+        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: hp),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ...List.generate(tabs.length, (i) {
+                return _IRTab(
+                  label: tabs[i],
+                  isActive: _selectedTab == i,
+                  onTap: () {
+                    setState(() => _selectedTab = i);
+                    widget.tabBodyKey.currentState?.switchTab(i);
+                  },
+                );
+              }),
+              _IRDropdownTab(
+                label: isArabic ? 'تحليلات' : 'Analytics',
+                isActive: _selectedTab >= 8 && _selectedTab <= 10,
+                items: analyticsItems,
+                onSelect: (i) {
+                  setState(() => _selectedTab = 8 + i);
+                  widget.tabBodyKey.currentState?.switchTab(8 + i);
+                },
+              ),
+              _IRTab(
+                label: isArabic ? 'الاشتراك' : 'Subscribe',
+                isActive: _selectedTab == 11,
+                onTap: () {
+                  setState(() => _selectedTab = 11);
+                  widget.tabBodyKey.currentState?.switchTab(11);
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
-// ===== Stock Ticker (بدون عنوان) =====
+// ── Old _IRTabBody removed ────────────────────────────────────────────────────
+
+// ── Fact Sheet Tab ────────────────────────────────────────────────────────────
+class _FactSheetContent extends StatefulWidget {
+  final bool isArabic;
+  const _FactSheetContent({required this.isArabic});
+  @override
+  State<_FactSheetContent> createState() => _FactSheetContentState();
+}
+
+class _FactSheetContentState extends State<_FactSheetContent> {
+  int _tab = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            _SubTab(label: widget.isArabic ? 'جدول' : 'Table', selected: _tab == 0, onTap: () => setState(() => _tab = 0)),
+            const SizedBox(width: 8),
+            _SubTab(label: widget.isArabic ? 'رسم بياني' : 'Chart', selected: _tab == 1, onTap: () => setState(() => _tab = 1)),
+          ],
+        ),
+        const SizedBox(height: 16),
+        if (_tab == 0) const FactSheetTableWidget(),
+        if (_tab == 1) const FactSheetChartsWidget(),
+      ],
+    );
+  }
+}
+
+// ── Stock Activity Tab ────────────────────────────────────────────────────────
+class _StockActivityContent extends StatefulWidget {
+  final bool isArabic;
+  const _StockActivityContent({required this.isArabic});
+  @override
+  State<_StockActivityContent> createState() => _StockActivityContentState();
+}
+
+class _StockActivityContentState extends State<_StockActivityContent> {
+  int _tab = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            _SubTab(label: widget.isArabic ? 'بسيط' : 'Simple', selected: _tab == 0, onTap: () => setState(() => _tab = 0)),
+            const SizedBox(width: 8),
+            _SubTab(label: widget.isArabic ? 'متقدم' : 'Advanced', selected: _tab == 1, onTap: () => setState(() => _tab = 1)),
+          ],
+        ),
+        const SizedBox(height: 16),
+        if (_tab == 0) const StockActivitySimpleWidget(),
+        if (_tab == 1) const StockActivityAdvancedWidget(),
+      ],
+    );
+  }
+}
+
+// ── More Tab ──────────────────────────────────────────────────────────────────
+class _MoreContent extends StatelessWidget {
+  final bool isArabic;
+  const _MoreContent({required this.isArabic});
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const PerformanceWidget(),
+        const SizedBox(height: 24),
+        Text(isArabic ? 'حاسبة الاستثمار' : 'Investment Calculator',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 12),
+        const InvestmentCalculatorWidget(),
+        const SizedBox(height: 24),
+        Text(isArabic ? 'تحليل المجموعة المماثلة' : 'Peer Group Analysis',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 12),
+        const PeerGroupAnalysisWidget(),
+        const SizedBox(height: 24),
+        Text(isArabic ? 'سلسلة الأسهم' : 'Share Series',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 12),
+        const ShareSeriesWidget(),
+        const SizedBox(height: 24),
+        const EmailSubscriptionWidget(),
+      ],
+    );
+  }
+}
+
+// ── IR Dropdown Tab ───────────────────────────────────────────────────────────
+class _IRDropdownTab extends StatefulWidget {
+  final String label;
+  final bool isActive;
+  final List<String> items;
+  final void Function(int) onSelect;
+  const _IRDropdownTab({required this.label, required this.isActive, required this.items, required this.onSelect});
+  @override
+  State<_IRDropdownTab> createState() => _IRDropdownTabState();
+}
+
+class _IRDropdownTabState extends State<_IRDropdownTab> {
+  bool _hovered = false;
+  OverlayEntry? _overlay;
+  final _key = GlobalKey();
+
+  void _show() {
+    _remove();
+    setAllIframesPointerEvents(false);
+    final box = _key.currentContext!.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero);
+
+    // بناء الـ dropdown كـ HTML element مباشرة فوق كل شي
+    final dropdown = html.DivElement()
+      ..id = 'ir-dropdown'
+      ..style.position = 'fixed'
+      ..style.left = '${offset.dx}px'
+      ..style.top = '${offset.dy + box.size.height}px'
+      ..style.background = 'white'
+      ..style.borderRadius = '8px'
+      ..style.boxShadow = '0 4px 16px rgba(0,0,0,0.12)'
+      ..style.border = '1px solid #E8E8E8'
+      ..style.zIndex = '99999'
+      ..style.minWidth = '200px'
+      ..style.overflow = 'hidden';
+
+    for (var i = 0; i < widget.items.length; i++) {
+      final item = html.DivElement()
+        ..text = widget.items[i]
+        ..style.padding = '12px 16px'
+        ..style.cursor = 'pointer'
+        ..style.fontSize = '13px'
+        ..style.color = '#1A1A1A'
+        ..style.borderBottom = i < widget.items.length - 1 ? '1px solid #F3F4F6' : 'none';
+
+      final idx = i;
+      item.onMouseEnter.listen((_) => item.style.background = '#F8FAFB');
+      item.onMouseLeave.listen((_) => item.style.background = 'white');
+      item.onClick.listen((_) {
+        _remove();
+        widget.onSelect(idx);
+      });
+      dropdown.append(item);
+    }
+
+    // كبسة خارج الـ dropdown تغلقه
+    _outsideClickListener = (html.Event e) {
+      if (!dropdown.contains(e.target as html.Node?)) {
+        _remove();
+      }
+    };
+    html.document.addEventListener('click', _outsideClickListener!);
+    html.document.body!.append(dropdown);
+    _htmlDropdown = dropdown;
+  }
+
+  html.DivElement? _htmlDropdown;
+  html.EventListener? _outsideClickListener;
+
+  void _remove() {
+    _htmlDropdown?.remove();
+    _htmlDropdown = null;
+    if (_outsideClickListener != null) {
+      html.document.removeEventListener('click', _outsideClickListener!);
+      _outsideClickListener = null;
+    }
+    setAllIframesPointerEvents(true);
+    _overlay?.remove();
+    _overlay = null;
+  }
+
+  @override
+  void dispose() { _remove(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    final highlight = widget.isActive || _hovered;
+    return MouseRegion(
+      key: _key,
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) { setState(() => _hovered = true); _show(); },
+      onExit:  (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: _show,
+        child: SelectionContainer.disabled(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            margin: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: widget.isActive ? Colors.white : (highlight ? Colors.white.withOpacity(0.6) : Colors.transparent),
+              border: Border(
+                top: BorderSide(color: widget.isActive ? AppColors.primary : Colors.transparent, width: 2),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  widget.label,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: widget.isActive ? FontWeight.w600 : FontWeight.w400,
+                    color: highlight ? AppColors.primary : const Color(0xFF6B7280),
+                  ),
+                ),
+                const SizedBox(width: 3),
+                Icon(Icons.keyboard_arrow_down, size: 14,
+                  color: highlight ? AppColors.primary : const Color(0xFF6B7280)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── IR Tab ────────────────────────────────────────────────────────────────────
+class _IRTab extends StatefulWidget {
+  final String label;
+  final bool isActive;
+  final VoidCallback onTap;
+  const _IRTab({required this.label, required this.isActive, required this.onTap});
+  @override
+  State<_IRTab> createState() => _IRTabState();
+}
+
+class _IRTabState extends State<_IRTab> {
+  bool _hovered = false;
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit:  (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          margin: const EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: widget.isActive ? Colors.white : (_hovered ? Colors.white.withOpacity(0.6) : Colors.transparent),
+            border: Border(
+              top: BorderSide(
+                color: widget.isActive ? AppColors.primary : Colors.transparent,
+                width: 2,
+              ),
+            ),
+          ),
+          child: SelectionContainer.disabled(
+            child: Text(
+              widget.label,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.visible,
+              softWrap: false,
+              style: TextStyle(
+                fontSize: 12.5,
+                fontWeight: widget.isActive ? FontWeight.w600 : FontWeight.w400,
+                color: widget.isActive
+                    ? AppColors.primary
+                    : _hovered
+                        ? AppColors.primary
+                        : const Color(0xFF6B7280),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Stock Ticker ──────────────────────────────────────────────────────────────
 class _StockTickerSection extends StatelessWidget {
   const _StockTickerSection();
   @override
@@ -149,286 +586,50 @@ class _StockTickerSection extends StatelessWidget {
         color: Colors.white,
         padding: EdgeInsets.fromLTRB(hp, 16, hp, 8),
         child: Container(
-            clipBehavior: Clip.hardEdge,
-            decoration: const BoxDecoration(
-              color: Color(0xFFF8F9FA),
-              border: Border(
-                top: BorderSide(color: Color(0xFFE53935), width: 2),
-                bottom: BorderSide(color: Color(0xFFE53935), width: 2),
-              ),
+          clipBehavior: Clip.hardEdge,
+          decoration: const BoxDecoration(
+            color: Color(0xFFF8F9FA),
+            border: Border(
+              top: BorderSide(color: Color(0xFFE53935), width: 2),
+              bottom: BorderSide(color: Color(0xFFE53935), width: 2),
             ),
-            height: 70,
-            child: const StockTickerWidget(),
           ),
-      ),
-    );
-  }
-}
-
-// ===== Company Snapshot =====
-class _CompanySnapshotSection extends StatelessWidget {
-  const _CompanySnapshotSection();
-  @override
-  Widget build(BuildContext context) {
-    return const _SectionWithTitle(
-      titleEn: 'Company Snapshot',
-      titleAr: 'نظرة عامة عن الشركة',
-      child: CompanySnapshotWidget(),
-    );
-  }
-}
-
-// ===== Announcements =====
-class _CorporateNewsSection extends StatelessWidget {
-  const _CorporateNewsSection();
-  @override
-  Widget build(BuildContext context) {
-    return const _SectionWithTitle(
-      titleEn: 'Announcements',
-      titleAr: 'الإعلانات',
-      child: CorporateNewsWidget(),
-    );
-  }
-}
-
-// ===== Fact Sheet =====
-class _FactSheetSection extends StatefulWidget {
-  const _FactSheetSection();
-  @override
-  State<_FactSheetSection> createState() => _FactSheetSectionState();
-}
-
-class _FactSheetSectionState extends State<_FactSheetSection> {
-  int _tab = 0;
-
-  @override
-  void initState() { super.initState(); localeProvider.addListener(_rebuild); }
-  void _rebuild() { if (mounted) setState(() {}); }
-  @override
-  void dispose() { localeProvider.removeListener(_rebuild); super.dispose(); }
-
-  @override
-  Widget build(BuildContext context) {
-    final hp = Responsive.getHorizontalPadding(context);
-    final isArabic = localeProvider.isArabic;
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: Text(isArabic ? 'نشرة المعلومات' : 'Fact Sheet',
-                  textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: isArabic ? MainAxisAlignment.end : MainAxisAlignment.start,
-              children: [
-                _TabButton(label: isArabic ? 'جدول' : 'Table', selected: _tab == 0, onTap: () => setState(() => _tab = 0)),
-                const SizedBox(width: 8),
-                _TabButton(label: isArabic ? 'رسم بياني' : 'Chart', selected: _tab == 1, onTap: () => setState(() => _tab = 1)),
-              ],
-            ),
-            const SizedBox(height: 16),
-            if (_tab == 0) const FactSheetTableWidget(),
-            if (_tab == 1) const FactSheetChartsWidget(),
-          ],
+          height: 70,
+          child: const StockTickerWidget(),
         ),
       ),
     );
   }
 }
 
-// ===== Stock Activity =====
-class _StockActivitySection extends StatefulWidget {
-  const _StockActivitySection();
-  @override
-  State<_StockActivitySection> createState() => _StockActivitySectionState();
-}
-
-class _StockActivitySectionState extends State<_StockActivitySection> {
-  int _tab = 0;
-
-  @override
-  void initState() { super.initState(); localeProvider.addListener(_rebuild); }
-  void _rebuild() { if (mounted) setState(() {}); }
-  @override
-  void dispose() { localeProvider.removeListener(_rebuild); super.dispose(); }
-
-  @override
-  Widget build(BuildContext context) {
-    final hp = Responsive.getHorizontalPadding(context);
-    final isArabic = localeProvider.isArabic;
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        width: double.infinity,
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(hp, 8, hp, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: Text(isArabic ? 'نشاط السهم' : 'Stock Activity',
-                  textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: isArabic ? MainAxisAlignment.end : MainAxisAlignment.start,
-              children: [
-                _TabButton(label: isArabic ? 'بسيط' : 'Simple', selected: _tab == 0, onTap: () => setState(() => _tab = 0)),
-                const SizedBox(width: 8),
-                _TabButton(label: isArabic ? 'متقدم' : 'Advanced', selected: _tab == 1, onTap: () => setState(() => _tab = 1)),
-              ],
-            ),
-            const SizedBox(height: 16),
-            if (_tab == 0) const StockActivitySimpleWidget(),
-            if (_tab == 1) const StockActivityAdvancedWidget(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ===== Corporate Actions =====
-class _CorporateActionsSection extends StatelessWidget {
-  const _CorporateActionsSection();
-  @override
-  Widget build(BuildContext context) {
-    return const _SectionWithTitle(
-      titleEn: 'Corporate Actions',
-      titleAr: 'الإجراءات النظامية',
-      child: CorporateActionsWidget(),
-    );
-  }
-}
-
-// ===== Company Financials =====
-class _CompanyFinancialsSection extends StatelessWidget {
-  const _CompanyFinancialsSection();
-  @override
-  Widget build(BuildContext context) {
-    return const _SectionWithTitle(
-      titleEn: 'Company Financials',
-      titleAr: 'البيانات المالية',
-      child: CompanyFinancialsWidget(),
-    );
-  }
-}
-
-// ===== Investment Calculator =====
-class _InvestmentCalculatorSection extends StatelessWidget {
-  const _InvestmentCalculatorSection();
-  @override
-  Widget build(BuildContext context) {
-    return const _SectionWithTitle(
-      titleEn: 'Investment Calculator',
-      titleAr: 'حاسبة الاستثمار',
-      child: InvestmentCalculatorWidget(),
-    );
-  }
-}
-
-// ===== Share Price =====
-class _SharePriceSection extends StatelessWidget {
-  const _SharePriceSection();
-  @override
-  Widget build(BuildContext context) {
-    return const _SectionWithTitle(
-      titleEn: 'Share Price',
-      titleAr: 'سعر السهم',
-      child: SharePriceWidget(),
-    );
-  }
-}
-
-// ===== Peer Group Analysis =====
-class _PeerGroupAnalysisSection extends StatelessWidget {
-  const _PeerGroupAnalysisSection();
-  @override
-  Widget build(BuildContext context) {
-    return const _SectionWithTitle(
-      titleEn: 'Peer Group Analysis',
-      titleAr: 'تحليل المجموعة المماثلة',
-      child: PeerGroupAnalysisWidget(),
-    );
-  }
-}
-
-// ===== Performance =====
-class _PerformanceSection extends StatelessWidget {
-  const _PerformanceSection();
-  @override
-  Widget build(BuildContext context) {
-    return const _SectionWithTitle(
-      titleEn: 'Performance',
-      titleAr: 'الأداء',
-      child: PerformanceWidget(),
-    );
-  }
-}
-
-// ===== Share Series =====
-class _ShareSeriesSection extends StatelessWidget {
-  const _ShareSeriesSection();
-  @override
-  Widget build(BuildContext context) {
-    return const _SectionWithTitle(
-      titleEn: 'Share Series',
-      titleAr: 'سلسلة الأسهم',
-      child: ShareSeriesWidget(),
-    );
-  }
-}
-
-// ===== Email Subscription =====
-class _EmailSubscriptionSection extends StatelessWidget {
-  const _EmailSubscriptionSection();
-  @override
-  Widget build(BuildContext context) {
-    return const _SectionWithTitle(
-      titleEn: 'Email Subscription',
-      titleAr: 'الاشتراك بالبريد الإلكتروني',
-      child: EmailSubscriptionWidget(),
-    );
-  }
-}
-
-// ===== Tab Button =====
-class _TabButton extends StatelessWidget {
+// ── Sub Tab Button ────────────────────────────────────────────────────────────
+class _SubTab extends StatelessWidget {
   final String label;
   final bool selected;
   final VoidCallback onTap;
-
-  const _TabButton({required this.label, required this.selected, required this.onTap});
+  const _SubTab({required this.label, required this.selected, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-        decoration: BoxDecoration(
-          color: selected ? Colors.white : Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(6),
-          border: selected
-              ? Border.all(color: Colors.red, width: 2)
-              : Border.all(color: Colors.transparent),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: selected ? Colors.black : Colors.grey,
-            fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+          decoration: BoxDecoration(
+            color: selected ? Colors.white : Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(6),
+            border: selected
+                ? Border.all(color: Colors.red, width: 2)
+                : Border.all(color: Colors.transparent),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: selected ? Colors.black : Colors.grey,
+              fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+            ),
           ),
         ),
       ),

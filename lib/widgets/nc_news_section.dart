@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
 import '../main.dart';
@@ -23,37 +24,40 @@ class _NCNewsSectionState extends State<NCNewsSection> {
 
     final items = [
       _NewsItem(
-        date:     isArabic ? 'مارس \u200E2026\u200F'    : 'March 2026',
-        tag:      isArabic ? 'نتائج مالية'  : 'Financial Results',
+        date:     isArabic ? 'الربع الثالث \u200E2025\u200F' : 'Q3 2025',
+        tag:      isArabic ? 'قيادة'  : 'Leadership',
         tagColor: const Color(0xFFE53935),
         title:    isArabic
-            ? 'نتائج الربع الأول \u200E2026\u200F'
-            : 'Q1 2026 Financial Results',
+            ? 'الرئيس التنفيذي لسيف غاليري يتوقع استمرار الزخم الإيجابي'
+            : 'Alsaif Gallery CEO Expects Positive Momentum to Continue',
         desc:     isArabic
-            ? 'تعلن السيف غاليري عن نتائج الربع الأول، مع استمرار زخم نمو القنوات الرقمية وتحسينات الكفاءة التشغيلية.'
-            : 'Al Saif Gallery announces first quarter results, continuing momentum in digital channel growth and operational efficiency improvements.',
+            ? 'يتوقع الرئيس التنفيذي أحمد آل سلطان استمرار الزخم الإيجابي مدفوعاً بتعزيز تجربة العميل وتوسيع القنوات الرقمية والتوسع المدروس.'
+            : 'CEO Ahmed AlSultan expects continued positive momentum driven by enhanced customer experience, digital channel expansion, and measured growth.',
+        url: 'https://www.argaam.com/en/article/articledetail/id/1850328',
       ),
       _NewsItem(
-        date:     isArabic ? 'ديسمبر \u200E2024\u200F'  : 'December 2024',
+        date:     isArabic ? '\u200E2024\u200F' : '2024',
         tag:      isArabic ? 'قيادة'         : 'Leadership',
         tagColor: const Color(0xFFE53935),
         title:    isArabic
-            ? 'تعيين رئيس تنفيذي جديد'
-            : 'New CEO Appointment',
+            ? 'السيف غاليري تعيّن سليمان السيف رئيساً ومحمد السيف نائباً للرئيس'
+            : 'Alsaif Gallery Appoints Sulaiman Alsaif as Chairman and Mohammed Alsaif as Vice Chairman',
         desc:     isArabic
-            ? 'تعيين أحمد بن صالح آل سلطان رئيساً تنفيذياً، وهو أول رئيس تنفيذي محترف من خارج الأسرة المؤسِّسة في تاريخ الشركة.'
-            : 'Ahmed bin Saleh Al Sultan appointed as CEO, marking the first professional, non-family CEO in the Company\'s history.',
+            ? 'أعلنت السيف غاليري عن تعيينات قيادية جديدة في مجلس الإدارة.'
+            : 'Alsaif Gallery announces new board leadership appointments.',
+        url: 'https://maaal.com/en/news/details/alsaif-gallery-appoints-s-a/',
       ),
       _NewsItem(
-        date:     isArabic ? 'ديسمبر \u200E2024\u200F'  : 'December 2024',
+        date:     isArabic ? 'الربع الرابع \u200E2024\u200F' : 'Q4 2024',
         tag:      isArabic ? 'توسع'          : 'Expansion',
         tagColor: const Color(0xFFE53935),
         title:    isArabic
-            ? 'التوسع الخليجي مستمر'
-            : 'GCC Expansion Continues',
+            ? 'السيف غاليري تفتتح أول فرع لها في قطر'
+            : 'Alsaif Gallery Opens First Branch in Qatar',
         desc:     isArabic
-            ? 'افتتاح صالات عرض جديدة في الدوحة (\u200E1,392\u200F م²) والعين (\u200E1,700\u200F م²)، مما يعزز حضورنا الخليجي إلى سبعة مواقع.'
-            : 'New showrooms opened in Doha (1,392 m²) and Al Ain (1,700 m²), strengthening our GCC presence to seven locations.',
+            ? 'افتتحت السيف غاليري أول فرع لها في الدوحة، ليكون الفرع الـ 73 للشركة والسابع في دول الخليج، ضمن استراتيجية التوسع خارج المملكة.'
+            : 'Alsaif Gallery opened its first branch in Doha, Qatar — its 73rd branch overall and 7th in the GCC — as part of its expansion strategy beyond Saudi Arabia.',
+        url: 'https://www.argaam.com/en/article/articledetail/id/1776359',
       ),
     ];
 
@@ -116,12 +120,14 @@ class _NewsItem {
   final Color tagColor;
   final String title;
   final String desc;
+  final String url;
   const _NewsItem({
     required this.date,
     required this.tag,
     required this.tagColor,
     required this.title,
     required this.desc,
+    required this.url,
   });
 }
 
@@ -141,8 +147,7 @@ class _NewsCardState extends State<_NewsCard> {
     final isArabic = widget.isArabic;
     final item = widget.item;
 
-    return SelectionContainer.disabled(
-      child: MouseRegion(
+    return MouseRegion(
         onEnter: (_) => setState(() => _hovered = true),
         onExit:  (_) => setState(() => _hovered = false),
         child: AnimatedContainer(
@@ -162,9 +167,8 @@ class _NewsCardState extends State<_NewsCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(item.date, style: const TextStyle(fontSize: 12, color: Color(0xFF888888))),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
@@ -180,22 +184,29 @@ class _NewsCardState extends State<_NewsCard> {
                 const SizedBox(height: 10),
                 Text(item.desc, style: const TextStyle(fontSize: 13, color: Color(0xFF555555), height: 1.6)),
                 const SizedBox(height: 20),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      isArabic ? 'اقرأ المزيد' : 'Read More',
-                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFFE53935)),
+                SelectionContainer.disabled(
+                  child: GestureDetector(
+                    onTap: () => launchUrl(Uri.parse(item.url), mode: LaunchMode.externalApplication),
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            isArabic ? 'اقرأ المزيد' : 'Read More',
+                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFFE53935)),
+                          ),
+                          const SizedBox(width: 4),
+                          Icon(isArabic ? Icons.chevron_left : Icons.chevron_right, size: 16, color: const Color(0xFFE53935)),
+                        ],
+                      ),
                     ),
-                    const SizedBox(width: 4),
-                    Icon(isArabic ? Icons.chevron_left : Icons.chevron_right, size: 16, color: const Color(0xFFE53935)),
-                  ],
+                  ),
                 ),
               ],
             ),
           ),
         ),
-      ),
     );
   }
 }
