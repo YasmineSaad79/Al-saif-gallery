@@ -36,6 +36,7 @@ class InvestorsGovernanceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SelectionArea(
@@ -48,24 +49,39 @@ class InvestorsGovernanceScreen extends StatelessWidget {
                 const TopBar(),
                 const CustomNavigationBar(),
                 Expanded(
-                  child: CustomScrollView(
-                    controller: irScrollController,
-                    slivers: [
-                      // ── Non-sticky content ──
-                      const SliverToBoxAdapter(child: IGHeroSection()),
-                      const SliverToBoxAdapter(child: IGIntroSection()),
-                      const SliverToBoxAdapter(child: IGInvestmentCaseSection()),
-                      const SliverToBoxAdapter(child: _StockTickerSection()),
-                      // ── Sticky Tab Bar ──
-                      SliverPersistentHeader(
-                        pinned: true,
-                        delegate: _IRTabBarDelegate(tabBodyKey: irTabBodyKey),
-                      ),
-                      // ── Tab Content ──
-                      SliverToBoxAdapter(child: _IRTabContent(key: irTabBodyKey)),
-                      const SliverToBoxAdapter(child: FooterSection()),
-                    ],
-                  ),
+                  child: isMobile
+                      // ── Mobile: tab bar inside scroll (not sticky) ──
+                      ? SingleChildScrollView(
+                          controller: irScrollController,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const IGHeroSection(),
+                              const IGIntroSection(),
+                              const IGInvestmentCaseSection(),
+                              const _StockTickerSection(),
+                              _IRStickyTabBar(tabBodyKey: irTabBodyKey),
+                              _IRTabContent(key: irTabBodyKey),
+                              const FooterSection(),
+                            ],
+                          ),
+                        )
+                      // ── Desktop: tab bar sticky ──
+                      : CustomScrollView(
+                          controller: irScrollController,
+                          slivers: [
+                            const SliverToBoxAdapter(child: IGHeroSection()),
+                            const SliverToBoxAdapter(child: IGIntroSection()),
+                            const SliverToBoxAdapter(child: IGInvestmentCaseSection()),
+                            const SliverToBoxAdapter(child: _StockTickerSection()),
+                            SliverPersistentHeader(
+                              pinned: true,
+                              delegate: _IRTabBarDelegate(tabBodyKey: irTabBodyKey),
+                            ),
+                            SliverToBoxAdapter(child: _IRTabContent(key: irTabBodyKey)),
+                            const SliverToBoxAdapter(child: FooterSection()),
+                          ],
+                        ),
                 ),
               ],
             ),
@@ -697,6 +713,7 @@ class _StockTickerSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hp = Responsive.getHorizontalPadding(context);
+    final isMobile = Responsive.isMobile(context);
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Container(
@@ -712,7 +729,7 @@ class _StockTickerSection extends StatelessWidget {
               bottom: BorderSide(color: Color(0xFFE53935), width: 2),
             ),
           ),
-          height: 70,
+          height: isMobile ? 50 : 70,
           child: const StockTickerWidget(),
         ),
       ),
