@@ -216,6 +216,7 @@ class ExternalScriptWidget extends StatefulWidget {
 
 class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   html.IFrameElement? _iframe;
+  html.DivElement? _wrapper;
   double _height = 0;
   html.EventListener? _messageListener;
   Timer? _debounce;
@@ -243,6 +244,62 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
       ..style.pointerEvents = 'auto'
       ..srcdoc = _buildHtml();
 
+    // div شفاف فوق الـ iframe يستقبل wheel ويمرره للصفحة
+    final wrapper = html.DivElement()
+      ..style.position = 'relative'
+      ..style.width = '100%'
+      ..style.height = '100%';
+
+    final overlay = html.DivElement()
+      ..style.position = 'absolute'
+      ..style.top = '0'
+      ..style.left = '0'
+      ..style.width = '100%'
+      ..style.height = '100%'
+      ..style.zIndex = '1'
+      ..style.background = 'transparent';
+
+    overlay.addEventListener('wheel', (e) {
+      final we = e as html.WheelEvent;
+      if (irScrollController.hasClients) {
+        final next = (irScrollController.offset + we.deltaY)
+            .clamp(0.0, irScrollController.position.maxScrollExtent);
+        irScrollController.animateTo(next,
+            duration: const Duration(milliseconds: 80), curve: Curves.linear);
+      }
+      // مرر الـ event للـ iframe أيضاً
+      e.preventDefault();
+    });
+
+    // على الموبايل - touch events
+    double _touchY = 0;
+    overlay.addEventListener('touchstart', (e) {
+      final te = e as html.TouchEvent;
+      _touchY = te.touches!.first.client.y.toDouble();
+    });
+    overlay.addEventListener('touchmove', (e) {
+      final te = e as html.TouchEvent;
+      final dy = _touchY - te.touches!.first.client.y.toDouble();
+      _touchY = te.touches!.first.client.y.toDouble();
+      if (irScrollController.hasClients) {
+        final next = (irScrollController.offset + dy)
+            .clamp(0.0, irScrollController.position.maxScrollExtent);
+        irScrollController.jumpTo(next);
+      }
+    });
+
+    // اسمح بالـ clicks تعدي للـ iframe
+    overlay.addEventListener('click', (e) {
+      overlay.style.pointerEvents = 'none';
+      Future.delayed(const Duration(milliseconds: 100), () {
+        overlay.style.pointerEvents = 'auto';
+      });
+    });
+
+    wrapper.append(_iframe!);
+    wrapper.append(overlay);
+    _wrapper = wrapper;
+
     _messageListener = (event) {
       final msg = (event as html.MessageEvent).data;
       if (msg is Map &&
@@ -265,7 +322,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     try {
       ui.platformViewRegistry.registerViewFactory(
         widget.viewId,
-        (int id) => _iframe!,
+        (int id) => _wrapper!,
       );
     } catch (_) {}
   }
@@ -396,26 +453,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     return SizedBox(
       width: double.infinity,
       height: _height,
-      child: Stack(
-        children: [
-          HtmlElementView(viewType: widget.viewId),
-          // overlay يستقبل wheel/touch scroll فقط ويمرره للصفحة
-          Positioned.fill(
-            child: Listener(
-              behavior: HitTestBehavior.translucent,
-              onPointerSignal: (e) {
-                if (e is PointerScrollEvent && irScrollController.hasClients) {
-                  final next = (irScrollController.offset + e.scrollDelta.dy)
-                      .clamp(0.0, irScrollController.position.maxScrollExtent);
-                  irScrollController.animateTo(next,
-                      duration: const Duration(milliseconds: 80), curve: Curves.linear);
-                }
-              },
-              child: const SizedBox.expand(),
-            ),
-          ),
-        ],
-      ),
+      child: HtmlElementView(viewType: widget.viewId),
     );
   }
 }
