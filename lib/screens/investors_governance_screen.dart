@@ -359,7 +359,7 @@ class _IRStickyTabBarState extends State<_IRStickyTabBar> {
 }
 
 // ── Mobile Tab Dropdown ───────────────────────────────────────────────────────
-class _MobileTabDropdown extends StatelessWidget {
+class _MobileTabDropdown extends StatefulWidget {
   final int selectedIndex;
   final List<String> allTabs;
   final void Function(int) onSelect;
@@ -375,40 +375,100 @@ class _MobileTabDropdown extends StatelessWidget {
   });
 
   @override
+  State<_MobileTabDropdown> createState() => _MobileTabDropdownState();
+}
+
+class _MobileTabDropdownState extends State<_MobileTabDropdown> {
+  bool _open = false;
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.symmetric(horizontal: hp, vertical: 8),
-      child: Directionality(
-        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-        child: Row(
-          children: List.generate(allTabs.length, (i) {
-            final isActive = selectedIndex == i;
-            return GestureDetector(
-              onTap: () => onSelect(i),
-              child: Container(
-                margin: const EdgeInsets.only(right: 8),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                decoration: BoxDecoration(
-                  color: isActive ? AppColors.primary : Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: isActive ? AppColors.primary : const Color(0xFFE5E7EB),
+    final selected = widget.allTabs[widget.selectedIndex];
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // زر الـ dropdown
+        InkWell(
+          onTap: () => setState(() => _open = !_open),
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: widget.hp, vertical: 14),
+            color: Colors.white,
+            child: Row(
+              textDirection: widget.isArabic ? TextDirection.rtl : TextDirection.ltr,
+              children: [
+                Expanded(
+                  child: Text(
+                    selected,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
-                child: Text(
-                  allTabs[i],
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-                    color: isActive ? Colors.white : const Color(0xFF6B7280),
-                  ),
+                AnimatedRotation(
+                  turns: _open ? 0.5 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Icon(Icons.keyboard_arrow_down, color: AppColors.primary, size: 20),
                 ),
-              ),
-            );
-          }),
+              ],
+            ),
+          ),
         ),
-      ),
+        // القائمة
+        AnimatedCrossFade(
+          duration: const Duration(milliseconds: 200),
+          crossFadeState: _open ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          firstChild: const SizedBox.shrink(),
+          secondChild: Container(
+            width: double.infinity,
+            color: Colors.white,
+            child: Column(
+              children: List.generate(widget.allTabs.length, (i) {
+                final isActive = widget.selectedIndex == i;
+                return InkWell(
+                  onTap: () {
+                    setState(() => _open = false);
+                    widget.onSelect(i);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: widget.hp, vertical: 13),
+                    decoration: BoxDecoration(
+                      color: isActive ? AppColors.primary.withOpacity(0.05) : Colors.white,
+                      border: Border(top: BorderSide(color: const Color(0xFFF3F4F6))),
+                    ),
+                    child: Row(
+                      textDirection: widget.isArabic ? TextDirection.rtl : TextDirection.ltr,
+                      children: [
+                        if (isActive)
+                          Container(
+                            width: 3, height: 16,
+                            margin: EdgeInsets.only(
+                              right: widget.isArabic ? 0 : 10,
+                              left: widget.isArabic ? 10 : 0,
+                            ),
+                            color: AppColors.primary,
+                          ),
+                        Text(
+                          widget.allTabs[i],
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                            color: isActive ? AppColors.primary : const Color(0xFF374151),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
