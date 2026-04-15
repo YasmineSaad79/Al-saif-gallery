@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
+import 'dart:js_util' as js_util;
 import 'package:flutter/material.dart';
 import 'utils/app_theme.dart';
 import 'utils/app_router.dart';
@@ -33,22 +34,25 @@ class _AlSaifGalleryAppState extends State<AlSaifGalleryApp> {
   void initState() {
     super.initState();
     localeProvider.addListener(_onLocaleChanged);
-    // Forward wheel events from iframes to the Flutter app's scroll
+    // استمع على الـ window للـ message من الـ iframes
     _wheelListener = (event) {
       final msg = (event as html.MessageEvent).data;
-      if (msg is Map && msg['type'] == 'iframe-wheel') {
-        final dy = (msg['deltaY'] as num?)?.toDouble() ?? 0;
-        if (irScrollController.hasClients) {
-          final current = irScrollController.offset;
-          final max = irScrollController.position.maxScrollExtent;
-          final next = (current + dy).clamp(0.0, max);
-          irScrollController.animateTo(
-            next,
-            duration: const Duration(milliseconds: 100),
-            curve: Curves.linear,
-          );
+      if (msg == null) return;
+      try {
+        final type = js_util.getProperty(msg, 'type');
+        if (type == 'iframe-wheel') {
+          final dy = (js_util.getProperty(msg, 'deltaY') as num?)?.toDouble() ?? 0;
+          if (irScrollController.hasClients) {
+            final current = irScrollController.offset;
+            final max = irScrollController.position.maxScrollExtent;
+            final next = (current + dy).clamp(0.0, max);
+            irScrollController.animateTo(next,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.linear,
+            );
+          }
         }
-      }
+      } catch (_) {}
     };
     html.window.addEventListener('message', _wheelListener!);
   }

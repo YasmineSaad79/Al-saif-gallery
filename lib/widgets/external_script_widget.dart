@@ -2,12 +2,14 @@
 
 import 'dart:async';
 import 'dart:html' as html;
+import 'dart:js_util' as js_util;
 import 'dart:ui_web' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
+import '../utils/app_colors.dart';
 
 // ── Global load queue: max 1 iframe loaded every 1.5s ──────────────────────
 final List<VoidCallback> _loadQueue = [];
@@ -216,19 +218,10 @@ class ExternalScriptWidget extends StatefulWidget {
 
 class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   html.IFrameElement? _iframe;
-  html.DivElement? _wrapper;
   double _height = 0;
   html.EventListener? _messageListener;
   Timer? _debounce;
   double _pendingHeight = 0;
-  bool _hovered = false;
-
-  void _setPointerEvents(bool enabled) {
-    _iframe?.style.pointerEvents = enabled ? 'auto' : 'none';
-    if (_hovered != enabled) {
-      setState(() => _hovered = enabled);
-    }
-  }
 
   @override
   void initState() {
@@ -244,88 +237,39 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
       ..style.pointerEvents = 'auto'
       ..srcdoc = _buildHtml();
 
-    // div شفاف فوق الـ iframe يستقبل wheel ويمرره للصفحة
-    final wrapper = html.DivElement()
-      ..style.position = 'relative'
-      ..style.width = '100%'
-      ..style.height = '100%';
-
-    final overlay = html.DivElement()
-      ..style.position = 'absolute'
-      ..style.top = '0'
-      ..style.left = '0'
-      ..style.width = '100%'
-      ..style.height = '100%'
-      ..style.zIndex = '1'
-      ..style.background = 'transparent';
-
-    overlay.addEventListener('wheel', (e) {
-      final we = e as html.WheelEvent;
-      if (irScrollController.hasClients) {
-        final next = (irScrollController.offset + we.deltaY)
-            .clamp(0.0, irScrollController.position.maxScrollExtent);
-        irScrollController.animateTo(next,
-            duration: const Duration(milliseconds: 80), curve: Curves.linear);
-      }
-      // مرر الـ event للـ iframe أيضاً
-      e.preventDefault();
-    });
-
-    // على الموبايل - touch events
-    double _touchY = 0;
-    overlay.addEventListener('touchstart', (e) {
-      final te = e as html.TouchEvent;
-      _touchY = te.touches!.first.client.y.toDouble();
-    });
-    overlay.addEventListener('touchmove', (e) {
-      final te = e as html.TouchEvent;
-      final dy = _touchY - te.touches!.first.client.y.toDouble();
-      _touchY = te.touches!.first.client.y.toDouble();
-      if (irScrollController.hasClients) {
-        final next = (irScrollController.offset + dy)
-            .clamp(0.0, irScrollController.position.maxScrollExtent);
-        irScrollController.jumpTo(next);
-      }
-    });
-
-    // اسمح بالـ clicks تعدي للـ iframe
-    overlay.addEventListener('click', (e) {
-      overlay.style.pointerEvents = 'none';
-      Future.delayed(const Duration(milliseconds: 100), () {
-        overlay.style.pointerEvents = 'auto';
-      });
-    });
-
-    wrapper.append(_iframe!);
-    wrapper.append(overlay);
-    _wrapper = wrapper;
-
     _messageListener = (event) {
       final msg = (event as html.MessageEvent).data;
-      if (msg is Map &&
-          msg['type'] == 'widget-height' &&
-          msg['id'] == widget.viewId) {
-        final h = (msg['height'] as num).toDouble();
-        if (h > 20) {
-          _pendingHeight = h;
-          _debounce?.cancel();
-          _debounce = Timer(const Duration(milliseconds: 400), () {
-            if (mounted && (_pendingHeight - _height).abs() > 2) {
-              setState(() => _height = _pendingHeight);
+      if (msg == null) return;
+      try {
+        final type = js_util.getProperty(msg, 'type');
+        if (type == 'widget-height') {
+          final id = js_util.getProperty(msg, 'id');
+          if (id == widget.viewId) {
+            final h = (js_util.getProperty(msg, 'height') as num).toDouble();
+            if (h > 20) {
+              _pendingHeight = h;
+              _debounce?.cancel();
+              _debounce = Timer(const Duration(milliseconds: 400), () {
+                if (mounted && (_pendingHeight - _height).abs() > 2) {
+                  setState(() => _height = _pendingHeight);
+                }
+              });
             }
-          });
+          }
         }
-      }
+      } catch (_) {}
     };
     html.window.addEventListener('message', _messageListener!);
 
     try {
       ui.platformViewRegistry.registerViewFactory(
         widget.viewId,
-        (int id) => _wrapper!,
+        (int id) => _iframe!,
       );
     } catch (_) {}
   }
+
+  void _reportHeight() {}
 
   String _buildHtml() {
     return '''<!DOCTYPE html>
@@ -344,42 +288,40 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
 <div id="${widget.widgetType}-widget"></div>
 <script>
 (function() {
-  // Forward wheel events to parent Flutter page
+  // Forward wheel events to parent
   window.addEventListener('wheel', function(e) {
     window.parent.postMessage({ type: 'iframe-wheel', deltaY: e.deltaY }, '*');
   }, { passive: true });
 
-  // Forward touch scroll to parent Flutter page
-  var _touchStartY = 0;
-  window.addEventListener('touchstart', function(e) {
-    _touchStartY = e.touches[0].clientY;
-  }, { passive: true });
+  // Forward touch scroll
+  var _ty = 0;
+  window.addEventListener('touchstart', function(e) { _ty = e.touches[0].clientY; }, { passive: true });
   window.addEventListener('touchmove', function(e) {
-    var dy = _touchStartY - e.touches[0].clientY;
-    _touchStartY = e.touches[0].clientY;
+    var dy = _ty - e.touches[0].clientY;
+    _ty = e.touches[0].clientY;
     window.parent.postMessage({ type: 'iframe-wheel', deltaY: dy }, '*');
   }, { passive: true });
+
+  // بعد كل click، أرجع الـ focus للـ parent
+  document.addEventListener('click', function() {
+    setTimeout(function() { window.parent.focus(); }, 50);
+  }, true);
 
   var ID = '${widget.viewId}';
   var debounceTimer = null;
   var lastSent = 0;
 
   function getTrueHeight() {
-    var h = Math.max(
-      document.body.scrollHeight,
-      document.body.offsetHeight,
-      document.documentElement.scrollHeight,
-      document.documentElement.offsetHeight
-    );
-    var frames = document.querySelectorAll('iframe');
-    for (var j = 0; j < frames.length; j++) {
-      var fRect = frames[j].getBoundingClientRect();
-      h = Math.max(h, fRect.bottom + window.pageYOffset);
+    var h = Math.max(document.body.scrollHeight, document.body.offsetHeight,
+      document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+    document.querySelectorAll('iframe').forEach(function(f) {
+      var r = f.getBoundingClientRect();
+      h = Math.max(h, r.bottom + window.pageYOffset);
       try {
-        var fDoc = frames[j].contentDocument || frames[j].contentWindow.document;
-        h = Math.max(h, fDoc.body.scrollHeight + fRect.top + window.pageYOffset);
+        var fd = f.contentDocument || f.contentWindow.document;
+        h = Math.max(h, fd.body.scrollHeight + r.top + window.pageYOffset);
       } catch(e) {}
-    }
+    });
     return Math.ceil(h) + 4;
   }
 
@@ -397,39 +339,23 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   new MutationObserver(function() {
     reportDebounced();
     document.querySelectorAll('iframe').forEach(function(f) {
-      if (!f._w) {
-        f._w = true;
-        f.addEventListener('load', function() {
-          setTimeout(reportDebounced, 500);
-          setTimeout(reportDebounced, 1500);
-          setTimeout(reportDebounced, 3000);
-        });
-      }
+      if (!f._w) { f._w = true; f.addEventListener('load', function() {
+        [500,1500,3000].forEach(function(t){setTimeout(reportDebounced,t);});
+      }); }
     });
   }).observe(document.body, { childList: true, subtree: true, attributes: true });
 
-  if (window.ResizeObserver) {
-    new ResizeObserver(reportDebounced).observe(document.body);
-  }
+  if (window.ResizeObserver) new ResizeObserver(reportDebounced).observe(document.body);
 
   document.addEventListener('click', function() {
-    setTimeout(reportDebounced, 500);
-    setTimeout(reportDebounced, 1500);
+    [500,1500].forEach(function(t){setTimeout(reportDebounced,t);});
   });
 
   window.addEventListener('load', function() {
     if (typeof loadWidget === 'function') {
-      loadWidget(
-        '${widget.widgetType}',
-        "5be9c146-613e-4141-a351-1f5e13fc5513",
-        "${widget.lang}",
-        "81a06c05-1a48-4d1b-8dbd-bcf60a76730f",
-        "v2"
-      );
+      loadWidget('${widget.widgetType}','5be9c146-613e-4141-a351-1f5e13fc5513','${widget.lang}','81a06c05-1a48-4d1b-8dbd-bcf60a76730f','v2');
     }
-    [1000, 2000, 4000, 7000, 12000].forEach(function(t) {
-      setTimeout(reportDebounced, t);
-    });
+    [1000,2000,4000,7000,12000].forEach(function(t){setTimeout(reportDebounced,t);});
   });
 })();
 </script>
@@ -449,7 +375,6 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   @override
   Widget build(BuildContext context) {
     if (!kIsWeb) return const SizedBox.shrink();
-
     return SizedBox(
       width: double.infinity,
       height: _height,

@@ -55,7 +55,7 @@
     }
   </script>
   <script>
-    // Preload IR widgets by prefetching the widget loader script
+    // Preload IR widgets
     window.addEventListener('load', function() {
       setTimeout(function() {
         var link = document.createElement('link');
@@ -66,54 +66,23 @@
     });
   </script>
   <script>
-    // Forward iframe-wheel to irScrollController
+    // استقبل wheel من الـ iframes وحوّله لـ Flutter
     window.addEventListener('message', function(e) {
-      if (e.data && e.data.type === 'iframe-wheel') {
+      if (!e.data) return;
+      var type = e.data.type;
+      if (type === 'iframe-wheel') {
         var dy = e.data.deltaY || 0;
         var gp = document.querySelector('flt-glass-pane');
-        if (gp) gp.dispatchEvent(new WheelEvent('wheel', {deltaY: dy, deltaMode: 0, bubbles: true, cancelable: true, composed: true}));
+        if (gp) gp.dispatchEvent(new WheelEvent('wheel', {
+          deltaY: dy, deltaMode: 0,
+          bubbles: true, cancelable: true, composed: true
+        }));
       }
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-      var observer = new MutationObserver(function() {
-        var gp = document.querySelector('flt-glass-pane');
-        if (!gp) return;
-        observer.disconnect();
-
-        var scrollTimer = null;
-
-        // Disable iframe pointer-events during scroll
-        gp.addEventListener('wheel', function(e) {
-          window.disableAllIframes();
-          clearTimeout(scrollTimer);
-          scrollTimer = setTimeout(function() {
-            window.enableAllIframes();
-          }, 300);
-        }, { passive: true });
-
-        // Smart iframe pointer-events: only disable during scroll
-        // On mobile, iframes stay enabled unless manually disabled by Dart
-        var isMobile = /Mobi|Android/i.test(navigator.userAgent);
-        if (!isMobile) {
-          document.addEventListener('mousemove', function(e) {
-            if (window._iframesManuallyDisabled) return;
-            var els = document.elementsFromPoint(e.clientX, e.clientY);
-            var topEl = els[0];
-            if (topEl && topEl.tagName === 'IFRAME') {
-              document.querySelectorAll('iframe').forEach(function(f) {
-                f.style.pointerEvents = 'auto';
-              });
-            } else {
-              document.querySelectorAll('iframe').forEach(function(f) {
-                f.style.pointerEvents = 'none';
-              });
-            }
-          });
-        }
-
-      });
-      observer.observe(document.body, { childList: true, subtree: true });
+    // بعد ما يخسر الـ window الـ focus للـ iframe، ارجعه
+    window.addEventListener('blur', function() {
+      setTimeout(function() { window.focus(); }, 50);
     });
   </script>
   <script src="flutter_bootstrap.js" async></script>

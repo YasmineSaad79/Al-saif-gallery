@@ -271,11 +271,7 @@ class _IRTabBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return MouseRegion(
-      onEnter: (_) => setAllIframesPointerEvents(false),
-      onExit:  (_) => setAllIframesPointerEvents(true),
-      child: _IRStickyTabBar(tabBodyKey: tabBodyKey),
-    );
+    return _IRStickyTabBar(tabBodyKey: tabBodyKey);
   }
 
   @override
