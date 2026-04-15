@@ -9,6 +9,7 @@ import '../widgets/strategy_risk_section.dart';
 import '../utils/page_meta.dart';
 import '../utils/scroll_keys.dart';
 import '../main.dart';
+import '../main.dart';
 import '../widgets/footer_section.dart';
 
 class StrategyScreen extends StatefulWidget {

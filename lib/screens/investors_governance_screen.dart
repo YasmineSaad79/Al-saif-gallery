@@ -58,8 +58,8 @@ class InvestorsGovernanceScreen extends StatelessWidget {
                             children: [
                               const IGHeroSection(),
                               const IGIntroSection(),
-                              const IGInvestmentCaseSection(),
-                              _IRTabContent(key: irTabBodyKey),
+                              KeyedSubtree(key: ScrollKeys.get('ig-investment-case'), child: const IGInvestmentCaseSection()),
+                              KeyedSubtree(key: ScrollKeys.get('ir-widgets'), child: _IRTabContent(key: irTabBodyKey)),
                               const FooterSection(),
                             ],
                           ),
@@ -112,20 +112,64 @@ class _IRTabBodyState extends State<_IRTabContent> {
     final l = AppLocalizations.of(context);
     final isArabic = l.isArabic;
     final hp = Responsive.getHorizontalPadding(context);
+    final isMobile = Responsive.isMobile(context);
 
-    // لما ما في اختيار، اعرض كل الـ widgets ورا بعض
+    final allTitles = isArabic ? [
+      'نظرة عامة عن الشركة', 'الإعلانات', 'نشرة المعلومات', 'نشاط السهم',
+      'الإجراءات النظامية', 'البيانات المالية', 'سعر السهم', 'الأداء',
+      'حاسبة الاستثمار', 'سلسلة الأسهم', 'تحليل المجموعة المماثلة', 'الاشتراك',
+    ] : [
+      'Company Snapshot', 'Announcements', 'Fact Sheet', 'Stock Activity',
+      'Corporate Actions', 'Company Financials', 'Share Price', 'Performance',
+      'Investment Calculator', 'Share Series', 'Peer Group Analysis', 'Subscribe',
+    ];
+
+    // الموبايل: نفس منطق الديسكتوب بدون dropdown
+    if (isMobile) {
+      if (_selectedTab == -1) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-0'),  child: _buildSectionWithTitle('Company Snapshot', 'نظرة عامة عن الشركة', const CompanySnapshotWidget(), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-1'),  child: _buildSectionWithTitle('Announcements', 'الإعلانات', const CorporateNewsWidget(), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-2'),  child: _buildSectionWithTitle('Fact Sheet', 'نشرة المعلومات', _FactSheetContent(isArabic: isArabic), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-3'),  child: _buildSectionWithTitle('Stock Activity', 'نشاط السهم', _StockActivityContent(isArabic: isArabic), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-4'),  child: _buildSectionWithTitle('Corporate Actions', 'الإجراءات النظامية', const CorporateActionsWidget(), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-5'),  child: _buildSectionWithTitle('Company Financials', 'البيانات المالية', const CompanyFinancialsWidget(), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-6'),  child: _buildSectionWithTitle('Share Price', 'سعر السهم', const SharePriceWidget(), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-7'),  child: _buildSectionWithTitle('Performance', 'الأداء', const PerformanceWidget(), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-8'),  child: _buildSectionWithTitle('Investment Calculator', 'حاسبة الاستثمار', const InvestmentCalculatorWidget(), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-9'),  child: _buildSectionWithTitle('Share Series', 'سلسلة الأسهم', const ShareSeriesWidget(), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-10'), child: _buildSectionWithTitle('Peer Group Analysis', 'تحليل المجموعة المماثلة', const PeerGroupAnalysisWidget(), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-11'), child: _buildSectionWithTitle('Subscribe', 'الاشتراك', const EmailSubscriptionWidget(), isArabic, hp)),
+          ],
+        );
+      }
+      return Container(
+        width: double.infinity,
+        color: Colors.white,
+        padding: EdgeInsets.symmetric(horizontal: hp, vertical: 16),
+        child: _buildTabContent(_selectedTab, isArabic),
+      );
+    }
+
+    // ديسكتوب: نفس المنطق القديم
     if (_selectedTab == -1) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionWithTitle('Company Snapshot', 'نظرة عامة عن الشركة', const CompanySnapshotWidget(), isArabic, hp),
-          _buildSectionWithTitle('Announcements', 'الإعلانات', const CorporateNewsWidget(), isArabic, hp),
-          _buildSectionWithTitle('Fact Sheet', 'نشرة المعلومات', _FactSheetContent(isArabic: isArabic), isArabic, hp),
-          _buildSectionWithTitle('Stock Activity', 'نشاط السهم', _StockActivityContent(isArabic: isArabic), isArabic, hp),
-          _buildSectionWithTitle('Corporate Actions', 'الإجراءات النظامية', const CorporateActionsWidget(), isArabic, hp),
-          _buildSectionWithTitle('Company Financials', 'البيانات المالية', const CompanyFinancialsWidget(), isArabic, hp),
-          _buildSectionWithTitle('Share Price', 'سعر السهم', const SharePriceWidget(), isArabic, hp),
-          _buildSectionWithTitle('Performance', 'الأداء', const PerformanceWidget(), isArabic, hp),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-0'), child: _buildSectionWithTitle('Company Snapshot', 'نظرة عامة عن الشركة', const CompanySnapshotWidget(), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-1'), child: _buildSectionWithTitle('Announcements', 'الإعلانات', const CorporateNewsWidget(), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-2'), child: _buildSectionWithTitle('Fact Sheet', 'نشرة المعلومات', _FactSheetContent(isArabic: isArabic), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-3'), child: _buildSectionWithTitle('Stock Activity', 'نشاط السهم', _StockActivityContent(isArabic: isArabic), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-4'), child: _buildSectionWithTitle('Corporate Actions', 'الإجراءات النظامية', const CorporateActionsWidget(), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-5'), child: _buildSectionWithTitle('Company Financials', 'البيانات المالية', const CompanyFinancialsWidget(), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-6'), child: _buildSectionWithTitle('Share Price', 'سعر السهم', const SharePriceWidget(), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-7'), child: _buildSectionWithTitle('Performance', 'الأداء', const PerformanceWidget(), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-8'), child: _buildSectionWithTitle('Investment Calculator', 'حاسبة الاستثمار', const InvestmentCalculatorWidget(), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-9'), child: _buildSectionWithTitle('Share Series', 'سلسلة الأسهم', const ShareSeriesWidget(), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-10'), child: _buildSectionWithTitle('Peer Group Analysis', 'تحليل المجموعة المماثلة', const PeerGroupAnalysisWidget(), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-11'), child: _buildSectionWithTitle('Subscribe', 'الاشتراك', const EmailSubscriptionWidget(), isArabic, hp)),
         ],
       );
     }
@@ -474,6 +518,136 @@ class _MobileTabDropdownState extends State<_MobileTabDropdown> {
 }
 
 // ── Old _IRTabBody removed ────────────────────────────────────────────────────
+
+// ── Mobile IR Dropdown ────────────────────────────────────────────────────────
+class _MobileIRDropdown extends StatefulWidget {
+  final int selectedIndex;
+  final List<String> titles;
+  final bool isArabic;
+  final double hp;
+  final void Function(int) onSelect;
+  final VoidCallback onReset;
+
+  const _MobileIRDropdown({
+    required this.selectedIndex,
+    required this.titles,
+    required this.isArabic,
+    required this.hp,
+    required this.onSelect,
+    required this.onReset,
+  });
+
+  @override
+  State<_MobileIRDropdown> createState() => _MobileIRDropdownState();
+}
+
+class _MobileIRDropdownState extends State<_MobileIRDropdown> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final label = widget.selectedIndex == -1
+        ? (widget.isArabic ? 'كل الأقسام' : 'All Sections')
+        : widget.titles[widget.selectedIndex];
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InkWell(
+          onTap: () => setState(() => _open = !_open),
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: widget.hp, vertical: 14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 4, offset: const Offset(0, 2))],
+            ),
+            child: Row(
+              textDirection: widget.isArabic ? TextDirection.rtl : TextDirection.ltr,
+              children: [
+                Expanded(
+                  child: Text(label, style: TextStyle(
+                    fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primary)),
+                ),
+                AnimatedRotation(
+                  turns: _open ? 0.5 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Icon(Icons.keyboard_arrow_down, color: AppColors.primary, size: 20),
+                ),
+              ],
+            ),
+          ),
+        ),
+        AnimatedCrossFade(
+          duration: const Duration(milliseconds: 200),
+          crossFadeState: _open ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          firstChild: const SizedBox.shrink(),
+          secondChild: Container(
+            width: double.infinity,
+            color: Colors.white,
+            child: Column(
+              children: [
+                // خيار "كل الأقسام"
+                InkWell(
+                  onTap: () { setState(() => _open = false); widget.onReset(); },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: widget.hp, vertical: 13),
+                    decoration: const BoxDecoration(
+                      border: Border(top: BorderSide(color: Color(0xFFF3F4F6))),
+                      color: Color(0xFFF8FAFB),
+                    ),
+                    child: Text(
+                      widget.isArabic ? 'كل الأقسام' : 'All Sections',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: widget.selectedIndex == -1 ? FontWeight.w600 : FontWeight.w400,
+                        color: widget.selectedIndex == -1 ? AppColors.primary : const Color(0xFF374151),
+                      ),
+                    ),
+                  ),
+                ),
+                ...List.generate(widget.titles.length, (i) {
+                  final isActive = widget.selectedIndex == i;
+                  return InkWell(
+                    onTap: () { setState(() => _open = false); widget.onSelect(i); },
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(horizontal: widget.hp, vertical: 13),
+                      decoration: BoxDecoration(
+                        color: isActive ? AppColors.primary.withOpacity(0.05) : Colors.white,
+                        border: const Border(top: BorderSide(color: Color(0xFFF3F4F6))),
+                      ),
+                      child: Row(
+                        textDirection: widget.isArabic ? TextDirection.rtl : TextDirection.ltr,
+                        children: [
+                          if (isActive)
+                            Container(
+                              width: 3, height: 16,
+                              margin: EdgeInsets.only(
+                                right: widget.isArabic ? 0 : 10,
+                                left: widget.isArabic ? 10 : 0,
+                              ),
+                              color: AppColors.primary,
+                            ),
+                          Text(widget.titles[i], style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                            color: isActive ? AppColors.primary : const Color(0xFF374151),
+                          )),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 // ── Fact Sheet Tab ────────────────────────────────────────────────────────────
 class _FactSheetContent extends StatefulWidget {

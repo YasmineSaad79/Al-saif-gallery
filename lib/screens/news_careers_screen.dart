@@ -5,6 +5,7 @@ import '../widgets/nc_hero_section.dart';
 import '../widgets/nc_news_section.dart';
 import '../widgets/nc_careers_section.dart';
 import '../widgets/nc_contact_section.dart';
+import '../main.dart';
 import '../widgets/footer_section.dart';
 import '../utils/page_meta.dart';
 import '../utils/scroll_keys.dart';

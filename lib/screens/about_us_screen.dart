@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/top_bar.dart';
 import '../widgets/navigation_bar.dart';
-import '../widgets/about_hero_section.dart';
-import '../widgets/our_purpose_section.dart';
+import '../widgets/about_hero_section.dart';import '../widgets/our_purpose_section.dart';
 import '../widgets/our_values_section.dart';
 import '../widgets/heritage_milestones_section.dart';
 import '../widgets/leadership_section.dart';

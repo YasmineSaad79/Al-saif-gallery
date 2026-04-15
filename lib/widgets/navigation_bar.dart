@@ -53,39 +53,21 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
   }
 
   void _openMenu(BuildContext context) {
-    final l = AppLocalizations.of(context);
     final currentRoute = GoRouterState.of(context).uri.path;
     final isArabic = localeProvider.isArabic;
 
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (_) {
-        return SelectionContainer.disabled(
-          child: Directionality(
-            textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-            child: SafeArea(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 8),
-                  Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2))),
-                  const SizedBox(height: 8),
-                  _mobileItem(l.navHome, '/', currentRoute, isArabic, () { Navigator.pop(context); context.go('/'); }),
-                  _mobileItem(l.navAboutUs, '/about-us', currentRoute, isArabic, () { Navigator.pop(context); context.go('/about-us'); }),
-                  _mobileItem(l.navStrategy, '/strategy-operations', currentRoute, isArabic, () { Navigator.pop(context); context.go('/strategy-operations'); }),
-                  _mobileItem(l.navInvestors, '/investors-governance', currentRoute, isArabic, () { Navigator.pop(context); _goToIR(context); }),
-                  _mobileItem(l.navNewsroom, '/news-careers', currentRoute, isArabic, () { Navigator.pop(context); context.go('/news-careers'); }),
-                  const SizedBox(height: 8),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
+      builder: (ctx) => _MobileMenuSheet(
+        currentRoute: currentRoute,
+        isArabic: isArabic,
+        parentContext: context,
+      ),
     );
   }
 
@@ -772,6 +754,347 @@ class _NavItem extends StatelessWidget {  final String text;
           ),
         ),
       ),
+    );
+  }
+}
+
+// ── Mobile Menu Sheet ─────────────────────────────────────────────────────────
+class _MobileMenuSheet extends StatefulWidget {
+  final String currentRoute;
+  final bool isArabic;
+  final BuildContext parentContext;
+  const _MobileMenuSheet({required this.currentRoute, required this.isArabic, required this.parentContext});
+
+  @override
+  State<_MobileMenuSheet> createState() => _MobileMenuSheetState();
+}
+
+class _MobileMenuSheetState extends State<_MobileMenuSheet> {
+  int? _expanded; // index of expanded item
+
+  void _navigate(String route, [String? scrollKey, int tabIndex = -1]) {
+    Navigator.pop(context);
+    final ctx = widget.parentContext;
+    final currentPath = GoRouter.of(ctx).routerDelegate.currentConfiguration.uri.path;
+
+    void doNavigate() {
+      if (tabIndex >= 0) {
+        // أظهر الـ widget لوحدها زي الديسكتوب
+        irTabBodyKey.currentState?.switchTab(tabIndex);
+        Future.delayed(const Duration(milliseconds: 150), () {
+          ScrollKeys.scrollTo('ir-widgets');
+        });
+      } else if (scrollKey != null) {
+        Future.delayed(const Duration(milliseconds: 300), () => ScrollKeys.scrollTo(scrollKey));
+      }
+    }
+
+    if (currentPath != route) {
+      GoRouter.of(ctx).go(route);
+      Future.delayed(const Duration(milliseconds: 600), doNavigate);
+    } else {
+      doNavigate();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final isAr = widget.isArabic;
+
+    final items = [
+      _NavMenuItem(
+        label: l.navHome,
+        route: '/',
+        subs: [],
+      ),
+      _NavMenuItem(
+        label: l.navAboutUs,
+        route: '/about-us',
+        subs: isAr ? [
+          ('هدفنا',            'our-purpose', -1),
+          ('قيمنا',            'our-values',  -1),
+          ('المسيرة والمحطات', 'heritage',    -1),
+          ('القيادة',          'leadership',  -1),
+        ] : [
+          ('Our Purpose',          'our-purpose', -1),
+          ('Our Values',           'our-values',  -1),
+          ('Heritage & Milestones','heritage',    -1),
+          ('Leadership',           'leadership',  -1),
+        ],
+      ),
+      _NavMenuItem(
+        label: l.navStrategy,
+        route: '/strategy-operations',
+        subs: isAr ? [
+          ('مقدمة الاستراتيجية', 'strategy-intro',    -1),
+          ('ركائز الاستراتيجية', 'strategy-pillars',  -1),
+          ('خارطة الطريق',       'strategy-roadmap',  -1),
+          ('إدارة المخاطر',      'strategy-risk',     -1),
+        ] : [
+          ('Strategy Overview', 'strategy-intro',   -1),
+          ('Strategic Pillars', 'strategy-pillars', -1),
+          ('Roadmap',           'strategy-roadmap', -1),
+          ('Risk Management',   'strategy-risk',    -1),
+        ],
+      ),
+      _NavMenuItem(
+        label: l.navInvestors,
+        route: '/investors-governance',
+        subs: isAr ? [
+          ('مقومات الاستثمار',        'ig-investment-case', -1),
+          ('نظرة عامة',               'ir-tab-0',            0),
+          ('الإعلانات',               'ir-tab-1',            1),
+          ('نشرة المعلومات',          'ir-tab-2',            2),
+          ('نشاط السهم',              'ir-tab-3',            3),
+          ('الإجراءات النظامية',      'ir-tab-4',            4),
+          ('البيانات المالية',        'ir-tab-5',            5),
+          ('سعر السهم',               'ir-tab-6',            6),
+          ('الأداء',                  'ir-tab-7',            7),
+          ('حاسبة الاستثمار',         'ir-tab-8',            8),
+          ('سلسلة الأسهم',            'ir-tab-9',            9),
+          ('تحليل المجموعة المماثلة', 'ir-tab-10',          10),
+          ('الاشتراك',                'ir-tab-11',          11),
+        ] : [
+          ('Investment Case',        'ig-investment-case', -1),
+          ('Company Snapshot',       'ir-tab-0',            0),
+          ('Announcements',          'ir-tab-1',            1),
+          ('Fact Sheet',             'ir-tab-2',            2),
+          ('Stock Activity',         'ir-tab-3',            3),
+          ('Corporate Actions',      'ir-tab-4',            4),
+          ('Company Financials',     'ir-tab-5',            5),
+          ('Share Price',            'ir-tab-6',            6),
+          ('Performance',            'ir-tab-7',            7),
+          ('Investment Calculator',  'ir-tab-8',            8),
+          ('Share Series',           'ir-tab-9',            9),
+          ('Peer Group Analysis',    'ir-tab-10',          10),
+          ('Subscribe',              'ir-tab-11',          11),
+        ],
+      ),
+      _NavMenuItem(
+        label: l.navNewsroom,
+        route: '/news-careers',
+        subs: isAr ? [
+          ('آخر الأخبار', 'news',    -1),
+          ('الوظائف',     'careers', -1),
+          ('تواصل معنا',  'contact', -1),
+        ] : [
+          ('Latest News', 'news',    -1),
+          ('Careers',     'careers', -1),
+          ('Contact Us',  'contact', -1),
+        ],
+      ),
+    ];
+
+    return SelectionContainer.disabled(
+      child: Directionality(
+        textDirection: isAr ? TextDirection.rtl : TextDirection.ltr,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 8),
+                Container(width: 40, height: 4,
+                  decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2))),
+                const SizedBox(height: 4),
+                ...List.generate(items.length, (i) {
+                  final item = items[i];
+                  final isActive = widget.currentRoute == item.route;
+                  final isExpanded = _expanded == i;
+                  final hasSubs = item.subs.isNotEmpty;
+
+                  return Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          if (hasSubs) {
+                            setState(() => _expanded = isExpanded ? null : i);
+                          } else {
+                            _navigate(item.route);
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                          decoration: BoxDecoration(
+                            border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+                            color: isActive ? AppColors.primary.withOpacity(0.05) : Colors.white,
+                          ),
+                          child: Row(
+                            children: [
+                              if (isActive)
+                                Container(width: 3, height: 18, color: AppColors.primary,
+                                  margin: EdgeInsets.only(left: isAr ? 12 : 0, right: isAr ? 0 : 12)),
+                              Expanded(
+                                child: Text(item.label, style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                                  color: isActive ? AppColors.primary : AppColors.textPrimary,
+                                )),
+                              ),
+                              if (hasSubs)
+                                AnimatedRotation(
+                                  turns: isExpanded ? 0.5 : 0,
+                                  duration: const Duration(milliseconds: 200),
+                                  child: Icon(Icons.keyboard_arrow_down,
+                                    size: 18,
+                                    color: isActive ? AppColors.primary : Colors.grey.shade400),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      // Sub items
+                      AnimatedCrossFade(
+                        duration: const Duration(milliseconds: 200),
+                        crossFadeState: isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                        firstChild: const SizedBox.shrink(),
+                        secondChild: Container(
+                          color: const Color(0xFFF8FAFB),
+                          child: Column(
+                            children: item.subs.map((sub) => InkWell(
+                              onTap: () => _navigate(item.route, sub.$2, sub.$3),
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.only(
+                                  left: isAr ? 24 : 40,
+                                  right: isAr ? 40 : 24,
+                                  top: 13, bottom: 13,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+                                ),
+                                child: Text(sub.$1, style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Color(0xFF374151),
+                                )),
+                              ),
+                            )).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NavMenuItem {
+  final String label;
+  final String route;
+  final List<(String, String, int)> subs;
+  const _NavMenuItem({required this.label, required this.route, required this.subs});
+}
+
+// ── Mobile Section Dropdown ───────────────────────────────────────────────────
+// استخدمه في كل صفحة على الموبايل لعرض sections كـ dropdown
+class MobileSectionDropdown extends StatefulWidget {
+  final List<(String label, String scrollKey)> sections;
+  const MobileSectionDropdown({super.key, required this.sections});
+
+  @override
+  State<MobileSectionDropdown> createState() => _MobileSectionDropdownState();
+}
+
+class _MobileSectionDropdownState extends State<MobileSectionDropdown> {
+  bool _open = false;
+  int _selected = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!Responsive.isMobile(context)) return const SizedBox.shrink();
+    final isArabic = localeProvider.isArabic;
+    final hp = Responsive.getHorizontalPadding(context);
+    final selected = widget.sections[_selected].$1;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InkWell(
+          onTap: () => setState(() => _open = !_open),
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: hp, vertical: 13),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB))),
+            ),
+            child: Row(
+              textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+              children: [
+                Expanded(
+                  child: Text(selected,
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primary)),
+                ),
+                AnimatedRotation(
+                  turns: _open ? 0.5 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Icon(Icons.keyboard_arrow_down, color: AppColors.primary, size: 20),
+                ),
+              ],
+            ),
+          ),
+        ),
+        AnimatedCrossFade(
+          duration: const Duration(milliseconds: 200),
+          crossFadeState: _open ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          firstChild: const SizedBox.shrink(),
+          secondChild: Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB))),
+            ),
+            child: Column(
+              children: List.generate(widget.sections.length, (i) {
+                final isActive = _selected == i;
+                return InkWell(
+                  onTap: () {
+                    setState(() { _selected = i; _open = false; });
+                    ScrollKeys.scrollTo(widget.sections[i].$2);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: hp, vertical: 13),
+                    decoration: BoxDecoration(
+                      color: isActive ? AppColors.primary.withOpacity(0.05) : Colors.white,
+                      border: const Border(top: BorderSide(color: Color(0xFFF3F4F6))),
+                    ),
+                    child: Row(
+                      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                      children: [
+                        if (isActive)
+                          Container(
+                            width: 3, height: 16,
+                            margin: EdgeInsets.only(
+                              right: isArabic ? 0 : 10,
+                              left: isArabic ? 10 : 0,
+                            ),
+                            color: AppColors.primary,
+                          ),
+                        Text(widget.sections[i].$1,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                            color: isActive ? AppColors.primary : const Color(0xFF374151),
+                          )),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
