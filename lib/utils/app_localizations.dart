@@ -319,8 +319,8 @@ class AppLocalizations {
 
   String get igInvest4Title => isArabic ? 'رؤية 2030 رافعة نمو هيكلية' : 'Vision 2030 as Structural Tailwind';
   String get igInvest4Desc  => isArabic
-      ? 'تُولّد طفرة الإسكان في المملكة العربية السعودية، ارتفاع نسبة تملّك المسكن من \u200E47%\u200F عام \u200E2016\u200F إلى \u200E65.4%\u200F عام \u200E2024\u200F مع أكثر من \u200E660,000\u200F وحدة سكنية قيد التطوير وبرنامج سكني دعم أكثر من \u200E122,000\u200F أسرة عام \u200E2024\u200F، طلباً متيناً ومستداماً على مستلزمات المنزل. كل منزل سعودي جديد يحتاج إلى تجهيز مطبخ متكامل.'
-      : "Saudi Arabia's housing boom, with homeownership rising from 47% in 2016 to 65.4% in 2024, with 660,000+ new units in the pipeline and Sakani supporting 122,000+ families in 2024, creates a durable demand tailwind for household essentials. Every new Saudi home requires a full kitchen outfitting.";
+      ? 'تُولّد طفرة الإسكان في المملكة العربية السعودية، ارتفاع نسبة تملّك المسكن من \u200E47%\u200F عام \u200E2016\u200F إلى \u200E65.4%\u200F عام \u200E2024\u200F مع أكثر من \u200E660K+\u200F وحدة سكنية قيد التطوير وبرنامج سكني دعم أكثر من \u200E122K+\u200F أسرة عام \u200E2024\u200F، طلباً متيناً ومستداماً على مستلزمات المنزل. كل منزل سعودي جديد يحتاج إلى تجهيز مطبخ متكامل.'
+      : "Saudi Arabia's housing boom, with homeownership rising from 47% in 2016 to 65.4% in 2024, with 660K+ new units in the pipeline and Sakani supporting 122K+ families in 2024, creates a durable demand tailwind for household essentials. Every new Saudi home requires a full kitchen outfitting.";
 
   String get igInvest5Title => isArabic ? 'تسارع التجارة الإلكترونية مع الرافعة التشغيلية' : 'Digital Acceleration with Operating Leverage';
   String get igInvest5Desc  => isArabic

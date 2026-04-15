@@ -992,13 +992,7 @@ class _MobileMenuSheetState extends State<_MobileMenuSheet> {
                   return Column(
                     children: [
                       InkWell(
-                        onTap: () {
-                          if (hasSubs) {
-                            setState(() => _expanded = isExpanded ? null : i);
-                          } else {
-                            _navigate(item.route);
-                          }
-                        },
+                        onTap: () => _navigate(item.route),
                         child: Container(
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -1019,12 +1013,18 @@ class _MobileMenuSheetState extends State<_MobileMenuSheet> {
                                 )),
                               ),
                               if (hasSubs)
-                                AnimatedRotation(
-                                  turns: isExpanded ? 0.5 : 0,
-                                  duration: const Duration(milliseconds: 200),
-                                  child: Icon(Icons.keyboard_arrow_down,
-                                    size: 18,
-                                    color: isActive ? AppColors.primary : Colors.grey.shade400),
+                                GestureDetector(
+                                  onTap: () => setState(() => _expanded = isExpanded ? null : i),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 8),
+                                    child: AnimatedRotation(
+                                      turns: isExpanded ? 0.5 : 0,
+                                      duration: const Duration(milliseconds: 200),
+                                      child: Icon(Icons.keyboard_arrow_down,
+                                        size: 22,
+                                        color: isActive ? AppColors.primary : Colors.grey.shade400),
+                                    ),
+                                  ),
                                 ),
                             ],
                           ),
