@@ -16,6 +16,9 @@ final LocaleProvider localeProvider = LocaleProvider();
 // Global scroll controller for IR page - receives iframe wheel events
 final ScrollController irScrollController = ScrollController();
 
+// Global notifier for contact section highlight
+final ValueNotifier<bool> contactHighlightNotifier = ValueNotifier(false);
+
 class AlSaifGalleryApp extends StatefulWidget {
   const AlSaifGalleryApp({super.key});
 

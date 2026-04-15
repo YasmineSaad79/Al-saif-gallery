@@ -6,10 +6,19 @@ import 'package:go_router/go_router.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
 import '../utils/ir_section_keys.dart';
+import '../utils/scroll_keys.dart';
 import '../utils/responsive.dart';
 import '../main.dart';
 import '../widgets/external_script_widget.dart';
 import '../screens/investors_governance_screen.dart';
+
+// ── Global Nav Dropdown Manager ───────────────────────────────────────────────
+VoidCallback? _activeNavDropdownCloser;
+
+void _closeActiveNavDropdown() {
+  _activeNavDropdownCloser?.call();
+  _activeNavDropdownCloser = null;
+}
 const String _irPageBase = String.fromEnvironment(
   'IR_PAGE_URL',
   defaultValue: 'http://localhost:3001/ir',
@@ -135,13 +144,13 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
               if (!isMobile) ...[
                 _NavItem(text: l.navHome, isActive: currentRoute == '/', onTap: () => context.go('/')),
                 const SizedBox(width: 32),
-                _NavItem(text: l.navAboutUs, isActive: currentRoute == '/about-us', onTap: () => context.go('/about-us')),
+                _AboutDropdownNavItem(isActive: currentRoute == '/about-us', l: l),
                 const SizedBox(width: 32),
-                _NavItem(text: l.navStrategy, isActive: currentRoute == '/strategy-operations', onTap: () => context.go('/strategy-operations')),
+                _StrategyDropdownNavItem(isActive: currentRoute == '/strategy-operations', l: l),
                 const SizedBox(width: 32),
-                _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: () => context.go('/investors-governance')),
+                _IRDropdownNavItem(isActive: currentRoute == '/investors-governance', l: l, onPage: currentRoute == '/investors-governance'),
                 const SizedBox(width: 32),
-                _NavItem(text: l.navNewsroom, isActive: currentRoute == '/news-careers', onTap: () => context.go('/news-careers')),
+                _NewsroomDropdownNavItem(isActive: currentRoute == '/news-careers', l: l),
               ] else
                 IconButton(icon: const Icon(Icons.menu, color: AppColors.textPrimary), onPressed: () => _openMenu(context)),
               const Spacer(),
@@ -153,19 +162,401 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
             if (isAr) ...[
               const Spacer(),
               if (!isMobile) ...[
-                _NavItem(text: l.navNewsroom, isActive: currentRoute == '/news-careers', onTap: () => context.go('/news-careers')),
+                _NewsroomDropdownNavItem(isActive: currentRoute == '/news-careers', l: l),
                 const SizedBox(width: 32),
-                _NavItem(text: l.navInvestors, isActive: currentRoute == '/investors-governance', onTap: () => context.go('/investors-governance')),
+                _IRDropdownNavItem(isActive: currentRoute == '/investors-governance', l: l, onPage: currentRoute == '/investors-governance'),
                 const SizedBox(width: 32),
-                _NavItem(text: l.navStrategy, isActive: currentRoute == '/strategy-operations', onTap: () => context.go('/strategy-operations')),
+                _StrategyDropdownNavItem(isActive: currentRoute == '/strategy-operations', l: l),
                 const SizedBox(width: 32),
-                _NavItem(text: l.navAboutUs, isActive: currentRoute == '/about-us', onTap: () => context.go('/about-us')),
+                _AboutDropdownNavItem(isActive: currentRoute == '/about-us', l: l),
                 const SizedBox(width: 32),
                 _NavItem(text: l.navHome, isActive: currentRoute == '/', onTap: () => context.go('/')),
               ] else
                 IconButton(icon: const Icon(Icons.menu, color: AppColors.textPrimary), onPressed: () => _openMenu(context)),
             ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── About Us Dropdown Nav Item ────────────────────────────────────────────────
+class _AboutDropdownNavItem extends StatefulWidget {
+  final bool isActive;
+  final AppLocalizations l;
+  const _AboutDropdownNavItem({required this.isActive, required this.l});
+  @override
+  State<_AboutDropdownNavItem> createState() => _AboutDropdownNavItemState();
+}
+
+class _AboutDropdownNavItemState extends State<_AboutDropdownNavItem> {
+  bool _hovered = false;
+  OverlayEntry? _overlay;
+  final _key = GlobalKey();
+
+  void _show() {
+    _closeActiveNavDropdown();
+    _remove();
+    _activeNavDropdownCloser = _remove;
+    final box = _key.currentContext!.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero);
+    final isArabic = widget.l.isArabic;
+
+    final items = isArabic ? [
+      ('هدفنا',              'our-purpose'),
+      ('قيمنا',              'our-values'),
+      ('المسيرة والمحطات',   'heritage'),
+      ('القيادة',            'leadership'),
+    ] : [
+      ('Our Purpose',        'our-purpose'),
+      ('Our Values',         'our-values'),
+      ('Heritage & Milestones', 'heritage'),
+      ('Leadership',         'leadership'),
+    ];
+
+    _overlay = OverlayEntry(
+      builder: (_) => Stack(
+        children: [
+          Positioned(
+            left: isArabic ? null : offset.dx,
+            right: isArabic ? MediaQuery.of(context).size.width - offset.dx - box.size.width : null,
+            top: offset.dy + box.size.height + 4,
+            child: MouseRegion(
+              onExit: (_) => _remove(),
+              child: Material(
+                elevation: 8,
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  width: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFFE8E8E8)),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: items.map((item) {
+                      return InkWell(
+                        onTap: () {
+                          _remove();
+                          final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+                          if (currentPath != '/about-us') {
+                            GoRouter.of(context).go('/about-us');
+                            Future.delayed(const Duration(milliseconds: 400), () => ScrollKeys.scrollTo(item.$2));
+                          } else {
+                            ScrollKeys.scrollTo(item.$2);
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          decoration: BoxDecoration(
+                            border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+                          ),
+                          child: Text(item.$1,
+                            textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                            style: const TextStyle(fontSize: 13, color: Color(0xFF1A1A1A))),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    Overlay.of(context).insert(_overlay!);
+  }
+
+  void _remove() { _overlay?.remove(); _overlay = null; if (_activeNavDropdownCloser == _remove) _activeNavDropdownCloser = null; }
+
+  @override
+  void dispose() { _remove(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    return SelectionContainer.disabled(
+      child: MouseRegion(
+        key: _key,
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) { setState(() => _hovered = true); _show(); },
+        onExit:  (_) { setState(() => _hovered = false); },
+        child: GestureDetector(
+          onTap: () => GoRouter.of(context).go('/about-us'),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(widget.l.navAboutUs,
+                    style: TextStyle(
+                      color: (widget.isActive || _hovered) ? AppColors.textPrimary : AppColors.textSecondary,
+                      fontSize: 13.1, fontWeight: FontWeight.w400,
+                    )),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Container(height: 2, width: 40, color: widget.isActive ? AppColors.primary : Colors.transparent),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Strategy Dropdown Nav Item ────────────────────────────────────────────────
+class _StrategyDropdownNavItem extends StatefulWidget {
+  final bool isActive;
+  final AppLocalizations l;
+  const _StrategyDropdownNavItem({required this.isActive, required this.l});
+  @override
+  State<_StrategyDropdownNavItem> createState() => _StrategyDropdownNavItemState();
+}
+
+class _StrategyDropdownNavItemState extends State<_StrategyDropdownNavItem> {
+  bool _hovered = false;
+  OverlayEntry? _overlay;
+  final _key = GlobalKey();
+
+  void _show() {
+    _closeActiveNavDropdown();
+    _remove();
+    _activeNavDropdownCloser = _remove;
+    final box = _key.currentContext!.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero);
+    final isArabic = widget.l.isArabic;
+
+    final items = isArabic ? [
+      ('مقدمة الاستراتيجية',   'strategy-intro'),
+      ('ركائز الاستراتيجية',   'strategy-pillars'),
+      ('خارطة الطريق',         'strategy-roadmap'),
+      ('إدارة المخاطر',        'strategy-risk'),
+    ] : [
+      ('Strategy Overview',    'strategy-intro'),
+      ('Strategic Pillars',    'strategy-pillars'),
+      ('Roadmap',              'strategy-roadmap'),
+      ('Risk Management',      'strategy-risk'),
+    ];
+
+    _overlay = OverlayEntry(
+      builder: (_) => Stack(
+        children: [
+          Positioned(
+            left: isArabic ? null : offset.dx,
+            right: isArabic ? MediaQuery.of(context).size.width - offset.dx - box.size.width : null,
+            top: offset.dy + box.size.height + 4,
+            child: MouseRegion(
+              onExit: (_) => _remove(),
+              child: Material(
+                elevation: 8,
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  width: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFFE8E8E8)),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: items.map((item) {
+                      return InkWell(
+                        onTap: () {
+                          _remove();
+                          final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+                          if (currentPath != '/strategy-operations') {
+                            GoRouter.of(context).go('/strategy-operations');
+                            Future.delayed(const Duration(milliseconds: 400), () => ScrollKeys.scrollTo(item.$2));
+                          } else {
+                            ScrollKeys.scrollTo(item.$2);
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          decoration: BoxDecoration(
+                            border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+                          ),
+                          child: Text(item.$1,
+                            textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                            style: const TextStyle(fontSize: 13, color: Color(0xFF1A1A1A))),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    Overlay.of(context).insert(_overlay!);
+  }
+
+  void _remove() { _overlay?.remove(); _overlay = null; if (_activeNavDropdownCloser == _remove) _activeNavDropdownCloser = null; }
+
+  @override
+  void dispose() { _remove(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    return SelectionContainer.disabled(
+      child: MouseRegion(
+        key: _key,
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) { setState(() => _hovered = true); _show(); },
+        onExit:  (_) { setState(() => _hovered = false); },
+        child: GestureDetector(
+          onTap: () => GoRouter.of(context).go('/strategy-operations'),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(widget.l.navStrategy,
+                    style: TextStyle(
+                      color: (widget.isActive || _hovered) ? AppColors.textPrimary : AppColors.textSecondary,
+                      fontSize: 13.1, fontWeight: FontWeight.w400,
+                    )),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Container(height: 2, width: 40, color: widget.isActive ? AppColors.primary : Colors.transparent),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Newsroom Dropdown Nav Item ────────────────────────────────────────────────
+class _NewsroomDropdownNavItem extends StatefulWidget {
+  final bool isActive;
+  final AppLocalizations l;
+  const _NewsroomDropdownNavItem({required this.isActive, required this.l});
+  @override
+  State<_NewsroomDropdownNavItem> createState() => _NewsroomDropdownNavItemState();
+}
+
+class _NewsroomDropdownNavItemState extends State<_NewsroomDropdownNavItem> {
+  bool _hovered = false;
+  OverlayEntry? _overlay;
+  final _key = GlobalKey();
+
+  void _show() {
+    _closeActiveNavDropdown();
+    _remove();
+    _activeNavDropdownCloser = _remove;
+    final box = _key.currentContext!.findRenderObject() as RenderBox;
+    final offset = box.localToGlobal(Offset.zero);
+    final isArabic = widget.l.isArabic;
+
+    final items = isArabic ? [
+      ('آخر الأخبار',   'news'),
+      ('الوظائف',       'careers'),
+      ('تواصل معنا',    'contact'),
+    ] : [
+      ('Latest News',   'news'),
+      ('Careers',       'careers'),
+      ('Contact Us',    'contact'),
+    ];
+
+    _overlay = OverlayEntry(
+      builder: (_) => Stack(
+        children: [
+          Positioned(
+            left: isArabic ? null : offset.dx,
+            right: isArabic ? MediaQuery.of(context).size.width - offset.dx - box.size.width : null,
+            top: offset.dy + box.size.height + 4,
+            child: MouseRegion(
+              onExit: (_) => _remove(),
+              child: Material(
+                elevation: 8,
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  width: 180,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFFE8E8E8)),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: items.map((item) {
+                      return InkWell(
+                        onTap: () {
+                          _remove();
+                          final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+                          if (currentPath != '/news-careers') {
+                            GoRouter.of(context).go('/news-careers');
+                            Future.delayed(const Duration(milliseconds: 400), () => ScrollKeys.scrollTo(item.$2));
+                          } else {
+                            ScrollKeys.scrollTo(item.$2);
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          decoration: BoxDecoration(
+                            border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+                          ),
+                          child: Text(item.$1,
+                            textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                            style: const TextStyle(fontSize: 13, color: Color(0xFF1A1A1A))),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    Overlay.of(context).insert(_overlay!);
+  }
+
+  void _remove() { _overlay?.remove(); _overlay = null; if (_activeNavDropdownCloser == _remove) _activeNavDropdownCloser = null; }
+
+  @override
+  void dispose() { _remove(); super.dispose(); }
+
+  @override
+  Widget build(BuildContext context) {
+    return SelectionContainer.disabled(
+      child: MouseRegion(
+        key: _key,
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) { setState(() => _hovered = true); _show(); },
+        onExit:  (_) { setState(() => _hovered = false); },
+        child: GestureDetector(
+          onTap: () => GoRouter.of(context).go('/news-careers'),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(widget.l.navNewsroom,
+                    style: TextStyle(
+                      color: (widget.isActive || _hovered) ? AppColors.textPrimary : AppColors.textSecondary,
+                      fontSize: 13.1, fontWeight: FontWeight.w400,
+                    )),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Container(height: 2, width: 40, color: widget.isActive ? AppColors.primary : Colors.transparent),
+            ],
+          ),
         ),
       ),
     );
@@ -189,30 +580,43 @@ class _IRDropdownNavItemState extends State<_IRDropdownNavItem> {
   final _key = GlobalKey();
 
   void _showDropdown() {
+    _closeActiveNavDropdown();
     _removeDropdown();
-    setAllIframesPointerEvents(false); // عطّل الـ iframes
-    final box = _key.currentContext!.findRenderObject() as RenderBox;
+    _activeNavDropdownCloser = _removeDropdown;
+    setAllIframesPointerEvents(false);
+    final ctx = _key.currentContext ?? context;
+    final box = ctx.findRenderObject() as RenderBox;
     final offset = box.localToGlobal(Offset.zero);
     final isArabic = widget.l.isArabic;
 
     final items = isArabic ? [
-      ('نظرة عامة', 0),
-      ('الإعلانات', 1),
-      ('نشرة المعلومات', 2),
-      ('نشاط السهم', 3),
-      ('الإجراءات النظامية', 4),
-      ('البيانات المالية', 5),
-      ('سعر السهم', 6),
-      ('الأداء', 7),
+      ('مقومات الاستثمار',       -1),
+      ('نظرة عامة',              0),
+      ('الإعلانات',              1),
+      ('نشرة المعلومات',         2),
+      ('نشاط السهم',             3),
+      ('الإجراءات النظامية',     4),
+      ('البيانات المالية',       5),
+      ('سعر السهم',              6),
+      ('الأداء',                 7),
+      ('حاسبة الاستثمار',        8),
+      ('سلسلة الأسهم',           9),
+      ('تحليل المجموعة المماثلة', 10),
+      ('الاشتراك',               11),
     ] : [
-      ('Company Snapshot', 0),
-      ('Announcements', 1),
-      ('Fact Sheet', 2),
-      ('Stock Activity', 3),
-      ('Corporate Actions', 4),
-      ('Company Financials', 5),
-      ('Share Price', 6),
-      ('Performance', 7),
+      ('Investment Case',        -1),
+      ('Company Snapshot',       0),
+      ('Announcements',          1),
+      ('Fact Sheet',             2),
+      ('Stock Activity',         3),
+      ('Corporate Actions',      4),
+      ('Company Financials',     5),
+      ('Share Price',            6),
+      ('Performance',            7),
+      ('Investment Calculator',  8),
+      ('Share Series',           9),
+      ('Peer Group Analysis',    10),
+      ('Subscribe',              11),
     ];
 
     _overlay = OverlayEntry(
@@ -245,13 +649,25 @@ class _IRDropdownNavItemState extends State<_IRDropdownNavItem> {
                           if (currentPath != '/investors-governance') {
                             GoRouter.of(context).go('/investors-governance');
                             Future.delayed(const Duration(milliseconds: 600), () {
-                              irTabBodyKey.currentState?.switchTab(tabIndex);
+                              if (tabIndex == -1) {
+                                // سكرول للـ Investment Case
+                                ScrollKeys.scrollTo('ig-investment-case');
+                              } else {
+                                irTabBodyKey.currentState?.switchTab(tabIndex);
+                                Future.delayed(const Duration(milliseconds: 200), () {
+                                  ScrollKeys.scrollTo('ir-widgets');
+                                });
+                              }
                             });
                           } else {
-                            // تأخير بسيط عشان الـ overlay يختفي أولاً
-                            Future.delayed(const Duration(milliseconds: 50), () {
+                            if (tabIndex == -1) {
+                              ScrollKeys.scrollTo('ig-investment-case');
+                            } else {
                               irTabBodyKey.currentState?.switchTab(tabIndex);
-                            });
+                              Future.delayed(const Duration(milliseconds: 100), () {
+                                ScrollKeys.scrollTo('ir-widgets');
+                              });
+                            }
                           }
                         },
                         child: Container(
@@ -282,7 +698,8 @@ class _IRDropdownNavItemState extends State<_IRDropdownNavItem> {
   void _removeDropdown() {
     _overlay?.remove();
     _overlay = null;
-    setAllIframesPointerEvents(true); // أعد تفعيل الـ iframes
+    setAllIframesPointerEvents(true);
+    if (_activeNavDropdownCloser == _removeDropdown) _activeNavDropdownCloser = null;
   }
 
   @override
@@ -293,34 +710,6 @@ class _IRDropdownNavItemState extends State<_IRDropdownNavItem> {
 
   @override
   Widget build(BuildContext context) {
-    // لما مش على صفحة IR، يتصرف كزر عادي بدون dropdown
-    if (!widget.onPage) {
-      return SelectionContainer.disabled(
-        child: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: GestureDetector(
-            onTap: () => GoRouter.of(context).go('/investors-governance'),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  widget.l.navInvestors,
-                  style: TextStyle(
-                    color: _hovered ? AppColors.textPrimary : AppColors.textSecondary,
-                    fontSize: 13.1,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(height: 2, width: 40, color: Colors.transparent),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
-    // على صفحة IR: يظهر الـ dropdown
     return SelectionContainer.disabled(
       child: MouseRegion(
         key: _key,
@@ -328,25 +717,17 @@ class _IRDropdownNavItemState extends State<_IRDropdownNavItem> {
         onEnter: (_) { setState(() => _hovered = true); _showDropdown(); },
         onExit:  (_) { setState(() => _hovered = false); },
         child: GestureDetector(
-          onTap: _showDropdown,
+          onTap: () => GoRouter.of(context).go('/investors-governance'),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    widget.l.navInvestors,
-                    style: TextStyle(
-                      color: (widget.isActive || _hovered) ? AppColors.textPrimary : AppColors.textSecondary,
-                      fontSize: 13.1,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  const SizedBox(width: 3),
-                  Icon(Icons.keyboard_arrow_down, size: 14,
-                    color: (widget.isActive || _hovered) ? AppColors.textPrimary : AppColors.textSecondary),
-                ],
+              Text(
+                widget.l.navInvestors,
+                style: TextStyle(
+                  color: (widget.isActive || _hovered) ? AppColors.textPrimary : AppColors.textSecondary,
+                  fontSize: 13.1,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
               const SizedBox(height: 4),
               Container(height: 2, width: 40, color: widget.isActive ? AppColors.primary : Colors.transparent),

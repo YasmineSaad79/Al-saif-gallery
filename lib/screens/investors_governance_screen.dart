@@ -25,6 +25,7 @@ import '../widgets/footer_section.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
+import '../utils/scroll_keys.dart';
 import '../main.dart';
 import '../widgets/external_script_widget.dart';
 
@@ -50,7 +51,6 @@ class InvestorsGovernanceScreen extends StatelessWidget {
                 const CustomNavigationBar(),
                 Expanded(
                   child: isMobile
-                      // ── Mobile: tab bar inside scroll (not sticky) ──
                       ? SingleChildScrollView(
                           controller: irScrollController,
                           child: Column(
@@ -59,26 +59,19 @@ class InvestorsGovernanceScreen extends StatelessWidget {
                               const IGHeroSection(),
                               const IGIntroSection(),
                               const IGInvestmentCaseSection(),
-                              const _StockTickerSection(),
-                              _IRStickyTabBar(tabBodyKey: irTabBodyKey),
                               _IRTabContent(key: irTabBodyKey),
                               const FooterSection(),
                             ],
                           ),
                         )
-                      // ── Desktop: tab bar sticky ──
                       : CustomScrollView(
                           controller: irScrollController,
                           slivers: [
                             const SliverToBoxAdapter(child: IGHeroSection()),
                             const SliverToBoxAdapter(child: IGIntroSection()),
-                            const SliverToBoxAdapter(child: IGInvestmentCaseSection()),
+                            SliverToBoxAdapter(child: KeyedSubtree(key: ScrollKeys.get('ig-investment-case'), child: const IGInvestmentCaseSection())),
                             const SliverToBoxAdapter(child: _StockTickerSection()),
-                            SliverPersistentHeader(
-                              pinned: true,
-                              delegate: _IRTabBarDelegate(tabBodyKey: irTabBodyKey),
-                            ),
-                            SliverToBoxAdapter(child: _IRTabContent(key: irTabBodyKey)),
+                            SliverToBoxAdapter(child: KeyedSubtree(key: ScrollKeys.get('ir-widgets'), child: _IRTabContent(key: irTabBodyKey))),
                             const SliverToBoxAdapter(child: FooterSection()),
                           ],
                         ),
@@ -94,7 +87,7 @@ class InvestorsGovernanceScreen extends StatelessWidget {
 
 // ── Shared Tab State ──────────────────────────────────────────────────────────
 class _IRTabBodyState extends State<_IRTabContent> {
-  int _selectedTab = 0;
+  int _selectedTab = -1; // -1 = show all
 
   void switchTab(int index) {
     if (mounted) setState(() => _selectedTab = index);
@@ -120,11 +113,47 @@ class _IRTabBodyState extends State<_IRTabContent> {
     final isArabic = l.isArabic;
     final hp = Responsive.getHorizontalPadding(context);
 
+    // لما ما في اختيار، اعرض كل الـ widgets ورا بعض
+    if (_selectedTab == -1) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSectionWithTitle('Company Snapshot', 'نظرة عامة عن الشركة', const CompanySnapshotWidget(), isArabic, hp),
+          _buildSectionWithTitle('Announcements', 'الإعلانات', const CorporateNewsWidget(), isArabic, hp),
+          _buildSectionWithTitle('Fact Sheet', 'نشرة المعلومات', _FactSheetContent(isArabic: isArabic), isArabic, hp),
+          _buildSectionWithTitle('Stock Activity', 'نشاط السهم', _StockActivityContent(isArabic: isArabic), isArabic, hp),
+          _buildSectionWithTitle('Corporate Actions', 'الإجراءات النظامية', const CorporateActionsWidget(), isArabic, hp),
+          _buildSectionWithTitle('Company Financials', 'البيانات المالية', const CompanyFinancialsWidget(), isArabic, hp),
+          _buildSectionWithTitle('Share Price', 'سعر السهم', const SharePriceWidget(), isArabic, hp),
+          _buildSectionWithTitle('Performance', 'الأداء', const PerformanceWidget(), isArabic, hp),
+        ],
+      );
+    }
+
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(color: Colors.white),
       padding: EdgeInsets.symmetric(horizontal: hp, vertical: 16),
       child: _buildTabContent(_selectedTab, isArabic),
+    );
+  }
+
+  Widget _buildSectionWithTitle(String titleEn, String titleAr, Widget child, bool isArabic, double hp) {
+    return Container(
+      width: double.infinity,
+      color: Colors.white,
+      padding: EdgeInsets.fromLTRB(hp, 16, hp, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(isArabic ? titleAr : titleEn,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 8),
+          child,
+          const SizedBox(height: 8),
+          const Divider(color: Color(0xFFE5E7EB)),
+        ],
+      ),
     );
   }
 

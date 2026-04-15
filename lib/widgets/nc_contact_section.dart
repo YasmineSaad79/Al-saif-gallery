@@ -8,12 +8,39 @@ class NCContactSection extends StatefulWidget {
   State<NCContactSection> createState() => _NCContactSectionState();
 }
 
-class _NCContactSectionState extends State<NCContactSection> {
+class _NCContactSectionState extends State<NCContactSection> with SingleTickerProviderStateMixin {
+  late AnimationController _glowCtrl;
+  late Animation<double> _glow;
+
   @override
-  void initState() { super.initState(); localeProvider.addListener(_rebuild); }
+  void initState() {
+    super.initState();
+    localeProvider.addListener(_rebuild);
+    _glowCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
+    _glow = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _glowCtrl, curve: Curves.easeInOut),
+    );
+    contactHighlightNotifier.addListener(_onHighlight);
+  }
+
+  void _onHighlight() {
+    if (contactHighlightNotifier.value) {
+      _glowCtrl.repeat(reverse: true);
+    } else {
+      _glowCtrl.stop();
+      _glowCtrl.reset();
+    }
+  }
+
   void _rebuild() { if (mounted) setState(() {}); }
+
   @override
-  void dispose() { localeProvider.removeListener(_rebuild); super.dispose(); }
+  void dispose() {
+    localeProvider.removeListener(_rebuild);
+    contactHighlightNotifier.removeListener(_onHighlight);
+    _glowCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

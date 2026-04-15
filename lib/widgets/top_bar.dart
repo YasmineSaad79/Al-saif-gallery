@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../utils/app_colors.dart';
 import '../utils/responsive.dart';
+import '../utils/scroll_keys.dart';
 import '../main.dart';
 import 'search_dialog.dart';
 import 'external_script_widget.dart';
@@ -58,7 +59,7 @@ class _TopBarState extends State<TopBar> {
                   if (!isMobile) ...[
                     _buildItem(docLabel,  'assets/images/document.svg',  () => context.go('/documents-library')),
                     const SizedBox(width: 24),
-                    _buildItem(conLabel,  'assets/images/contact.svg',   () => context.go('/contact')),
+                    _buildItem(conLabel,  'assets/images/contact.svg',   () => _goToContact(context)),
                     const SizedBox(width: 24),
                     _buildItem(srchLabel, 'assets/images/search.svg',    () => _showSearchDialog(context)),
                     const SizedBox(width: 24),
@@ -76,6 +77,26 @@ class _TopBarState extends State<TopBar> {
         ],
       ),
     );
+  }
+
+  void _goToContact(BuildContext context) {
+    final currentPath = GoRouterState.of(context).uri.path;
+    if (currentPath != '/news-careers') {
+      context.go('/news-careers');
+      Future.delayed(const Duration(milliseconds: 500), () {
+        ScrollKeys.scrollTo('contact');
+        contactHighlightNotifier.value = true;
+        Future.delayed(const Duration(milliseconds: 2000), () {
+          contactHighlightNotifier.value = false;
+        });
+      });
+    } else {
+      ScrollKeys.scrollTo('contact');
+      contactHighlightNotifier.value = true;
+      Future.delayed(const Duration(milliseconds: 2000), () {
+        contactHighlightNotifier.value = false;
+      });
+    }
   }
 
   void _showSearchDialog(BuildContext context) {

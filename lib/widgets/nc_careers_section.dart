@@ -92,9 +92,9 @@ class _NCCareersSectionState extends State<NCCareersSection> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Expanded(child: _StatCard(item: stats[0])),
+                          Expanded(child: _StatCard(item: stats[0], delay: 0)),
                           const SizedBox(width: 12),
-                          Expanded(child: _StatCard(item: stats[1])),
+                          Expanded(child: _StatCard(item: stats[1], delay: 120)),
                         ],
                       ),
                     ),
@@ -103,9 +103,9 @@ class _NCCareersSectionState extends State<NCCareersSection> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Expanded(child: _StatCard(item: stats[2])),
+                          Expanded(child: _StatCard(item: stats[2], delay: 240)),
                           const SizedBox(width: 12),
-                          Expanded(child: _StatCard(item: stats[3])),
+                          Expanded(child: _StatCard(item: stats[3], delay: 360)),
                         ],
                       ),
                     ),
@@ -118,7 +118,7 @@ class _NCCareersSectionState extends State<NCCareersSection> {
                   children: [
                     for (int i = 0; i < stats.length; i++) ...[
                       if (i > 0) const SizedBox(width: 16),
-                      Expanded(child: _StatCard(item: stats[i])),
+                      Expanded(child: _StatCard(item: stats[i], delay: i * 120)),
                     ],
                   ],
                 ),
@@ -252,46 +252,106 @@ class _StatItem {
   const _StatItem({required this.icon, required this.value, required this.label, required this.sub});
 }
 
-// ── Stat card ──
-class _StatCard extends StatelessWidget {
+// ── Animated Stat card ──
+class _StatCard extends StatefulWidget {
   final _StatItem item;
-  const _StatCard({required this.item});
+  final int delay;
+  const _StatCard({required this.item, this.delay = 0});
+  @override
+  State<_StatCard> createState() => _StatCardState();
+}
+
+class _StatCardState extends State<_StatCard> with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _fade;
+  late Animation<Offset> _slide;
+  double _countValue = 0;
+  bool _counted = false;
+
+  // استخرج الرقم من الـ value string
+  double? _parseNumber(String val) {
+    final clean = val.replaceAll(RegExp(r'[^0-9.]'), '');
+    return double.tryParse(clean);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
+    _fade  = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
+    _slide = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero)
+        .animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
+
+    Future.delayed(Duration(milliseconds: widget.delay), () {
+      if (!mounted) return;
+      _ctrl.forward();
+      _startCountUp();
+    });
+  }
+
+  void _startCountUp() {
+    final target = _parseNumber(widget.item.value);
+    if (target == null) return;
+    const steps = 30;
+    const duration = Duration(milliseconds: 800);
+    final stepDuration = Duration(milliseconds: duration.inMilliseconds ~/ steps);
+    int step = 0;
+    Future.doWhile(() async {
+      await Future.delayed(stepDuration);
+      if (!mounted) return false;
+      step++;
+      setState(() => _countValue = target * step / steps);
+      return step < steps;
+    });
+  }
+
+  String _displayValue() {
+    final target = _parseNumber(widget.item.value);
+    if (target == null || _countValue == 0) return widget.item.value;
+    final suffix = widget.item.value.replaceAll(RegExp(r'[0-9,.]'), '');
+    if (target == target.truncateToDouble()) {
+      return '${_countValue.toInt()}$suffix';
+    }
+    return '${_countValue.toStringAsFixed(0)}$suffix';
+  }
+
+  @override
+  void dispose() { _ctrl.dispose(); super.dispose(); }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFE8E8E8)),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(item.icon, width: 32, height: 32, colorFilter: const ColorFilter.mode(Color(0xFFC62030), BlendMode.srcIn)),
-          const SizedBox(height: 10),
-          Text(
-            item.value,
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF1A1A1A),
-            ),
+    return FadeTransition(
+      opacity: _fade,
+      child: SlideTransition(
+        position: _slide,
+        child: Container(
+          height: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: const Color(0xFFE8E8E8)),
           ),
-          const SizedBox(height: 2),
-          Text(
-            item.label,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF333333)),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(widget.item.icon, width: 32, height: 32,
+                colorFilter: const ColorFilter.mode(Color(0xFFC62030), BlendMode.srcIn)),
+              const SizedBox(height: 10),
+              Text(
+                _displayValue(),
+                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: Color(0xFF1A1A1A)),
+              ),
+              const SizedBox(height: 2),
+              Text(widget.item.label,
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF333333))),
+              const SizedBox(height: 2),
+              Text(widget.item.sub,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 11, color: Color(0xFF888888))),
+            ],
           ),
-          const SizedBox(height: 2),
-          Text(
-            item.sub,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 11, color: Color(0xFF888888)),
-          ),
-        ],
+        ),
       ),
     );
   }

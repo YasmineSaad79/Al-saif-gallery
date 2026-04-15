@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/home_screen.dart';
@@ -72,29 +73,60 @@ class PlaceholderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/'),
-        ),
-      ),
+      backgroundColor: Colors.white,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            const Text('This page is under construction'),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => context.go('/'),
-              child: const Text('Back to Home'),
-            ),
-          ],
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 1880),
+          color: const Color(0xFFF8FAFB),
+          child: Column(
+            children: [
+              Container(
+                height: 56,
+                color: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () => html.window.location.replace('/'),
+                        child: const Icon(Icons.arrow_back, size: 22, color: Color(0xFF1A1A1A)),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xFF1A1A1A))),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(title, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 20),
+                      const Text('This page is under construction'),
+                      const SizedBox(height: 20),
+                      MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: () => html.window.location.replace('/'),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: const Color(0xFFE53935)),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Text('Back to Home', style: TextStyle(color: Color(0xFFE53935), fontSize: 13)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

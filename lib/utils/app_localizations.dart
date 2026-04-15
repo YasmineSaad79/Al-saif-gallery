@@ -324,13 +324,13 @@ class AppLocalizations {
 
   String get igInvest5Title => isArabic ? 'تسارع التجارة الإلكترونية مع الرافعة التشغيلية' : 'Digital Acceleration with Operating Leverage';
   String get igInvest5Desc  => isArabic
-      ? 'نمت التجارة الإلكترونية \u200E37%\u200F في \u200E2025\u200F مُسهِمةً بـ \u200E94\u200F مليون ريال، أي \u200E12.4%\u200F من الإيرادات، عبر تطبيق يتجاوز عدد تنزيلاته \u200E500,000\u200F. وتعمل القناة الرقمية بالاعتماد على البنية اللوجستية المشتركة وخدمة ما بعد البيع مع الشبكة المادية، مما يُنشئ رافعة تشغيلية حقيقية مع نمو الإيرادات الرقمية ضمن شبكة الفروع والبنية التشغيلية القائمة.'
-      : 'E-commerce grew 37% in 2025, contributing SAR 94 million (12.4% of revenue) through an app with 500,000+ downloads. The digital channel operates with shared logistics and after-sales infrastructure, creating operating leverage as digital revenue grows within the existing physical footprint.';
+      ? 'نمت التجارة الإلكترونية \u200E37%\u200F في \u200E2025\u200F مُسهِمةً بـ \u200E94\u200F مليون ريال، أي \u200E12.4%\u200F من الإيرادات، عبر تطبيق يتجاوز عدد تنزيلاته \u200E500K+\u200F. وتعمل القناة الرقمية بالاعتماد على البنية اللوجستية المشتركة وخدمة ما بعد البيع مع الشبكة المادية، مما يُنشئ رافعة تشغيلية حقيقية مع نمو الإيرادات الرقمية ضمن شبكة الفروع والبنية التشغيلية القائمة.'
+      : 'E-commerce grew 37% in 2025, contributing SAR 94 million (12.4% of revenue) through an app with 500K+ downloads. The digital channel operates with shared logistics and after-sales infrastructure, creating operating leverage as digital revenue grows within the existing physical footprint.';
 
   String get igInvest6Title => isArabic ? 'قيادة محترفة في لحظة محورية' : 'Professional Leadership at a Pivotal Moment';
   String get igInvest6Desc  => isArabic
       ? 'تم تعيين أحمد بن صالح آل سلطان رئيساً تنفيذياً في ديسمبر \u200E2024\u200F، ويمثّل ذلك خطوة نضوج حوكمي مقصودة. إطاره الاستراتيجي ثلاثي المحاور، تجربة العميل وجودة الأرباح والتوسع المدروس، يتجلى بالفعل في نتائج \u200E2025\u200F.'
-      : 'The appointment of CEO Ahmed bin Saleh Al Sultan in December 2024 marks a deliberate governance maturation step. His three-pillar strategic framework (customer experience, earnings quality, measured expansion) is already reflected in the 2025 results.';
+      : 'The appointment of CEO Ahmed bin Saleh Al Sultan in Dec 2024 marks a deliberate governance maturation step. His three-pillar strategic framework (customer experience, earnings quality, measured expansion) is already reflected in the 2025 results.';
 }
 
 
