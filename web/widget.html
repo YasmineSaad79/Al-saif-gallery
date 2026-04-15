@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overflow: hidden; background: #ffffff; margin: 0; padding: 0; }
+  body > div { margin: 0 !important; padding: 0 !important; }
+</style>
+<script src="https://irp.atnmo.com/v2/widget/widget-loader.js"></script>
+</head>
+<body>
+<div id="widget-container"></div>
+<script>
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var widgetType = params.get('type') || '';
+  var lang = params.get('lang') || 'en';
+  var viewId = params.get('id') || '';
+
+  // rename div id to match widget type
+  document.getElementById('widget-container').id = widgetType + '-widget';
+
+  // scroll forwarding
+  window.addEventListener('wheel', function(e) {
+    window.parent.postMessage({ type: 'iframe-wheel', deltaY: e.deltaY }, '*');
+  }, { passive: true });
+
+  var _ty = 0;
+  window.addEventListener('touchstart', function(e) { _ty = e.touches[0].clientY; }, { passive: true });
+  window.addEventListener('touchmove', function(e) {
+    var dy = _ty - e.touches[0].clientY;
+    _ty = e.touches[0].clientY;
+    window.parent.postMessage({ type: 'iframe-wheel', deltaY: dy }, '*');
+  }, { passive: true });
+
+  // height reporting
+  var debounceTimer = null;
+  var lastSent = 0;
+
+  function getTrueHeight() {
+    var h = Math.max(
+      document.body.scrollHeight, document.body.offsetHeight,
+      document.documentElement.scrollHeight, document.documentElement.offsetHeight
+    );
+    document.querySelectorAll('iframe').forEach(function(f) {
+      var r = f.getBoundingClientRect();
+      h = Math.max(h, r.bottom + window.pageYOffset);
+      try {
+        var fd = f.contentDocument || f.contentWindow.document;
+        h = Math.max(h, fd.body.scrollHeight + r.top + window.pageYOffset);
+      } catch(e) {}
+    });
+    return Math.ceil(h) + 4;
+  }
+
+  function reportHeight() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(function() {
+      var h = getTrueHeight();
+      if (h > 20 && Math.abs(h - lastSent) > 2) {
+        lastSent = h;
+        window.parent.postMessage({ type: 'widget-height', id: viewId, height: h }, '*');
+      }
+    }, 300);
+  }
+
+  new MutationObserver(function() {
+    reportHeight();
+    document.querySelectorAll('iframe').forEach(function(f) {
+      if (!f._watched) {
+        f._watched = true;
+        f.addEventListener('load', function() {
+          [500, 1500, 3000].forEach(function(t) { setTimeout(reportHeight, t); });
+        });
+      }
+    });
+  }).observe(document.body, { childList: true, subtree: true, attributes: true });
+
+  if (window.ResizeObserver) {
+    new ResizeObserver(reportHeight).observe(document.body);
+  }
+
+  document.addEventListener('click', function() {
+    [500, 1500].forEach(function(t) { setTimeout(reportHeight, t); });
+  });
+
+  window.addEventListener('load', function() {
+    if (typeof loadWidget === 'function') {
+      loadWidget(widgetType, '5be9c146-613e-4141-a351-1f5e13fc5513', lang, '81a06c05-1a48-4d1b-8dbd-bcf60a76730f', 'v2');
+    }
+    [1000, 2000, 4000, 7000, 12000].forEach(function(t) { setTimeout(reportHeight, t); });
+  });
+})();
+</script>
+</body>
+</html>

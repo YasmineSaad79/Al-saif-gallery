@@ -19,8 +19,8 @@ class _InvestmentCalculatorWidgetState extends State<InvestmentCalculatorWidget>
   Widget build(BuildContext context) {
     final isAr = localeProvider.isArabic;
     return Stack(children: [
-      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'investment-calculator-view-en', widgetType: 'investment-calculator', fallbackHeight: 200, lang: 'en')),
-      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'investment-calculator-view-ar', widgetType: 'investment-calculator', fallbackHeight: 200, lang: 'ar')),
+      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'investment-calculator-view-en', widgetType: 'investment-calculator', lang: 'en')),
+      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'investment-calculator-view-ar', widgetType: 'investment-calculator', lang: 'ar')),
     ]);
   }
 }

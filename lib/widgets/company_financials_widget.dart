@@ -19,8 +19,8 @@ class _CompanyFinancialsWidgetState extends State<CompanyFinancialsWidget> {
   Widget build(BuildContext context) {
     final isAr = localeProvider.isArabic;
     return Stack(children: [
-      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'company-financials-view-en', widgetType: 'company-financials', fallbackHeight: 200, lang: 'en')),
-      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'company-financials-view-ar', widgetType: 'company-financials', fallbackHeight: 200, lang: 'ar')),
+      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'company-financials-view-en', widgetType: 'company-financials', lang: 'en')),
+      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'company-financials-view-ar', widgetType: 'company-financials', lang: 'ar')),
     ]);
   }
 }

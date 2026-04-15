@@ -22,7 +22,6 @@ class _StockActivitySimpleWidgetState extends State<StockActivitySimpleWidget> {
       key: ValueKey('stock-activity-simple-$lang'),
       viewId: 'stock-activity-simple-view-$lang',
       widgetType: 'stock-activity-simple',
-      fallbackHeight: 200,
       lang: lang,
     );
   }

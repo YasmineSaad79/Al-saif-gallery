@@ -19,8 +19,8 @@ class _CorporateActionsWidgetState extends State<CorporateActionsWidget> {
   Widget build(BuildContext context) {
     final isAr = localeProvider.isArabic;
     return Stack(children: [
-      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'corporate-actions-view-en', widgetType: 'corporate-actions', fallbackHeight: 200, lang: 'en')),
-      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'corporate-actions-view-ar', widgetType: 'corporate-actions', fallbackHeight: 200, lang: 'ar')),
+      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'corporate-actions-view-en', widgetType: 'corporate-actions', lang: 'en')),
+      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'corporate-actions-view-ar', widgetType: 'corporate-actions', lang: 'ar')),
     ]);
   }
 }

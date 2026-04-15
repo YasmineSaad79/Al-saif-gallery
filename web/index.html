@@ -22,15 +22,6 @@
     * { touch-action: manipulation; }
     html, body { touch-action: manipulation; }
     iframe { user-select: text; -webkit-user-select: text; }
-    /* Flutter always on top of iframes */
-    flt-glass-pane, flutter-view, flt-scene-host {
-      z-index: 9999 !important;
-      position: relative !important;
-    }
-    iframe {
-      z-index: 1 !important;
-      position: relative !important;
-    }
   </style>
   <script>
     // Global functions called directly from Dart via dart:html
@@ -66,20 +57,6 @@
     });
   </script>
   <script>
-    // استقبل wheel من الـ iframes وحوّله لـ Flutter
-    window.addEventListener('message', function(e) {
-      if (!e.data) return;
-      var type = e.data.type;
-      if (type === 'iframe-wheel') {
-        var dy = e.data.deltaY || 0;
-        var gp = document.querySelector('flt-glass-pane');
-        if (gp) gp.dispatchEvent(new WheelEvent('wheel', {
-          deltaY: dy, deltaMode: 0,
-          bubbles: true, cancelable: true, composed: true
-        }));
-      }
-    });
-
     // بعد ما يخسر الـ window الـ focus للـ iframe، ارجعه
     window.addEventListener('blur', function() {
       setTimeout(function() { window.focus(); }, 50);

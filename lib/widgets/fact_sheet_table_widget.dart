@@ -19,8 +19,8 @@ class _FactSheetTableWidgetState extends State<FactSheetTableWidget> {
   Widget build(BuildContext context) {
     final isAr = localeProvider.isArabic;
     return Stack(children: [
-      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'fact-sheet-table-view-en', widgetType: 'fact-sheet-table', fallbackHeight: 200, lang: 'en')),
-      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'fact-sheet-table-view-ar', widgetType: 'fact-sheet-table', fallbackHeight: 200, lang: 'ar')),
+      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'fact-sheet-table-view-en', widgetType: 'fact-sheet-table', lang: 'en')),
+      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'fact-sheet-table-view-ar', widgetType: 'fact-sheet-table', lang: 'ar')),
     ]);
   }
 }

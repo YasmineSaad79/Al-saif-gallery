@@ -206,7 +206,7 @@ class AppLocalizations {
 
   String get boardTitle => isArabic ? 'مجلس الإدارة' : 'Board of Directors';
   String get boardDesc  => isArabic
-      ? 'يتولى مجلس الإدارة الإشراف الاستراتيجي وصون حقوق المساهمين وضمان مساءلة الإدارة وفق التزامات الشركة بوصفها مدرجة في تداول. أُعيد انتخاب المجلس الحالي في أكتوبر \u200E2025\u200F للفترة من \u200E2025\u200F إلى \u200E2028\u200F.'
+      ? 'يتولى مجلس الإدارة الإشراف الاستراتيجي وحماية حقوق المساهمين وضمان مساءلة الإدارة وفق التزامات الشركة بوصفها مدرجة في تداول. أُعيد انتخاب المجلس الحالي في أكتوبر \u200E2025\u200F للفترة من \u200E2025\u200F إلى \u200E2028\u200F.'
       : 'The Board provides strategic oversight, safeguards shareholder interests, and ensures that management accountability aligns with our obligations as a Tadawul-listed company. The current board was re-elected in October 2025 for the 2025 to 2028 term.';
   String get boardLink  => isArabic ? 'عرض السير الذاتية لأعضاء المجلس' : 'View Board Profiles';
 
@@ -310,7 +310,7 @@ class AppLocalizations {
   String get igInvest2Title => isArabic ? 'جودة الأرباح مصدرها العمليات' : 'Earnings Quality Rooted in Operations';
   String get igInvest2Desc  => isArabic
       ? 'حقّقت السيف غاليري صافي ربح قدره \u200E58\u200F مليون ريال في عام \u200E2025\u200F بنمو \u200E54.6%\u200F على أساس سنوي، مدفوعاً كلياً بتحسينات تشغيلية. لم يعتمد هذا الانتعاش على مبيعات أصول أو بنود استثنائية. وتعكس إيرادات بلغت \u200E758.8\u200F مليون ريال وهامش مجمل ربح بنسبة \u200E23.5%\u200F وتدفق نقدي تشغيلي بقيمة \u200E78.7\u200F مليون ريال؛ القوة الربحية الكامنة للنموذج التشغيلي للشركة. وأنهت الشركة عام \u200E2025\u200F بصافي نقد \u200E25.9\u200F مليون ريال بعد السداد الكامل لجميع التزامات الدين قصير الأجل.'
-      : 'In 2025, Al Saif Gallery delivered SAR 58 million in net profit, a 54.6% increase year-on-year, driven entirely by operational improvements. Revenue of SAR 758.8 million, a gross margin of 23.5%, and operating cash flow of SAR 78.7 million reflect the underlying earning power of the platform. The Company ended 2025 with net cash of SAR 25.9 million.';
+      : 'In 2025, Al Saif Gallery delivered SAR 58 million in net profit, a 54.6% increase year-on-year, driven entirely by operational improvements. Revenue of SAR 758.8 million, a gross margin of 23.5%, and operating cash flow of SAR 78.7 million reflect the underlying earning power of the platform. The Company ended 2025 with cash and cash equivalents of SAR 25.9 million.';
 
   String get igInvest3Title => isArabic ? 'ميزة هوامش العلامات التجارية الخاصة' : 'Proprietary Brand Margin Advantage';
   String get igInvest3Desc  => isArabic

@@ -43,7 +43,7 @@ class SearchData {
     ),
     SearchResult(
       titleEn: 'Board of Directors', titleAr: 'مجلس الإدارة',
-      descEn: 'Strategic oversight and shareholder interests', descAr: 'الإشراف الاستراتيجي وصون حقوق المساهمين',
+      descEn: 'Strategic oversight and shareholder interests', descAr: 'الإشراف الاستراتيجي وحماية حقوق المساهمين',
       route: '/about-us', fragment: 'leadership',
       categoryEn: 'About', categoryAr: 'من نحن',
     ),

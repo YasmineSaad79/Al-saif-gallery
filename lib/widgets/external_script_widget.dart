@@ -239,25 +239,20 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
 
     _messageListener = (event) {
       final msg = (event as html.MessageEvent).data;
-      if (msg == null) return;
-      try {
-        final type = js_util.getProperty(msg, 'type');
-        if (type == 'widget-height') {
-          final id = js_util.getProperty(msg, 'id');
-          if (id == widget.viewId) {
-            final h = (js_util.getProperty(msg, 'height') as num).toDouble();
-            if (h > 20) {
-              _pendingHeight = h;
-              _debounce?.cancel();
-              _debounce = Timer(const Duration(milliseconds: 400), () {
-                if (mounted && (_pendingHeight - _height).abs() > 2) {
-                  setState(() => _height = _pendingHeight);
-                }
-              });
+      if (msg is Map &&
+          msg['type'] == 'widget-height' &&
+          msg['id'] == widget.viewId) {
+        final h = (msg['height'] as num).toDouble();
+        if (h > 20) {
+          _pendingHeight = h;
+          _debounce?.cancel();
+          _debounce = Timer(const Duration(milliseconds: 400), () {
+            if (mounted && (_pendingHeight - _height).abs() > 2) {
+              setState(() => _height = _pendingHeight);
             }
-          }
+          });
         }
-      } catch (_) {}
+      }
     };
     html.window.addEventListener('message', _messageListener!);
 
@@ -268,8 +263,6 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
       );
     } catch (_) {}
   }
-
-  void _reportHeight() {}
 
   String _buildHtml() {
     return '''<!DOCTYPE html>
@@ -288,40 +281,40 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
 <div id="${widget.widgetType}-widget"></div>
 <script>
 (function() {
-  // Forward wheel events to parent
   window.addEventListener('wheel', function(e) {
     window.parent.postMessage({ type: 'iframe-wheel', deltaY: e.deltaY }, '*');
   }, { passive: true });
 
-  // Forward touch scroll
-  var _ty = 0;
-  window.addEventListener('touchstart', function(e) { _ty = e.touches[0].clientY; }, { passive: true });
+  var _touchStartY = 0;
+  window.addEventListener('touchstart', function(e) {
+    _touchStartY = e.touches[0].clientY;
+  }, { passive: true });
   window.addEventListener('touchmove', function(e) {
-    var dy = _ty - e.touches[0].clientY;
-    _ty = e.touches[0].clientY;
+    var dy = _touchStartY - e.touches[0].clientY;
+    _touchStartY = e.touches[0].clientY;
     window.parent.postMessage({ type: 'iframe-wheel', deltaY: dy }, '*');
   }, { passive: true });
-
-  // بعد كل click، أرجع الـ focus للـ parent
-  document.addEventListener('click', function() {
-    setTimeout(function() { window.parent.focus(); }, 50);
-  }, true);
 
   var ID = '${widget.viewId}';
   var debounceTimer = null;
   var lastSent = 0;
 
   function getTrueHeight() {
-    var h = Math.max(document.body.scrollHeight, document.body.offsetHeight,
-      document.documentElement.scrollHeight, document.documentElement.offsetHeight);
-    document.querySelectorAll('iframe').forEach(function(f) {
-      var r = f.getBoundingClientRect();
-      h = Math.max(h, r.bottom + window.pageYOffset);
+    var h = Math.max(
+      document.body.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.scrollHeight,
+      document.documentElement.offsetHeight
+    );
+    var frames = document.querySelectorAll('iframe');
+    for (var j = 0; j < frames.length; j++) {
+      var fRect = frames[j].getBoundingClientRect();
+      h = Math.max(h, fRect.bottom + window.pageYOffset);
       try {
-        var fd = f.contentDocument || f.contentWindow.document;
-        h = Math.max(h, fd.body.scrollHeight + r.top + window.pageYOffset);
+        var fDoc = frames[j].contentDocument || frames[j].contentWindow.document;
+        h = Math.max(h, fDoc.body.scrollHeight + fRect.top + window.pageYOffset);
       } catch(e) {}
-    });
+    }
     return Math.ceil(h) + 4;
   }
 
@@ -339,23 +332,39 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   new MutationObserver(function() {
     reportDebounced();
     document.querySelectorAll('iframe').forEach(function(f) {
-      if (!f._w) { f._w = true; f.addEventListener('load', function() {
-        [500,1500,3000].forEach(function(t){setTimeout(reportDebounced,t);});
-      }); }
+      if (!f._w) {
+        f._w = true;
+        f.addEventListener('load', function() {
+          setTimeout(reportDebounced, 500);
+          setTimeout(reportDebounced, 1500);
+          setTimeout(reportDebounced, 3000);
+        });
+      }
     });
   }).observe(document.body, { childList: true, subtree: true, attributes: true });
 
-  if (window.ResizeObserver) new ResizeObserver(reportDebounced).observe(document.body);
+  if (window.ResizeObserver) {
+    new ResizeObserver(reportDebounced).observe(document.body);
+  }
 
   document.addEventListener('click', function() {
-    [500,1500].forEach(function(t){setTimeout(reportDebounced,t);});
+    setTimeout(reportDebounced, 500);
+    setTimeout(reportDebounced, 1500);
   });
 
   window.addEventListener('load', function() {
     if (typeof loadWidget === 'function') {
-      loadWidget('${widget.widgetType}','5be9c146-613e-4141-a351-1f5e13fc5513','${widget.lang}','81a06c05-1a48-4d1b-8dbd-bcf60a76730f','v2');
+      loadWidget(
+        '${widget.widgetType}',
+        "5be9c146-613e-4141-a351-1f5e13fc5513",
+        "${widget.lang}",
+        "81a06c05-1a48-4d1b-8dbd-bcf60a76730f",
+        "v2"
+      );
     }
-    [1000,2000,4000,7000,12000].forEach(function(t){setTimeout(reportDebounced,t);});
+    [1000, 2000, 4000, 7000, 12000].forEach(function(t) {
+      setTimeout(reportDebounced, t);
+    });
   });
 })();
 </script>
