@@ -396,7 +396,26 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     return SizedBox(
       width: double.infinity,
       height: _height,
-      child: HtmlElementView(viewType: widget.viewId),
+      child: Stack(
+        children: [
+          HtmlElementView(viewType: widget.viewId),
+          // overlay يستقبل wheel/touch scroll فقط ويمرره للصفحة
+          Positioned.fill(
+            child: Listener(
+              behavior: HitTestBehavior.translucent,
+              onPointerSignal: (e) {
+                if (e is PointerScrollEvent && irScrollController.hasClients) {
+                  final next = (irScrollController.offset + e.scrollDelta.dy)
+                      .clamp(0.0, irScrollController.position.maxScrollExtent);
+                  irScrollController.animateTo(next,
+                      duration: const Duration(milliseconds: 80), curve: Curves.linear);
+                }
+              },
+              child: const SizedBox.expand(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
