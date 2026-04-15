@@ -65,6 +65,10 @@ class _TopBarState extends State<TopBar> {
                     const SizedBox(width: 24),
                     _buildItem(langLabel, 'assets/images/language.svg',  () => _showLanguageDialog(context)),
                   ] else ...[
+                    _buildItem('', 'assets/images/document.svg', () => context.go('/documents-library')),
+                    const SizedBox(width: 16),
+                    _buildItem('', 'assets/images/contact.svg', () => _goToContact(context)),
+                    const SizedBox(width: 16),
                     _buildItem('', 'assets/images/search.svg', () => _showSearchDialog(context)),
                     const SizedBox(width: 16),
                     _buildItem(langLabel, 'assets/images/language.svg', () => _showLanguageDialog(context)),
