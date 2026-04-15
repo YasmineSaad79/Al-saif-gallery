@@ -59,6 +59,7 @@ class InvestorsGovernanceScreen extends StatelessWidget {
                               const IGHeroSection(),
                               const IGIntroSection(),
                               KeyedSubtree(key: ScrollKeys.get('ig-investment-case'), child: const IGInvestmentCaseSection()),
+                              const _StockTickerSection(),
                               KeyedSubtree(key: ScrollKeys.get('ir-widgets'), child: _IRTabContent(key: irTabBodyKey)),
                               const FooterSection(),
                             ],
