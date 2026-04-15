@@ -19,6 +19,50 @@ void _closeActiveNavDropdown() {
   _activeNavDropdownCloser?.call();
   _activeNavDropdownCloser = null;
 }
+
+// ── Shared Dropdown Item ──────────────────────────────────────────────────────
+class _DropdownItem extends StatefulWidget {
+  final String label;
+  final bool isActive;
+  final bool isArabic;
+  final VoidCallback onTap;
+  const _DropdownItem({required this.label, required this.isActive, required this.isArabic, required this.onTap});
+  @override
+  State<_DropdownItem> createState() => _DropdownItemState();
+}
+
+class _DropdownItemState extends State<_DropdownItem> {
+  bool _hovered = false;
+  @override
+  Widget build(BuildContext context) {
+    final highlight = widget.isActive || _hovered;
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit:  (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: highlight ? const Color(0xFFFFF5F5) : Colors.white,
+            border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+          ),
+          child: Text(
+            widget.label,
+            textAlign: widget.isArabic ? TextAlign.right : TextAlign.left,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: highlight ? FontWeight.w500 : FontWeight.w400,
+              color: highlight ? AppColors.primary : const Color(0xFF1A1A1A),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 const String _irPageBase = String.fromEnvironment(
   'IR_PAGE_URL',
   defaultValue: 'http://localhost:3001/ir',
@@ -219,7 +263,10 @@ class _AboutDropdownNavItemState extends State<_AboutDropdownNavItem> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: items.map((item) {
-                      return InkWell(
+                      return _DropdownItem(
+                        label: item.$1,
+                        isActive: false,
+                        isArabic: isArabic,
                         onTap: () {
                           _remove();
                           final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
@@ -230,16 +277,6 @@ class _AboutDropdownNavItemState extends State<_AboutDropdownNavItem> {
                             ScrollKeys.scrollTo(item.$2);
                           }
                         },
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          decoration: BoxDecoration(
-                            border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
-                          ),
-                          child: Text(item.$1,
-                            textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                            style: const TextStyle(fontSize: 13, color: Color(0xFF1A1A1A))),
-                        ),
                       );
                     }).toList(),
                   ),
@@ -347,7 +384,10 @@ class _StrategyDropdownNavItemState extends State<_StrategyDropdownNavItem> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: items.map((item) {
-                      return InkWell(
+                      return _DropdownItem(
+                        label: item.$1,
+                        isActive: false,
+                        isArabic: isArabic,
                         onTap: () {
                           _remove();
                           final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
@@ -358,16 +398,6 @@ class _StrategyDropdownNavItemState extends State<_StrategyDropdownNavItem> {
                             ScrollKeys.scrollTo(item.$2);
                           }
                         },
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          decoration: BoxDecoration(
-                            border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
-                          ),
-                          child: Text(item.$1,
-                            textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                            style: const TextStyle(fontSize: 13, color: Color(0xFF1A1A1A))),
-                        ),
                       );
                     }).toList(),
                   ),
@@ -473,7 +503,10 @@ class _NewsroomDropdownNavItemState extends State<_NewsroomDropdownNavItem> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: items.map((item) {
-                      return InkWell(
+                      return _DropdownItem(
+                        label: item.$1,
+                        isActive: false,
+                        isArabic: isArabic,
                         onTap: () {
                           _remove();
                           final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
@@ -484,16 +517,6 @@ class _NewsroomDropdownNavItemState extends State<_NewsroomDropdownNavItem> {
                             ScrollKeys.scrollTo(item.$2);
                           }
                         },
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          decoration: BoxDecoration(
-                            border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
-                          ),
-                          child: Text(item.$1,
-                            textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                            style: const TextStyle(fontSize: 13, color: Color(0xFF1A1A1A))),
-                        ),
                       );
                     }).toList(),
                   ),
@@ -652,17 +675,37 @@ class _IRDropdownNavItemState extends State<_IRDropdownNavItem> {
                             }
                           }
                         },
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          decoration: BoxDecoration(
-                            border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
-                          ),
-                          child: Text(
-                            item.$1,
-                            textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                            style: const TextStyle(fontSize: 13, color: Color(0xFF1A1A1A)),
-                          ),
+                        child: _DropdownItem(
+                          label: item.$1,
+                          isActive: false,
+                          isArabic: isArabic,
+                          onTap: () {
+                            final tabIndex = item.$2;
+                            _removeDropdown();
+                            final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+                            if (currentPath != '/investors-governance') {
+                              GoRouter.of(context).go('/investors-governance');
+                              Future.delayed(const Duration(milliseconds: 600), () {
+                                if (tabIndex == -1) {
+                                  ScrollKeys.scrollTo('ig-investment-case');
+                                } else {
+                                  irTabBodyKey.currentState?.switchTab(tabIndex);
+                                  Future.delayed(const Duration(milliseconds: 200), () {
+                                    ScrollKeys.scrollTo('ir-widgets');
+                                  });
+                                }
+                              });
+                            } else {
+                              if (tabIndex == -1) {
+                                ScrollKeys.scrollTo('ig-investment-case');
+                              } else {
+                                irTabBodyKey.currentState?.switchTab(tabIndex);
+                                Future.delayed(const Duration(milliseconds: 100), () {
+                                  ScrollKeys.scrollTo('ir-widgets');
+                                });
+                              }
+                            }
+                          },
                         ),
                       );
                     }).toList(),
@@ -752,6 +795,48 @@ class _NavItem extends StatelessWidget {  final String text;
               Container(height: 2, width: 40, color: isActive ? AppColors.primary : Colors.transparent),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Mobile Sub Item ───────────────────────────────────────────────────────────
+class _MobileSubItem extends StatefulWidget {
+  final String label;
+  final bool isArabic;
+  final VoidCallback onTap;
+  const _MobileSubItem({required this.label, required this.isArabic, required this.onTap});
+  @override
+  State<_MobileSubItem> createState() => _MobileSubItemState();
+}
+
+class _MobileSubItemState extends State<_MobileSubItem> {
+  bool _hovered = false;
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit:  (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.only(
+            left: widget.isArabic ? 24 : 40,
+            right: widget.isArabic ? 40 : 24,
+            top: 13, bottom: 13,
+          ),
+          decoration: BoxDecoration(
+            color: _hovered ? const Color(0xFFFFF5F5) : Colors.transparent,
+            border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+          ),
+          child: Text(widget.label, style: TextStyle(
+            fontSize: 13,
+            fontWeight: _hovered ? FontWeight.w500 : FontWeight.w400,
+            color: _hovered ? AppColors.primary : const Color(0xFF374151),
+          )),
         ),
       ),
     );
@@ -953,23 +1038,10 @@ class _MobileMenuSheetState extends State<_MobileMenuSheet> {
                         secondChild: Container(
                           color: const Color(0xFFF8FAFB),
                           child: Column(
-                            children: item.subs.map((sub) => InkWell(
+                            children: item.subs.map((sub) => _MobileSubItem(
+                              label: sub.$1,
+                              isArabic: isAr,
                               onTap: () => _navigate(item.route, sub.$2, sub.$3),
-                              child: Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.only(
-                                  left: isAr ? 24 : 40,
-                                  right: isAr ? 40 : 24,
-                                  top: 13, bottom: 13,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
-                                ),
-                                child: Text(sub.$1, style: const TextStyle(
-                                  fontSize: 13,
-                                  color: Color(0xFF374151),
-                                )),
-                              ),
                             )).toList(),
                           ),
                         ),

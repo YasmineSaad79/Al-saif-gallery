@@ -5,7 +5,9 @@ import 'dart:html' as html;
 import 'dart:ui_web' as ui;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import '../main.dart';
 
 // ── Global load queue: max 1 iframe loaded every 1.5s ──────────────────────
 final List<VoidCallback> _loadQueue = [];
