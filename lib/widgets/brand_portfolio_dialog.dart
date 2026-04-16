@@ -115,7 +115,7 @@ class BrandPortfolioDialog extends StatelessWidget {
                             nameAr: 'إديسون',
                             descriptionEn: 'Small and large home appliances designed to meet everyday household usage requirements, including products dedicated to traditional cuisine preparation.',
                             descriptionAr: 'أجهزة منزلية صغيرة وكبيرة مصممة لتلبية متطلبات الاستخدام المنزلي اليومي، بما في ذلك منتجات مخصصة لتحضير المأكولات التقليدية.',
-                            logoPath: 'images/EDISON.jpeg',
+                            logoPath: 'assets/images/EDISON.jpeg',
                             backgroundColor: const Color(0xFFF9FAFB),
                           ),
                           _BrandCard(
@@ -123,7 +123,7 @@ class BrandPortfolioDialog extends StatelessWidget {
                             nameAr: 'تورنادو',
                             descriptionEn: 'A diverse range of kitchen tools designed for daily food preparation and cooking.',
                             descriptionAr: 'مجموعة متنوعة من أدوات المطبخ المصممة لتحضير الطعام والطهي اليومي.',
-                            logoPath: 'images/TORNADO.jpeg',
+                            logoPath: 'assets/images/TORNADO.jpeg',
                             backgroundColor: Colors.white,
                           ),
                           _BrandCard(
@@ -131,7 +131,7 @@ class BrandPortfolioDialog extends StatelessWidget {
                             nameAr: 'روكي',
                             descriptionEn: 'Cookware and preparation tools engineered for safe use, distinguished by their durability.',
                             descriptionAr: 'أدوات الطهي والتحضير المصممة للاستخدام الآمن، وتتميز بمتانتها.',
-                            logoPath: 'images/ROCKY.jpeg',
+                            logoPath: 'assets/images/ROCKY.jpeg',
                             backgroundColor: const Color(0xFFF9FAFB),
                           ),
                           _BrandCard(
@@ -139,7 +139,7 @@ class BrandPortfolioDialog extends StatelessWidget {
                             nameAr: 'روبست',
                             descriptionEn: 'Serving and kitchen tools designed for home use, with an emphasis on durability and practical functionality.',
                             descriptionAr: 'أدوات التقديم والمطبخ المصممة للاستخدام المنزلي، مع التركيز على المتانة والوظائف العملية.',
-                            logoPath: 'images/ROBUST.jpeg',
+                            logoPath: 'assets/images/ROBUST.jpeg',
                             backgroundColor: const Color(0xFFF9FAFB),
                           ),
                         ],
