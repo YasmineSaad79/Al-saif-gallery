@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
+import 'board_of_directors_dialog.dart';
+import 'executive_management_dialog.dart';
 
 class LeadershipSection extends StatelessWidget {
   const LeadershipSection({super.key});
@@ -29,9 +31,9 @@ class LeadershipSection extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        SizedBox(width: 320, child: _LeadershipCard(title: l.boardTitle, description: l.boardDesc, linkText: l.boardLink)),
+                        SizedBox(width: 320, child: _LeadershipCard(title: l.boardTitle, description: l.boardDesc, linkText: l.boardLink, isBoard: true)),
                         const SizedBox(width: 24),
-                        SizedBox(width: 320, child: _LeadershipCard(title: l.execTitle, description: l.execDesc, linkText: l.execLink)),
+                        SizedBox(width: 320, child: _LeadershipCard(title: l.execTitle, description: l.execDesc, linkText: l.execLink, isBoard: false)),
                       ],
                     ),
                   ),
@@ -41,9 +43,9 @@ class LeadershipSection extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Expanded(child: _LeadershipCard(title: l.boardTitle, description: l.boardDesc, linkText: l.boardLink)),
+                      Expanded(child: _LeadershipCard(title: l.boardTitle, description: l.boardDesc, linkText: l.boardLink, isBoard: true)),
                       const SizedBox(width: 16),
-                      Expanded(child: _LeadershipCard(title: l.execTitle, description: l.execDesc, linkText: l.execLink)),
+                      Expanded(child: _LeadershipCard(title: l.execTitle, description: l.execDesc, linkText: l.execLink, isBoard: false)),
                     ],
                   ),
                 );
@@ -60,11 +62,13 @@ class _LeadershipCard extends StatelessWidget {
   final String title;
   final String description;
   final String linkText;
+  final bool isBoard;
 
   const _LeadershipCard({
     required this.title,
     required this.description,
     required this.linkText,
+    required this.isBoard,
   });
 
   @override
@@ -103,7 +107,11 @@ class _LeadershipCard extends StatelessWidget {
             child: InkWell(
               mouseCursor: SystemMouseCursors.click,
               onTap: () {
-                // TODO: Navigate to profiles page
+                if (isBoard) {
+                  BoardOfDirectorsDialog.show(context);
+                } else {
+                  ExecutiveManagementDialog.show(context);
+                }
               },
               child: Row(
               mainAxisSize: MainAxisSize.min,

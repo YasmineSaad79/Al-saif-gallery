@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 class AppTheme {
@@ -8,6 +9,7 @@ class AppTheme {
         seedColor: AppColors.primary,
         primary: AppColors.primary,
       ),
+      textTheme: GoogleFonts.interTextTheme(),
       textSelectionTheme: const TextSelectionThemeData(
         selectionColor: Color(0xFF5AAAF9),
         cursorColor: Color(0xFF1976D2),

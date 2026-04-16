@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
+import '../utils/scroll_keys.dart';
+import 'brand_portfolio_dialog.dart';
 
 class BrandsSection extends StatelessWidget {
   const BrandsSection({super.key});
@@ -183,12 +185,16 @@ class _ServiceCard extends StatelessWidget {
     required this.linkText,
   });
 
-  String _getRouteFromTitle() {
+  String? _getRouteFromTitle() {
     if (title.contains('Strategy')) return '/strategy-operations';
     if (title.contains('Investors')) return '/investors-governance';
-    if (title.contains('Careers')) return '/news-careers';
-    if (title.contains('Brands')) return '/brands';
+    if (title.contains('Careers') || title.contains('الوظائف')) return '/news-careers#careers';
+    if (title.contains('Brands')) return null; // Open dialog instead
     return '/';
+  }
+
+  bool _isBrandsCard() {
+    return title.contains('Brands') || title.contains('العلامات');
   }
 
   @override
@@ -248,6 +254,7 @@ class _ServiceCard extends StatelessWidget {
           _LearnMoreLink(
             route: _getRouteFromTitle(),
             text: linkText,
+            isBrandsCard: _isBrandsCard(),
           ),
         ],
       ),
@@ -256,12 +263,14 @@ class _ServiceCard extends StatelessWidget {
 }
 
 class _LearnMoreLink extends StatefulWidget {
-  final String route;
+  final String? route;
   final String text;
+  final bool isBrandsCard;
 
   const _LearnMoreLink({
     required this.route,
     required this.text,
+    this.isBrandsCard = false,
   });
 
   @override
@@ -275,7 +284,30 @@ class _LearnMoreLinkState extends State<_LearnMoreLink> {
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
-          onTap: () => context.go(widget.route),
+          onTap: () {
+            if (widget.isBrandsCard) {
+              BrandPortfolioDialog.show(context);
+            } else if (widget.route != null) {
+              final route = widget.route!;
+              if (route.contains('#')) {
+                final parts = route.split('#');
+                final path = parts[0];
+                final scrollKey = parts[1];
+                final currentPath = GoRouterState.of(context).uri.path;
+                
+                if (currentPath != path) {
+                  context.go(path);
+                  Future.delayed(const Duration(milliseconds: 400), () {
+                    ScrollKeys.scrollTo(scrollKey);
+                  });
+                } else {
+                  ScrollKeys.scrollTo(scrollKey);
+                }
+              } else {
+                context.go(route);
+              }
+            }
+          },
           child: Row(
             children: [
               Text(

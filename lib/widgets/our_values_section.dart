@@ -100,6 +100,7 @@ class _ValueCard extends StatelessWidget {
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           SvgPicture.asset(
             iconPath,
@@ -121,7 +122,8 @@ class _ValueCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
+          Flexible(
+            child: Text(
               description,
               textAlign: TextAlign.center,
               style: const TextStyle(
@@ -131,6 +133,7 @@ class _ValueCard extends StatelessWidget {
                 height: 1.4,
               ),
             ),
+          ),
         ],
       ),
     );
