@@ -102,6 +102,7 @@ class _LeadershipCard extends StatelessWidget {
               height: 1.4,
             ),
           ),
+          const Spacer(),
           const SizedBox(height: 8),
           SelectionContainer.disabled(
             child: InkWell(

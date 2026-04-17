@@ -241,13 +241,15 @@ class _ServiceCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Text(
-            description,
-            style: const TextStyle(
-              color: Color(0xFF6B7280),
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              height: 1.5,
+          Expanded(
+            child: Text(
+              description,
+              style: const TextStyle(
+                color: Color(0xFF6B7280),
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                height: 1.5,
+              ),
             ),
           ),
           const SizedBox(height: 12),

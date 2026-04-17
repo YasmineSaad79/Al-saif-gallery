@@ -44,7 +44,7 @@ class _StrategyRoadmapSectionState extends State<StrategyRoadmapSection> {
           'Digital channel contribution: 9.4% of revenue (vs. 1.4% in 2019)',
           'Delivery SLAs: Riyadh 1–3 days | Nationwide 3–5 days | International 5–10 days',
           'Owned and exclusive brand structure complete across core categories',
-          '•	Central warehouse operations as primary inventory hub with unified replenishment',
+          'Central warehouse operations as primary inventory hub with unified replenishment',
         ],
       ),
       _Phase(
@@ -111,7 +111,7 @@ class _StrategyRoadmapSectionState extends State<StrategyRoadmapSection> {
             isArabic ? 'الخارطة الاستراتيجية' : 'Strategic Roadmap',
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontSize: 28,
+              fontSize: 29,
               fontWeight: FontWeight.w700,
               color: Color(0xFF1A1A1A),
             ),
@@ -200,7 +200,7 @@ class _RoadmapConnector extends StatelessWidget {
                 Text(
                   p.phaseLabel,
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: p.badgeColor,
                   ),
@@ -267,7 +267,7 @@ class _PhaseCard extends StatelessWidget {
               child: Text(
                 phase.badgeText,
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: phase.badgeColor,
                 ),
@@ -278,7 +278,7 @@ class _PhaseCard extends StatelessWidget {
             Text(
               phase.phaseLabel,
               style: const TextStyle(
-                fontSize: 20,
+                fontSize: 21,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF1A1A1A),
               ),
@@ -288,7 +288,7 @@ class _PhaseCard extends StatelessWidget {
             Text(
               phase.title,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 17,
                 fontWeight: FontWeight.w600,
                 color: Color(0xFF374151),
               ),
@@ -298,7 +298,7 @@ class _PhaseCard extends StatelessWidget {
             Text(
               phase.description,
               style: const TextStyle(
-                fontSize: 13,
+                fontSize: 14,
                 color: Color(0xFF6B7280),
                 height: 1.65,
               ),
@@ -308,7 +308,7 @@ class _PhaseCard extends StatelessWidget {
             Text(
               phase.kpiTitle,
               style: const TextStyle(
-                fontSize: 13,
+                fontSize: 14,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF1A1A1A),
               ),
@@ -327,7 +327,7 @@ class _PhaseCard extends StatelessWidget {
                         child: Text(
                           kpi,
                           style: const TextStyle(
-                            fontSize: 12,
+                            fontSize: 13,
                             color: Color(0xFF4B5563),
                             height: 1.5,
                           ),

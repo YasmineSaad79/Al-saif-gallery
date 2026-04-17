@@ -29,10 +29,8 @@ flutter:
     - assets/images/
     - assets/icons/
 
-  # Fonts (optional - if you want to add Inter font locally)
-  # fonts:
-  #   - family: Inter
-  #     fonts:
-  #       - asset: assets/fonts/Inter-Regular.ttf
-  #       - asset: assets/fonts/Inter-Bold.ttf
-  #         weight: 700
+  # Fonts
+  fonts:
+    - family: Alexandria
+      fonts:
+        - asset: assets/fonts/Alexandria-VariableFont_wght.ttf

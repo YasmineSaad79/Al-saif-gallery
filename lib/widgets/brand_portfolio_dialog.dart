@@ -24,11 +24,13 @@ class BrandPortfolioDialog extends StatelessWidget {
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 16 : 40,
+        horizontal: isMobile ? 16 : size.width * 0.1,
         vertical: isMobile ? 20 : 40,
       ),
       child: Container(
-        width: double.infinity,
+        constraints: BoxConstraints(
+          maxWidth: isMobile ? double.infinity : 1200,
+        ),
         height: size.height * 0.9,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -191,10 +193,10 @@ class BrandPortfolioDialog extends StatelessWidget {
                                 bottom: BorderSide(color: Color(0xFFefddcd), width: 1),
                               ),
                             ),
-                            child: RichText(
-                              text: TextSpan(
+                            child: Text.rich(
+                              TextSpan(
                                 style: const TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                   color: Color(0xFF364153),
                                   height: 1.5,
@@ -362,7 +364,7 @@ class _StorageBrandsSection extends StatelessWidget {
         Text(
           isArabic
               ? 'تشمل محفظة الشركة عدداً من العلامات التجارية المتخصصة في التخزين والتقديم وإكسسوارات الضيافة المنزلية. وتشمل هذه العلامات:'
-              : 'The Company\'s portfolio includes a number of branded lines specialized in vacuum storage, serving, and storage accessories for domestic hospitality use. These brands include:',
+              : 'The Company\'s portfolio includes a number of branded lines specialized in vacuum flasks, serving ware, and beverage accessories for domestic hospitality use. These brands include:',
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
@@ -508,7 +510,7 @@ class _InternationalBrandsTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final brands = [
       {'brand': 'Markutec', 'country': isArabic ? 'ألمانيا' : 'Germany'},
-      {'brand': 'Hielos', 'country': isArabic ? 'ألمانيا' : 'Germany'},
+      {'brand': 'Helios', 'country': isArabic ? 'ألمانيا' : 'Germany'},
       {'brand': 'Hascevher', 'country': isArabic ? 'تركيا' : 'Turkey'},
       {'brand': 'Falez', 'country': isArabic ? 'تركيا' : 'Turkey'},
     ];

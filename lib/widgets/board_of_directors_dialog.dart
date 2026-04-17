@@ -24,11 +24,13 @@ class BoardOfDirectorsDialog extends StatelessWidget {
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 16 : 40,
+        horizontal: isMobile ? 16 : size.width * 0.1,
         vertical: isMobile ? 20 : 40,
       ),
       child: Container(
-        width: double.infinity,
+        constraints: BoxConstraints(
+          maxWidth: isMobile ? double.infinity : 1200,
+        ),
         height: size.height * 0.9,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -120,8 +122,8 @@ class _BoardCompositionSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          RichText(
-            text: TextSpan(
+          Text.rich(
+            TextSpan(
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w400,
@@ -150,13 +152,13 @@ class _BoardCompositionSection extends StatelessWidget {
                 children: [
                   _RatioCard(
                     label: l.isArabic ? 'نسبة الأعضاء المستقلين' : 'Independent Members Ratio',
-                    value: '2 out of 6 = 33.3%',
+                    value: l.isArabic ? '2 من أصل 6 = 33.3%' : '2 out of 6 = 33.3%',
                     isArabic: l.isArabic,
                   ),
                   const SizedBox(height: 16),
                   _RatioCard(
                     label: l.isArabic ? 'نسبة الأعضاء غير التنفيذيين' : 'Non-Executive Members Ratio',
-                    value: '4 out of 6 = 66.7%',
+                    value: l.isArabic ? '4 من أصل 6 = 66.7%' : '4 out of 6 = 66.7%',
                     isArabic: l.isArabic,
                   ),
                 ],
@@ -166,7 +168,7 @@ class _BoardCompositionSection extends StatelessWidget {
                   Expanded(
                     child: _RatioCard(
                       label: l.isArabic ? 'نسبة الأعضاء المستقلين' : 'Independent Members Ratio',
-                      value: '2 out of 6 = 33.3%',
+                      value: l.isArabic ? '2 من أصل 6 = 33.3%' : '2 out of 6 = 33.3%',
                       isArabic: l.isArabic,
                     ),
                   ),
@@ -174,7 +176,7 @@ class _BoardCompositionSection extends StatelessWidget {
                   Expanded(
                     child: _RatioCard(
                       label: l.isArabic ? 'نسبة الأعضاء غير التنفيذيين' : 'Non-Executive Members Ratio',
-                      value: '4 out of 6 = 66.7%',
+                      value: l.isArabic ? '4 من أصل 6 = 66.7%' : '4 out of 6 = 66.7%',
                       isArabic: l.isArabic,
                     ),
                   ),
@@ -209,21 +211,32 @@ class _RatioCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFF6B7280),
+          SizedBox(
+            width: double.infinity,
+            child: Text(
+              label,
+              textAlign: isArabic ? TextAlign.right : TextAlign.left,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF6B7280),
+              ),
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: AppColors.primary,
+          SizedBox(
+            width: double.infinity,
+            child: Directionality(
+              textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+              child: Text(
+                value,
+                textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.primary,
+                ),
+              ),
             ),
           ),
         ],
@@ -264,7 +277,7 @@ class _BoardMembersSection extends StatelessWidget {
           ],
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
-          appointmentDate: '12/08/1435H (20/07/2014G)',
+          appointmentDate: '12/09/1435H (09/07/2014G)',
           academicQualificationsEn: 'Certificate in Islamic Sciences, Scientific Institute, Riyadh, Kingdom of Saudi Arabia, 1974G',
           academicQualificationsAr: 'شهادة في العلوم الإسلامية، المعهد العلمي، الرياض، المملكة العربية السعودية، 1974م',
           currentPositions: [
@@ -353,7 +366,7 @@ class _BoardMembersSection extends StatelessWidget {
           ],
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
-          appointmentDate: '12/08/1435H (09/07/2014G)',
+          appointmentDate: '12/08/1435H \u200F(09/07/2014G)\u200F',
           academicQualificationsEn: 'Master of Science in Finance, University of Tampa, Florida, United States of America, 2011G\nBachelor\'s in Financial Management, King Saud University, Kingdom of Saudi Arabia, 2006G',
           academicQualificationsAr: 'ماجستير في العلوم المالية، جامعة تامبا، فلوريدا، الولايات المتحدة الأمريكية، 2011م\nبكالوريوس في الإدارة المالية، جامعة الملك سعود، المملكة العربية السعودية، 2006م',
           currentPositions: [
@@ -433,7 +446,7 @@ class _BoardMembersSection extends StatelessWidget {
           ],
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
-          appointmentDate: '12/08/1435H (09/07/2014G)',
+          appointmentDate: '12/08/1435H \u200F(09/07/2014G)\u200F',
           academicQualificationsEn: 'Master\'s in Islamic Policy, Higher Institute for the Judiciary, Kingdom of Saudi Arabia, 2012G\nBachelor\'s in Sharia, Imam Mohammed bin Saud Islamic University, Kingdom of Saudi Arabia, 2008G',
           academicQualificationsAr: 'ماجستير في السياسة الشرعية، المعهد العالي للقضاء، المملكة العربية السعودية، 2012م\nبكالوريوس في الشريعة، جامعة الإمام محمد بن سعود الإسلامية، المملكة العربية السعودية، 2008م',
           currentPositions: [
@@ -520,7 +533,7 @@ class _BoardMembersSection extends StatelessWidget {
           ],
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
-          appointmentDate: '12/08/1435H (09/07/2014G)',
+          appointmentDate: '12/08/1435H \u200F(09/07/2014G)\u200F',
           academicQualificationsEn: 'Bachelor\'s in Sharia, Imam Mohammed bin Saud Islamic University, Kingdom of Saudi Arabia, 2012G\nBusiness Administration Course Certificate, Indiana University, United States of America, 2012G',
           academicQualificationsAr: 'بكالوريوس في الشريعة، جامعة الإمام محمد بن سعود الإسلامية، المملكة العربية السعودية، 2012م\nشهادة دورة في إدارة الأعمال، جامعة إنديانا، الولايات المتحدة الأمريكية، 2012م',
           currentPositions: [
@@ -608,7 +621,7 @@ class _BoardMembersSection extends StatelessWidget {
           ],
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
-          appointmentDate: '23/05/1443H (27/12/2021G)',
+          appointmentDate: '23/05/1443H \u200F(27/12/2021G)\u200F',
           academicQualificationsEn: 'Certificate in International Wealth & Investment Management (CIWM), 2024G\nCertified in Strategy and Competitive Analysis (CSCA), Institute of Management Accountants, USA, 2021G\nCertified Management Accountant (CMA), Institute of Management Accountants, USA, 2020G\nProject Management Professional (PMP), Project Management Institute, USA, 2017G\nExecutive Venture Investment Program License, UC Berkeley, USA, 2016G\nManagement Acceleration Program (MAP), INSEAD Business School, France, 2015G\nMaster\'s in Manufacturing Systems Engineering and Management, University of Warwick, United Kingdom, 2011G\nBachelor\'s in Chemical Engineering, King Saud University, Kingdom of Saudi Arabia, 2009G',
           academicQualificationsAr: 'شهادة في إدارة الثروات والاستثمار الدولي (CIWM)، 2024م\nمعتمد في الاستراتيجية والتحليل التنافسي (CSCA)، معهد المحاسبين الإداريين، الولايات المتحدة، 2021م\nمحاسب إداري معتمد (CMA)، معهد المحاسبين الإداريين، الولايات المتحدة، 2020م\nمحترف إدارة المشاريع (PMP)، معهد إدارة المشاريع، الولايات المتحدة، 2017م\nترخيص برنامج الاستثمار التنفيذي، جامعة كاليفورنيا بيركلي، الولايات المتحدة، 2016م\nبرنامج تسريع الإدارة (MAP)، كلية إنسياد للأعمال، فرنسا، 2015م\nماجستير في هندسة وإدارة أنظمة التصنيع، جامعة وارويك، المملكة المتحدة، 2011م\nبكالوريوس في الهندسة الكيميائية، جامعة الملك سعود، المملكة العربية السعودية، 2009م',
           currentPositions: [
@@ -760,7 +773,7 @@ class _BoardMembersSection extends StatelessWidget {
           ],
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
-          appointmentDate: '23/05/1443H (27/12/2021G)',
+          appointmentDate: '23/05/1443H \u200F(27/12/2021G)\u200F',
           academicQualificationsEn: 'Bachelor\'s in Accounting Sciences, Southern Utah University, United States of America, 2012G',
           academicQualificationsAr: 'بكالوريوس في علوم المحاسبة، جامعة جنوب يوتا، الولايات المتحدة الأمريكية، 2012م',
           currentPositions: [
@@ -1026,7 +1039,7 @@ class _RoleBadge extends StatelessWidget {
         isArabic ? role.labelAr : role.labelEn,
         style: TextStyle(
           fontSize: 11,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           color: role.color,
         ),
       ),
