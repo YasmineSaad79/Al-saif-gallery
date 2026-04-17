@@ -166,7 +166,7 @@ class _AnimatedStatCardState extends State<_AnimatedStatCard>
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Color(0xFFC62030),
-                  fontSize: 27,
+                  fontSize: 22,
                   fontWeight: FontWeight.w700,
                   height: 1.15,
                 ),

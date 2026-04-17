@@ -286,7 +286,7 @@ class _BoardMembersSection extends StatelessWidget {
               organizationAr: 'شركة السيف للتنمية والاستثمار',
               positionEn: 'Chairman of the Board',
               positionAr: 'رئيس مجلس الإدارة',
-              since: '2008G',
+              since: '2006G',
               sectorEn: 'Household Goods Retail',
               sectorAr: 'تجزئة السلع المنزلية',
             ),
@@ -300,7 +300,7 @@ class _BoardMembersSection extends StatelessWidget {
               sectorAr: 'التطوير العقاري',
             ),
             _Position(
-              organizationEn: 'Bait Al-Tasnia Al-Shatikia Company',
+              organizationEn: 'Bait Al-Tasne\'a Al-Blastikia Company',
               organizationAr: 'شركة بيت التصنيع الشاطئية',
               positionEn: 'Chairman of the Board',
               positionAr: 'رئيس مجلس الإدارة',
@@ -366,7 +366,7 @@ class _BoardMembersSection extends StatelessWidget {
           ],
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
-          appointmentDate: '12/08/1435H \u200F(09/07/2014G)\u200F',
+          appointmentDate: '12/09/1435H (09/07/2014G)',
           academicQualificationsEn: 'Master of Science in Finance, University of Tampa, Florida, United States of America, 2011G\nBachelor\'s in Financial Management, King Saud University, Kingdom of Saudi Arabia, 2006G',
           academicQualificationsAr: 'ماجستير في العلوم المالية، جامعة تامبا، فلوريدا، الولايات المتحدة الأمريكية، 2011م\nبكالوريوس في الإدارة المالية، جامعة الملك سعود، المملكة العربية السعودية، 2006م',
           currentPositions: [
@@ -446,7 +446,7 @@ class _BoardMembersSection extends StatelessWidget {
           ],
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
-          appointmentDate: '12/08/1435H \u200F(09/07/2014G)\u200F',
+          appointmentDate: '12/09/1435H (09/07/2014G)',
           academicQualificationsEn: 'Master\'s in Islamic Policy, Higher Institute for the Judiciary, Kingdom of Saudi Arabia, 2012G\nBachelor\'s in Sharia, Imam Mohammed bin Saud Islamic University, Kingdom of Saudi Arabia, 2008G',
           academicQualificationsAr: 'ماجستير في السياسة الشرعية، المعهد العالي للقضاء، المملكة العربية السعودية، 2012م\nبكالوريوس في الشريعة، جامعة الإمام محمد بن سعود الإسلامية، المملكة العربية السعودية، 2008م',
           currentPositions: [
@@ -478,7 +478,7 @@ class _BoardMembersSection extends StatelessWidget {
               sectorAr: 'المعدات والمستلزمات الطبية',
             ),
             _Position(
-              organizationEn: 'Rushoul Trading Company',
+              organizationEn: 'Rushouf Trading Company',
               organizationAr: 'شركة رشول للتجارة',
               positionEn: 'Co-Founder and Board Member',
               positionAr: 'مؤسس مشارك وعضو مجلس الإدارة',
@@ -487,7 +487,7 @@ class _BoardMembersSection extends StatelessWidget {
               sectorAr: 'تجزئة العسل',
             ),
             _Position(
-              organizationEn: 'Naseeiah Trading Company (Cara)',
+              organizationEn: 'Naseelah Trading Company (Clara)',
               organizationAr: 'شركة نصيحة للتجارة (كارا)',
               positionEn: 'Co-Founder',
               positionAr: 'مؤسس مشارك',
@@ -533,7 +533,7 @@ class _BoardMembersSection extends StatelessWidget {
           ],
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
-          appointmentDate: '12/08/1435H \u200F(09/07/2014G)\u200F',
+          appointmentDate: '12/09/1435H (09/07/2014G)',
           academicQualificationsEn: 'Bachelor\'s in Sharia, Imam Mohammed bin Saud Islamic University, Kingdom of Saudi Arabia, 2012G\nBusiness Administration Course Certificate, Indiana University, United States of America, 2012G',
           academicQualificationsAr: 'بكالوريوس في الشريعة، جامعة الإمام محمد بن سعود الإسلامية، المملكة العربية السعودية، 2012م\nشهادة دورة في إدارة الأعمال، جامعة إنديانا، الولايات المتحدة الأمريكية، 2012م',
           currentPositions: [
@@ -622,20 +622,20 @@ class _BoardMembersSection extends StatelessWidget {
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
           appointmentDate: '23/05/1443H \u200F(27/12/2021G)\u200F',
-          academicQualificationsEn: 'Certificate in International Wealth & Investment Management (CIWM), 2024G\nCertified in Strategy and Competitive Analysis (CSCA), Institute of Management Accountants, USA, 2021G\nCertified Management Accountant (CMA), Institute of Management Accountants, USA, 2020G\nProject Management Professional (PMP), Project Management Institute, USA, 2017G\nExecutive Venture Investment Program License, UC Berkeley, USA, 2016G\nManagement Acceleration Program (MAP), INSEAD Business School, France, 2015G\nMaster\'s in Manufacturing Systems Engineering and Management, University of Warwick, United Kingdom, 2011G\nBachelor\'s in Chemical Engineering, King Saud University, Kingdom of Saudi Arabia, 2009G',
-          academicQualificationsAr: 'شهادة في إدارة الثروات والاستثمار الدولي (CIWM)، 2024م\nمعتمد في الاستراتيجية والتحليل التنافسي (CSCA)، معهد المحاسبين الإداريين، الولايات المتحدة، 2021م\nمحاسب إداري معتمد (CMA)، معهد المحاسبين الإداريين، الولايات المتحدة، 2020م\nمحترف إدارة المشاريع (PMP)، معهد إدارة المشاريع، الولايات المتحدة، 2017م\nترخيص برنامج الاستثمار التنفيذي، جامعة كاليفورنيا بيركلي، الولايات المتحدة، 2016م\nبرنامج تسريع الإدارة (MAP)، كلية إنسياد للأعمال، فرنسا، 2015م\nماجستير في هندسة وإدارة أنظمة التصنيع، جامعة وارويك، المملكة المتحدة، 2011م\nبكالوريوس في الهندسة الكيميائية، جامعة الملك سعود، المملكة العربية السعودية، 2009م',
+          academicQualificationsEn: 'Certificate in International Wealth & Investment Management (CME4),, 2024G\nCertified in Strategy and Competitive Analysis (CSCA), Institute of Management Accountants, USA, 2021G\nCertified Management Accountant (CMA), Institute of Management Accountants, USA, 2020G\nProject Management Professional (PMP), Project Management Institute, USA, 2017G\nExecutive Venture Investment Program License, UC Berkeley, USA, 2016G\nManagement Acceleration Program (MAP), INSEAD Business School, France, 2015G\nMaster\'s in Manufacturing Systems Engineering and Management, University of Warwick, United Kingdom, 2011G\nBachelor\'s in Chemical Engineering, King Saud University, Kingdom of Saudi Arabia, 2009G',
+          academicQualificationsAr: 'شهادة في إدارة الثروات والاستثمار الدولي (CME4),، 2024م\nمعتمد في الاستراتيجية والتحليل التنافسي (CSCA)، معهد المحاسبين الإداريين، الولايات المتحدة، 2021م\nمحاسب إداري معتمد (CMA)، معهد المحاسبين الإداريين، الولايات المتحدة، 2020م\nمحترف إدارة المشاريع (PMP)، معهد إدارة المشاريع، الولايات المتحدة، 2017م\nترخيص برنامج الاستثمار التنفيذي، جامعة كاليفورنيا بيركلي، الولايات المتحدة، 2016م\nبرنامج تسريع الإدارة (MAP)، كلية إنسياد للأعمال، فرنسا، 2015م\nماجستير في هندسة وإدارة أنظمة التصنيع، جامعة وارويك، المملكة المتحدة، 2011م\nبكالوريوس في الهندسة الكيميائية، جامعة الملك سعود، المملكة العربية السعودية، 2009م',
           currentPositions: [
             _Position(
               organizationEn: 'Al-Saif Stores for Development and Investment Company',
               organizationAr: 'شركة السيف للتنمية والاستثمار',
-              positionEn: 'Independent Board Member, Chairman of NRC Committee, Audit Committee Member',
+              positionEn: 'Independent Board Member, Chairman of N&R Committee, Audit Committee Member',
               positionAr: 'عضو مجلس إدارة مستقل، رئيس لجنة الترشيحات والمكافآت، عضو لجنة المراجعة',
               since: '2021G',
               sectorEn: 'Household Goods Retail',
               sectorAr: 'تجزئة السلع المنزلية',
             ),
             _Position(
-              organizationEn: 'Al Arsolya Li Oud Company',
+              organizationEn: 'Al Arabiya Lil Oud Company',
               organizationAr: 'شركة الأرصولية للعود',
               positionEn: 'Audit Committee Member',
               positionAr: 'عضو لجنة المراجعة',
@@ -644,7 +644,7 @@ class _BoardMembersSection extends StatelessWidget {
               sectorAr: 'العطور الشرقية والتصاميم',
             ),
             _Position(
-              organizationEn: 'Ameco Security & Safety Solutions Company',
+              organizationEn: 'Amnco Security & Safety Solutions Company',
               organizationAr: 'شركة أميكو للحلول الأمنية والسلامة',
               positionEn: 'Chairman of the Board',
               positionAr: 'رئيس مجلس الإدارة',
@@ -653,7 +653,7 @@ class _BoardMembersSection extends StatelessWidget {
               sectorAr: 'حلول الأمن والسلامة',
             ),
             _Position(
-              organizationEn: 'Saud Transport and Logistics Company (Wabrail)',
+              organizationEn: 'Saudi Transport and Logistics Company (Mabrad)',
               organizationAr: 'شركة سعود للنقل واللوجستيات (وبريل)',
               positionEn: 'Chairman of the Board',
               positionAr: 'رئيس مجلس الإدارة',
@@ -680,7 +680,7 @@ class _BoardMembersSection extends StatelessWidget {
               sectorAr: 'الاستثمار والأمن والنقل',
             ),
             _Position(
-              organizationEn: 'Ameco Facilities Management Company',
+              organizationEn: 'Amnco Facilities Management Company',
               organizationAr: 'شركة أميكو لإدارة المرافق',
               positionEn: 'Chairman of the Board',
               positionAr: 'رئيس مجلس الإدارة',
@@ -689,7 +689,7 @@ class _BoardMembersSection extends StatelessWidget {
               sectorAr: 'إدارة المرافق',
             ),
             _Position(
-              organizationEn: 'Ibrahim Mohammed Al-Nanu and Brothers Company',
+              organizationEn: 'Ibrahim Mohammed Al-Mana and Brothers Company',
               organizationAr: 'شركة إبراهيم محمد النانو وإخوانه',
               positionEn: 'Board Member and Audit Committee Member',
               positionAr: 'عضو مجلس الإدارة وعضو لجنة المراجعة',
@@ -707,7 +707,7 @@ class _BoardMembersSection extends StatelessWidget {
               sectorAr: 'التعليم العالي',
             ),
             _Position(
-              organizationEn: 'Sawadi Shade Structures Manufacturing Company',
+              organizationEn: 'Sawatir Shade Structures Manufacturing Company',
               organizationAr: 'شركة سوادي لتصنيع الهياكل الظلية',
               positionEn: 'Board Member',
               positionAr: 'عضو مجلس الإدارة',
@@ -733,16 +733,16 @@ class _BoardMembersSection extends StatelessWidget {
               positionEn: 'Chief Executive Officer',
               positionAr: 'الرئيس التنفيذي',
               from: '2017G',
-              to: '2018G',
+              to: '2019G',
               sectorEn: 'Automotive Parts Manufacturing',
               sectorAr: 'تصنيع قطع غيار السيارات',
             ),
             _Experience(
-              organizationEn: 'Saud Industrial Development Fund (SIDF)',
+              organizationEn: 'Saudi Industrial Development Fund (SIDF)',
               organizationAr: 'صندوق التنمية الصناعية السعودي',
               positionEn: 'Senior Advisor and Deputy General Manager',
               positionAr: 'مستشار أول ونائب المدير العام',
-              from: '2008G',
+              from: '2009G',
               to: '2017G',
               sectorEn: 'Industrial Development & Support',
               sectorAr: 'التنمية والدعم الصناعي',
@@ -787,7 +787,7 @@ class _BoardMembersSection extends StatelessWidget {
               sectorAr: 'تجزئة السلع المنزلية',
             ),
             _Position(
-              organizationEn: 'Al-Qahwa Al-Khadhraa Trading Company',
+              organizationEn: 'Al-Qahwa Al-Khashbiya Trading Company',
               organizationAr: 'شركة القهوة الخضراء للتجارة',
               positionEn: 'Audit Committee Member',
               positionAr: 'عضو لجنة المراجعة',
@@ -796,7 +796,7 @@ class _BoardMembersSection extends StatelessWidget {
               sectorAr: 'إنتاج القهوة',
             ),
             _Position(
-              organizationEn: 'Asasiyat Al-Tanmia for Agriculture and Trade Company',
+              organizationEn: 'Asasiyyat Al-Tanmia for Agriculture and Trade Company',
               organizationAr: 'شركة أساسيات التنمية للزراعة والتجارة',
               positionEn: 'Audit Committee Chairman and Board Member',
               positionAr: 'رئيس لجنة المراجعة وعضو مجلس الإدارة',
@@ -805,7 +805,7 @@ class _BoardMembersSection extends StatelessWidget {
               sectorAr: 'الزراعة والتجارة',
             ),
             _Position(
-              organizationEn: 'Jazon Development and Investment Company',
+              organizationEn: 'Jazan Development and Investment Companyy',
               organizationAr: 'شركة جازون للتطوير والاستثمار',
               positionEn: 'Audit Committee Member',
               positionAr: 'عضو لجنة المراجعة',
@@ -814,7 +814,7 @@ class _BoardMembersSection extends StatelessWidget {
               sectorAr: 'الزراعة',
             ),
             _Position(
-              organizationEn: 'Saud Venture Investment Company',
+              organizationEn: 'Saudi Venture Investment Company',
               organizationAr: 'شركة سعود للاستثمار الجريء',
               positionEn: 'Audit Committee Member',
               positionAr: 'عضو لجنة المراجعة',
@@ -823,7 +823,7 @@ class _BoardMembersSection extends StatelessWidget {
               sectorAr: 'الاستثمار الجريء',
             ),
             _Position(
-              organizationEn: 'ViaHub',
+              organizationEn: 'ValuHub',
               organizationAr: 'فيا هب',
               positionEn: 'Partner',
               positionAr: 'شريك',
@@ -844,12 +844,12 @@ class _BoardMembersSection extends StatelessWidget {
               sectorAr: 'تجزئة السلع المنزلية',
             ),
             _Experience(
-              organizationEn: 'BNF Al-Bassam & Partners Company',
+              organizationEn: 'BKF Al-Bassam & Partners Company',
               organizationAr: 'شركة بي إن إف البسام وشركاه',
               positionEn: 'Partner',
               positionAr: 'شريك',
               from: '2018G',
-              to: '2025G',
+              to: '2020G',
               sectorEn: 'Legal Accounting',
               sectorAr: 'المحاسبة القانونية',
             ),
@@ -859,12 +859,12 @@ class _BoardMembersSection extends StatelessWidget {
               positionEn: 'Financial Advisor',
               positionAr: 'مستشار مالي',
               from: '2014G',
-              to: '2016G',
+              to: '2018G',
               sectorEn: 'Audit & Assurance',
               sectorAr: 'المراجعة والتأكيد',
             ),
             _Experience(
-              organizationEn: 'Saud Aramco Refinery (Jubail)',
+              organizationEn: 'Saudi Aramco Refinery (Jubail)',
               organizationAr: 'مصفاة أرامكو السعودية (الجبيل)',
               positionEn: 'Financial Accountant',
               positionAr: 'محاسب مالي',
@@ -1105,6 +1105,7 @@ class _PositionsTable extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(width: 12),
                 Expanded(
                   flex: 2,
                   child: Text(
@@ -1116,6 +1117,7 @@ class _PositionsTable extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(width: 12),
                 Expanded(
                   flex: 1,
                   child: Text(
@@ -1127,6 +1129,7 @@ class _PositionsTable extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(width: 12),
                 Expanded(
                   flex: 2,
                   child: Text(
@@ -1169,6 +1172,7 @@ class _PositionsTable extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 12),
                   Expanded(
                     flex: 2,
                     child: Text(
@@ -1180,6 +1184,7 @@ class _PositionsTable extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 12),
                   Expanded(
                     flex: 1,
                     child: Text(
@@ -1191,6 +1196,7 @@ class _PositionsTable extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 12),
                   Expanded(
                     flex: 2,
                     child: Text(
@@ -1262,7 +1268,7 @@ class _ExperienceTable extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: Text(
                     isArabic ? 'المنظمة' : 'Organization',
                     style: const TextStyle(
@@ -1272,8 +1278,9 @@ class _ExperienceTable extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(width: 16),
                 Expanded(
-                  flex: 2,
+                  flex: 3,
                   child: Text(
                     isArabic ? 'المنصب' : 'Position',
                     style: const TextStyle(
@@ -1283,8 +1290,9 @@ class _ExperienceTable extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(width: 16),
                 Expanded(
-                  flex: 1,
+                  flex: 2,
                   child: Text(
                     isArabic ? 'من' : 'From',
                     style: const TextStyle(
@@ -1294,8 +1302,9 @@ class _ExperienceTable extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(width: 16),
                 Expanded(
-                  flex: 1,
+                  flex: 2,
                   child: Text(
                     isArabic ? 'إلى' : 'To',
                     style: const TextStyle(
@@ -1305,8 +1314,9 @@ class _ExperienceTable extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(width: 16),
                 Expanded(
-                  flex: 2,
+                  flex: 3,
                   child: Text(
                     isArabic ? 'القطاع' : 'Sector',
                     style: const TextStyle(
@@ -1337,7 +1347,7 @@ class _ExperienceTable extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    flex: 3,
+                    flex: 4,
                     child: Text(
                       isArabic ? exp.organizationAr : exp.organizationEn,
                       style: const TextStyle(
@@ -1347,8 +1357,9 @@ class _ExperienceTable extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 16),
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: Text(
                       isArabic ? exp.positionAr : exp.positionEn,
                       style: const TextStyle(
@@ -1358,8 +1369,9 @@ class _ExperienceTable extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 16),
                   Expanded(
-                    flex: 1,
+                    flex: 2,
                     child: Text(
                       exp.from,
                       style: const TextStyle(
@@ -1369,8 +1381,9 @@ class _ExperienceTable extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 16),
                   Expanded(
-                    flex: 1,
+                    flex: 2,
                     child: Text(
                       exp.to,
                       style: const TextStyle(
@@ -1380,8 +1393,9 @@ class _ExperienceTable extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 16),
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: Text(
                       isArabic ? exp.sectorAr : exp.sectorEn,
                       style: const TextStyle(

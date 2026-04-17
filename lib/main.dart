@@ -79,7 +79,7 @@ class _AlSaifGalleryAppState extends State<AlSaifGalleryApp> {
         provider: localeProvider,
         child: MediaQuery(
           data: MediaQuery.of(context).copyWith(
-            textScaleFactor: localeProvider.isArabic ? 1.0 : 1.1,
+            textScaleFactor: localeProvider.isArabic ? 0.9 : 1.0,
           ),
           child: Directionality(
             textDirection: localeProvider.isArabic

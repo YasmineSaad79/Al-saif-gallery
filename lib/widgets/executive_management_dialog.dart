@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
@@ -55,7 +54,7 @@ class ExecutiveManagementDialog extends StatelessWidget {
                     Expanded(
                       child: Text(
                         l.isArabic ? 'الإدارة التنفيذية العليا' : 'Senior Executive Management',
-                        style: GoogleFonts.amiri(
+                        style: const TextStyle(
                           fontSize: 21,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
@@ -188,7 +187,7 @@ class ExecutiveManagementDialog extends StatelessWidget {
                             sectorAr: 'متخصصة في منتجات الألبان والأجبان',
                           ),
                           _Experience(
-                            organizationEn: 'Abu Qudara Holding Group',
+                            organizationEn: 'Abu Quffara Holding Group',
                             organizationAr: 'مجموعة أبو قدرة القابضة',
                             positionEn: 'CFO',
                             positionAr: 'المدير المالي',
@@ -198,7 +197,7 @@ class ExecutiveManagementDialog extends StatelessWidget {
                             sectorAr: 'تعمل في المقاولات ومواد البناء',
                           ),
                           _Experience(
-                            organizationEn: 'Freio Lays Pepsi',
+                            organizationEn: 'Freto Lays Pepsi',
                             organizationAr: 'فريتو ليز بيبسي',
                             positionEn: 'CFO',
                             positionAr: 'المدير المالي',
@@ -222,7 +221,7 @@ class ExecutiveManagementDialog extends StatelessWidget {
                             organizationAr: 'باسف',
                             positionEn: 'Senior Accountant',
                             positionAr: 'محاسب أول',
-                            from: '2007G',
+                            from: '2001G',
                             to: '2008G',
                             sectorEn: 'Global construction chemicals company',
                             sectorAr: 'شركة كيماويات البناء العالمية',
@@ -286,10 +285,10 @@ class _ExecutiveProfile extends StatelessWidget {
           // Name
           Text(
             isArabic ? nameAr : nameEn,
-            style: GoogleFonts.amiri(
+            style: const TextStyle(
               fontSize: 19,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF1A1A1A),
+              color: Color(0xFF1A1A1A),
             ),
           ),
           const SizedBox(height: 12),
@@ -304,10 +303,10 @@ class _ExecutiveProfile extends StatelessWidget {
                 ),
                 child: Text(
                   isArabic ? titleAr : titleEn,
-                  style: GoogleFonts.cairo(
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFFDC2626),
+                    color: Color(0xFFDC2626),
                   ),
                 ),
               ),
@@ -320,10 +319,10 @@ class _ExecutiveProfile extends StatelessWidget {
                 ),
                 child: Text(
                   '${isArabic ? 'تم التعيين' : 'Appointed'}: $appointedYear',
-                  style: GoogleFonts.cairo(
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF6B7280),
+                    color: Color(0xFF6B7280),
                   ),
                 ),
               ),
@@ -333,20 +332,20 @@ class _ExecutiveProfile extends StatelessWidget {
           // Nationality
           Text(
             '${isArabic ? 'الجنسية' : 'Nationality'}: ${isArabic ? nationalityAr : nationalityEn}',
-            style: GoogleFonts.cairo(
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
-              color: const Color(0xFF6B7280),
+              color: Color(0xFF6B7280),
             ),
           ),
           const SizedBox(height: 24),
           // Academic Qualifications
           Text(
             isArabic ? 'المؤهلات الأكاديمية:' : 'Academic Qualifications:',
-            style: GoogleFonts.cairo(
+            style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF1A1A1A),
+              color: Color(0xFF1A1A1A),
             ),
           ),
           const SizedBox(height: 8),
@@ -354,10 +353,10 @@ class _ExecutiveProfile extends StatelessWidget {
             padding: const EdgeInsets.only(left: 16, right: 16),
             child: Text(
               isArabic ? academicQualificationsAr : academicQualificationsEn,
-              style: GoogleFonts.cairo(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
-                color: const Color(0xFF4B5563),
+                color: Color(0xFF4B5563),
                 height: 1.5,
               ),
             ),
@@ -366,10 +365,10 @@ class _ExecutiveProfile extends StatelessWidget {
           // Current Positions
           Text(
             isArabic ? 'المناصب الحالية:' : 'Current Positions:',
-            style: GoogleFonts.cairo(
+            style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF1A1A1A),
+              color: Color(0xFF1A1A1A),
             ),
           ),
           const SizedBox(height: 12),
@@ -381,10 +380,10 @@ class _ExecutiveProfile extends StatelessWidget {
           // Previous Experience
           Text(
             isArabic ? 'الخبرات المهنية السابقة:' : 'Key Previous Professional Experience:',
-            style: GoogleFonts.cairo(
+            style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF1A1A1A),
+              color: Color(0xFF1A1A1A),
             ),
           ),
           const SizedBox(height: 12),
@@ -442,7 +441,7 @@ class _PositionItem extends StatelessWidget {
               Expanded(
                 child: RichText(
                   text: TextSpan(
-                    style: GoogleFonts.cairo(
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       height: 1.5,
@@ -470,7 +469,7 @@ class _PositionItem extends StatelessWidget {
               Expanded(
                 child: RichText(
                   text: TextSpan(
-                    style: GoogleFonts.cairo(
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       height: 1.5,
@@ -503,16 +502,16 @@ class _PositionItem extends StatelessWidget {
               Expanded(
                 child: RichText(
                   text: TextSpan(
-                    style: GoogleFonts.cairo(
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
-                      color: const Color(0xFF6B7280),
+                      color: Color(0xFF6B7280),
                       height: 1.5,
                     ),
                     children: [
-                      const TextSpan(
-                        text: 'منذ: ',
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                      TextSpan(
+                        text: '${isArabic ? 'منذ' : 'Since'}: ',
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                       TextSpan(
                         text: position.since,
@@ -525,10 +524,10 @@ class _PositionItem extends StatelessWidget {
               Expanded(
                 child: RichText(
                   text: TextSpan(
-                    style: GoogleFonts.cairo(
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
-                      color: const Color(0xFF6B7280),
+                      color: Color(0xFF6B7280),
                       height: 1.5,
                     ),
                     children: [
@@ -597,19 +596,19 @@ class _ExperienceItem extends StatelessWidget {
               Expanded(
                 child: Text(
                   isArabic ? experience.organizationAr : experience.organizationEn,
-                  style: GoogleFonts.cairo(
+                  style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF1A1A1A),
+                    color: Color(0xFF1A1A1A),
                   ),
                 ),
               ),
               Text(
                 '${experience.from} — ${experience.to}',
-                style: GoogleFonts.cairo(
+                style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
-                  color: const Color(0xFF6B7280),
+                  color: Color(0xFF6B7280),
                 ),
               ),
             ],
@@ -617,16 +616,16 @@ class _ExperienceItem extends StatelessWidget {
           const SizedBox(height: 8),
           RichText(
             text: TextSpan(
-              style: GoogleFonts.cairo(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
-                color: const Color(0xFF4B5563),
+                color: Color(0xFF4B5563),
                 height: 1.5,
               ),
               children: [
-                const TextSpan(
-                  text: 'المنصب: ',
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                TextSpan(
+                  text: '${isArabic ? 'المنصب' : 'Position'}: ',
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 TextSpan(
                   text: isArabic ? experience.positionAr : experience.positionEn,
@@ -637,10 +636,10 @@ class _ExperienceItem extends StatelessWidget {
           const SizedBox(height: 4),
           RichText(
             text: TextSpan(
-              style: GoogleFonts.cairo(
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
-                color: const Color(0xFF4B5563),
+                color: Color(0xFF4B5563),
                 height: 1.5,
               ),
               children: [
