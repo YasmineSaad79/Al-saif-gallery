@@ -6,14 +6,12 @@ import '../utils/responsive.dart';
 String _formatDateRange(String dateRange, bool isArabic) {
   if (!isArabic) return dateRange;
   
-  // For Arabic, reverse dates in format "2018م — 2019م" or similar
-  final regex = RegExp(r'(\d{4}[^\s—]+)\s*[—–-]\s*(\d{4}[^\s—]+)');
-  final match = regex.firstMatch(dateRange);
+  // For Arabic, reverse dates: "2019م — 2021م" becomes "2021م — 2019م"
+  // Split by dash (—, –, or -)
+  final parts = dateRange.split(RegExp(r'\s*[—–-]\s*'));
   
-  if (match != null) {
-    final start = match.group(1)!.trim();
-    final end = match.group(2)!.trim();
-    return '$end — $start';
+  if (parts.length == 2) {
+    return '${parts[1].trim()} — ${parts[0].trim()}';
   }
   
   return dateRange;

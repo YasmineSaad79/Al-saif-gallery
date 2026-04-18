@@ -3,6 +3,40 @@ import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
 
+String _translateMonth(String text, bool isArabic) {
+  if (!isArabic) return text;
+  
+  final monthMap = {
+    'January': 'يناير',
+    'February': 'فبراير',
+    'March': 'مارس',
+    'April': 'أبريل',
+    'May': 'مايو',
+    'June': 'يونيو',
+    'July': 'يوليو',
+    'August': 'أغسطس',
+    'September': 'سبتمبر',
+    'October': 'أكتوبر',
+    'November': 'نوفمبر',
+    'December': 'ديسمبر',
+  };
+  
+  String result = text;
+  monthMap.forEach((en, ar) {
+    result = result.replaceAll(en, ar);
+  });
+  
+  return result;
+}
+
+String _formatDateForTable(String from, String to, bool isArabic) {
+  if (!isArabic) return '$from — $to';
+  
+  // For Arabic, reverse: newer date on right, older on left
+  // "2009م — 2012م" becomes "2012م — 2009م"
+  return '${_translateMonth(to, isArabic)} — ${_translateMonth(from, isArabic)}';
+}
+
 String _formatAppointmentDate(String date, bool isArabic) {
   if (!isArabic) return date;
   
@@ -299,7 +333,7 @@ class _BoardMembersSection extends StatelessWidget {
           currentPositions: [
             _Position(
               organizationEn: 'Al-Saif Stores for Development and Investment Company',
-              organizationAr: 'شركة السيف للتنمية والاستثمار',
+              organizationAr: 'شركة متاجر السيف للتنمية والاستثمار',
               positionEn: 'Chairman of the Board',
               positionAr: 'رئيس مجلس الإدارة',
               since: '2006م',
@@ -388,7 +422,7 @@ class _BoardMembersSection extends StatelessWidget {
           currentPositions: [
             _Position(
               organizationEn: 'Al-Saif Stores for Development and Investment Company',
-              organizationAr: 'شركة السيف للتنمية والاستثمار',
+              organizationAr: 'شركة متاجر السيف للتنمية والاستثمار',
               positionEn: 'Managing Director',
               positionAr: 'العضو المنتدب',
               since: '2014م',
@@ -408,7 +442,7 @@ class _BoardMembersSection extends StatelessWidget {
           previousExperience: [
             _Experience(
               organizationEn: 'Al-Saif Stores for Development and Investment Company',
-              organizationAr: 'شركة السيف للتنمية والاستثمار',
+              organizationAr: 'شركة متاجر السيف للتنمية والاستثمار',
               positionEn: 'Chief Executive Officer',
               positionAr: 'الرئيس التنفيذي',
               from: '2012م',
@@ -468,7 +502,7 @@ class _BoardMembersSection extends StatelessWidget {
           currentPositions: [
             _Position(
               organizationEn: 'Al-Saif Stores for Development and Investment Company',
-              organizationAr: 'شركة السيف للتنمية والاستثمار',
+              organizationAr: 'شركة متاجر السيف للتنمية والاستثمار',
               positionEn: 'Executive Vice Chairman and Board Member',
               positionAr: 'نائب الرئيس التنفيذي وعضو مجلس الإدارة',
               since: '2014م',
@@ -515,7 +549,7 @@ class _BoardMembersSection extends StatelessWidget {
           previousExperience: [
             _Experience(
               organizationEn: 'Al-Saif Stores for Development and Investment Company',
-              organizationAr: 'شركة السيف للتنمية والاستثمار',
+              organizationAr: 'شركة متاجر السيف للتنمية والاستثمار',
               positionEn: 'Marketing Director',
               positionAr: 'مدير التسويق',
               from: '2014م',
@@ -555,7 +589,7 @@ class _BoardMembersSection extends StatelessWidget {
           currentPositions: [
             _Position(
               organizationEn: 'Al-Saif Stores for Development and Investment Company',
-              organizationAr: 'شركة السيف للتنمية والاستثمار',
+              organizationAr: 'شركة متاجر السيف للتنمية والاستثمار',
               positionEn: 'Board Member and Audit Committee Member',
               positionAr: 'عضو مجلس الإدارة وعضو لجنة المراجعة',
               since: '2014م / 2021م',
@@ -593,7 +627,7 @@ class _BoardMembersSection extends StatelessWidget {
           previousExperience: [
             _Experience(
               organizationEn: 'Al-Saif Stores for Development and Investment Company',
-              organizationAr: 'شركة السيف للتنمية والاستثمار',
+              organizationAr: 'شركة متاجر السيف للتنمية والاستثمار',
               positionEn: 'Development Manager',
               positionAr: 'مدير التطوير',
               from: '2014م',
@@ -643,7 +677,7 @@ class _BoardMembersSection extends StatelessWidget {
           currentPositions: [
             _Position(
               organizationEn: 'Al-Saif Stores for Development and Investment Company',
-              organizationAr: 'شركة السيف للتنمية والاستثمار',
+              organizationAr: 'شركة متاجر السيف للتنمية والاستثمار',
               positionEn: 'Independent Board Member, Chairman of N&R Committee, Audit Committee Member',
               positionAr: 'عضو مجلس إدارة مستقل، رئيس لجنة الترشيحات والمكافآت، عضو لجنة المراجعة',
               since: '2021م',
@@ -795,7 +829,7 @@ class _BoardMembersSection extends StatelessWidget {
           currentPositions: [
             _Position(
               organizationEn: 'Al-Saif Stores for Development and Investment Company',
-              organizationAr: 'شركة السيف للتنمية والاستثمار',
+              organizationAr: 'شركة متاجر السيف للتنمية والاستثمار',
               positionEn: 'Independent Board Member and Audit Committee Chairman',
               positionAr: 'عضو مجلس إدارة مستقل ورئيس لجنة المراجعة',
               since: '2022م',
@@ -851,7 +885,7 @@ class _BoardMembersSection extends StatelessWidget {
           previousExperience: [
             _Experience(
               organizationEn: 'Al-Saif Stores for Development and Investment Company',
-              organizationAr: 'شركة السيف للتنمية والاستثمار',
+              organizationAr: 'شركة متاجر السيف للتنمية والاستثمار',
               positionEn: 'Nominations & Remuneration Committee Member',
               positionAr: 'عضو لجنة الترشيحات والمكافآت',
               from: 'March 2022م',
@@ -861,7 +895,7 @@ class _BoardMembersSection extends StatelessWidget {
             ),
             _Experience(
               organizationEn: 'BKF Al-Bassam & Partners Company',
-              organizationAr: 'شركة بي إن إف البسام وشركاه',
+              organizationAr: 'شركة بي كي إف البسام وشركاه',
               positionEn: 'Partner',
               positionAr: 'شريك',
               from: '2018م',
@@ -871,13 +905,13 @@ class _BoardMembersSection extends StatelessWidget {
             ),
             _Experience(
               organizationEn: 'Ernst & Young and Partners',
-              organizationAr: 'إرنست ويونغ وشركاه',
+              organizationAr: 'إرنست ويونغ وشركاهم',
               positionEn: 'Financial Advisor',
               positionAr: 'مستشار مالي',
               from: '2014م',
               to: '2018م',
               sectorEn: 'Audit & Assurance',
-              sectorAr: 'المراجعة والتأكيد',
+              sectorAr: 'مراجعة الحسابات',
             ),
             _Experience(
               organizationEn: 'Saudi Aramco Refinery (Jubail)',
@@ -1113,7 +1147,7 @@ class _PositionsTable extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    isArabic ? 'المنظمة' : 'Organization',
+                    isArabic ? 'الجهة' : 'Organization',
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -1204,7 +1238,7 @@ class _PositionsTable extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: Text(
-                      position.since,
+                      _translateMonth(position.since, isArabic),
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
@@ -1286,7 +1320,7 @@ class _ExperienceTable extends StatelessWidget {
                 Expanded(
                   flex: 4,
                   child: Text(
-                    isArabic ? 'المنظمة' : 'Organization',
+                    isArabic ? 'الجهة' : 'Organization',
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -1308,21 +1342,9 @@ class _ExperienceTable extends StatelessWidget {
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  flex: 2,
+                  flex: 4,
                   child: Text(
-                    isArabic ? 'من' : 'From',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF374151),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    isArabic ? 'إلى' : 'To',
+                    isArabic ? 'الفترة' : 'Period',
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -1387,21 +1409,9 @@ class _ExperienceTable extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    flex: 2,
+                    flex: 4,
                     child: Text(
-                      exp.from,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF1F2937),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      exp.to,
+                      _formatDateForTable(exp.from, exp.to, isArabic),
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
