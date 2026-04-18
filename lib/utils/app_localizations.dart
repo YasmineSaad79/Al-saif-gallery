@@ -42,7 +42,7 @@ class AppLocalizations {
 
 
   // ── Stats Section ────────────────────────────────────────────────────────
-  String get statsShowrooms         => isArabic ? '\u200E73\u200F صالة عرض'                     : 'Showrooms';
+  String get statsShowrooms         => isArabic ? 'صالة عرض'                     : 'Showrooms';
   String get statsShowroomsSubtitle => isArabic ? 'في المملكة و\u200E4\u200F دول خليجية'          : 'Saudi Arabia & 4 GCC countries';
   String get statsRevenue           => isArabic ? 'الإيرادات'                                    : 'Revenue';
   String get statsRevenueSubtitle   => isArabic ? 'الأداء المالي لعام \u200E2025\u200F'          : 'FY 2025 Performance';
