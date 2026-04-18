@@ -1,7 +1,23 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
+
+String _formatDateRange(String dateRange, bool isArabic) {
+  if (!isArabic) return dateRange;
+  
+  // For Arabic, reverse dates in format "2018م — 2019م" or similar
+  final regex = RegExp(r'(\d{4}[^\s—]+)\s*[—–-]\s*(\d{4}[^\s—]+)');
+  final match = regex.firstMatch(dateRange);
+  
+  if (match != null) {
+    final start = match.group(1)!.trim();
+    final end = match.group(2)!.trim();
+    return '$end — $start';
+  }
+  
+  return dateRange;
+}
 
 class ExecutiveManagementDialog extends StatelessWidget {
   const ExecutiveManagementDialog({super.key});
@@ -83,18 +99,18 @@ class ExecutiveManagementDialog extends StatelessWidget {
                         nameAr: 'أحمد بن صالح بن محمد السلطان',
                         titleEn: 'Chief Executive Officer (CEO)',
                         titleAr: 'الرئيس التنفيذي',
-                        appointedYear: '2024G',
+                        appointedYear: '2024م',
                         nationalityEn: 'Saudi',
                         nationalityAr: 'سعودي',
-                        academicQualificationsEn: 'Master of Business Administration, Brunel University, United Kingdom, 2010G\nBachelor\'s in Finance, Qassim University, Kingdom of Saudi Arabia, 2006G',
+                        academicQualificationsEn: 'Master of Business Administration, Brunel University, United Kingdom, 2010م\nBachelor\'s in Finance, Qassim University, Kingdom of Saudi Arabia, 2006م',
                         academicQualificationsAr: 'ماجستير في إدارة الأعمال، جامعة برونيل، المملكة المتحدة، 2010م\nبكالوريوس في المالية، جامعة القصيم، المملكة العربية السعودية، 2006م',
                         currentPositions: [
                           _Position(
                             organizationEn: 'Cenomi Retail',
-                            organizationAr: 'سنومي للتجزئة',
+                            organizationAr: 'سينومي ريتيل',
                             positionEn: 'Board Member and Audit Committee Member',
                             positionAr: 'عضو مجلس الإدارة وعضو لجنة المراجعة',
-                            since: '2023G',
+                            since: '2023م',
                             sectorEn: 'Wholesale & Retail of Clothing & Furniture',
                             sectorAr: 'تجارة الجملة والتجزئة للملابس والأثاث',
                           ),
@@ -105,18 +121,18 @@ class ExecutiveManagementDialog extends StatelessWidget {
                             organizationAr: 'شركة ثوب الأصيل',
                             positionEn: 'Chief Executive Officer',
                             positionAr: 'الرئيس التنفيذي',
-                            from: '2018G',
-                            to: '2024G',
+                            from: '2018م',
+                            to: '2024م',
                             sectorEn: 'Premium Consumer Goods',
                             sectorAr: 'السلع الاستهلاكية الفاخرة',
                           ),
                           _Experience(
                             organizationEn: 'Al-Saif Stores for Development and Investment Company',
-                            organizationAr: 'شركة السيف للتنمية والاستثمار',
+                            organizationAr: 'شركة متاجر السيف للتنمية والاستثمار',
                             positionEn: 'Executive Committee Member and Board Member',
                             positionAr: 'عضو اللجنة التنفيذية وعضو مجلس الإدارة',
-                            from: '2021G',
-                            to: '2024G',
+                            from: '2021م',
+                            to: '2024م',
                             sectorEn: 'Household Goods Retail',
                             sectorAr: 'تجزئة السلع المنزلية',
                           ),
@@ -125,8 +141,8 @@ class ExecutiveManagementDialog extends StatelessWidget {
                             organizationAr: 'شركة نسك للمشاريع التجارية',
                             positionEn: 'Executive Vice President',
                             positionAr: 'نائب الرئيس التنفيذي',
-                            from: '2012G',
-                            to: '2018G',
+                            from: '2012م',
+                            to: '2018م',
                             sectorEn: 'International Fashion',
                             sectorAr: 'الأزياء العالمية',
                           ),
@@ -135,8 +151,8 @@ class ExecutiveManagementDialog extends StatelessWidget {
                             organizationAr: 'شركة نسك للمشاريع التجارية',
                             positionEn: 'Operations Manager',
                             positionAr: 'مدير العمليات',
-                            from: '2010G',
-                            to: '2012G',
+                            from: '2010م',
+                            to: '2012م',
                             sectorEn: 'International Fashion',
                             sectorAr: 'الأزياء العالمية',
                           ),
@@ -149,7 +165,7 @@ class ExecutiveManagementDialog extends StatelessWidget {
                         nameAr: 'معتز علي الأشقر',
                         titleEn: 'Chief Financial Officer (CFO)',
                         titleAr: 'المدير المالي التنفيذي',
-                        appointedYear: '2025G',
+                        appointedYear: '2025م',
                         nationalityEn: 'Jordanian',
                         nationalityAr: 'أردني',
                         academicQualificationsEn: 'Bachelor\'s in Accounting, Applied Sciences University, Hashemite Kingdom of Jordan, 2001',
@@ -159,8 +175,8 @@ class ExecutiveManagementDialog extends StatelessWidget {
                             organizationEn: 'Al Saif Gallery',
                             organizationAr: 'السيف غاليري',
                             positionEn: 'Chief Financial Officer',
-                            positionAr: 'المدير المالي التنفيذي',
-                            since: '2021G to date',
+                            positionAr: 'المدير المالي',
+                            since: '2021م — حتى تاريخه',
                             sectorEn: 'Household Goods Retail',
                             sectorAr: 'تجزئة السلع المنزلية',
                           ),
@@ -171,48 +187,48 @@ class ExecutiveManagementDialog extends StatelessWidget {
                             organizationAr: 'شركة تراي سبكتروم',
                             positionEn: 'CFO',
                             positionAr: 'المدير المالي',
-                            from: '2019G',
-                            to: '2021G',
+                            from: '2019م',
+                            to: '2021م',
                             sectorEn: 'Specialized in electrical building products',
-                            sectorAr: 'متخصصة في منتجات البناء الكهربائية',
+                            sectorAr: 'متخصصة في بناء المنتجات الكهربائية',
                           ),
                           _Experience(
                             organizationEn: 'Al-Mazraa Dairy Company',
-                            organizationAr: 'شركة المزرعة للألبان',
+                            organizationAr: 'شركة ألبان المزرعة',
                             positionEn: 'CFO',
                             positionAr: 'المدير المالي',
-                            from: '2018G',
-                            to: '2019G',
+                            from: '2018م',
+                            to: '2019م',
                             sectorEn: 'Specialized in dairy and cheese products',
                             sectorAr: 'متخصصة في منتجات الألبان والأجبان',
                           ),
                           _Experience(
                             organizationEn: 'Abu Quffara Holding Group',
-                            organizationAr: 'مجموعة أبو قدرة القابضة',
+                            organizationAr: 'مجموعة أبو قفرة القابضة',
                             positionEn: 'CFO',
                             positionAr: 'المدير المالي',
-                            from: '2016G',
-                            to: '2018G',
+                            from: '2016م',
+                            to: '2018م',
                             sectorEn: 'Operating in contracting and building materials',
                             sectorAr: 'تعمل في المقاولات ومواد البناء',
                           ),
                           _Experience(
                             organizationEn: 'Freto Lays Pepsi',
-                            organizationAr: 'فريتو ليز بيبسي',
+                            organizationAr: 'شركة بيبسي',
                             positionEn: 'CFO',
                             positionAr: 'المدير المالي',
-                            from: '2014G',
-                            to: '2016G',
+                            from: '2014م',
+                            to: '2016م',
                             sectorEn: 'Food Products Company',
                             sectorAr: 'شركة منتجات غذائية',
                           ),
                           _Experience(
                             organizationEn: 'National Integrated Industries Complex',
-                            organizationAr: 'مجمع الصناعات الوطنية المتكاملة',
+                            organizationAr: 'المجمع الوطني المتكامل للصناعات',
                             positionEn: 'Head of Accounting',
-                            positionAr: 'رئيس المحاسبة',
-                            from: '2009G',
-                            to: '2012G',
+                            positionAr: 'رئيس قسم المحاسبة',
+                            from: '2009م',
+                            to: '2012م',
                             sectorEn: 'Specialized in manufacturing air conditioners, washing machines, and refrigerators',
                             sectorAr: 'متخصص في تصنيع المكيفات وغسالات الملابس والثلاجات',
                           ),
@@ -220,11 +236,11 @@ class ExecutiveManagementDialog extends StatelessWidget {
                             organizationEn: 'BASF',
                             organizationAr: 'باسف',
                             positionEn: 'Senior Accountant',
-                            positionAr: 'محاسب أول',
-                            from: '2001G',
-                            to: '2008G',
+                            positionAr: 'محاسب رئيسي',
+                            from: '2001م',
+                            to: '2008م',
                             sectorEn: 'Global construction chemicals company',
-                            sectorAr: 'شركة كيماويات البناء العالمية',
+                            sectorAr: 'شركة عالمية في كيماويات البناء',
                           ),
                         ],
                         isArabic: l.isArabic,
@@ -448,7 +464,7 @@ class _PositionItem extends StatelessWidget {
                     ),
                     children: [
                       TextSpan(
-                        text: '${isArabic ? 'المنظمة' : 'Organization'}: ',
+                        text: '${isArabic ? 'الجهة' : 'Organization'}: ',
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           color: Color(0xFF6B7280),
@@ -604,7 +620,7 @@ class _ExperienceItem extends StatelessWidget {
                 ),
               ),
               Text(
-                '${experience.from} — ${experience.to}',
+                _formatDateRange('${experience.from} — ${experience.to}', isArabic),
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
