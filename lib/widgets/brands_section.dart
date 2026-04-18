@@ -55,7 +55,7 @@ class BrandsSection extends StatelessWidget {
               ),
             ),
           ),
-          Column(
+            Column(
             children: [
               Container(
                 width: double.infinity,

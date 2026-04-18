@@ -111,7 +111,7 @@ class HeroSection extends StatelessWidget {
                         textAlign:
                             isArabic ? TextAlign.right : TextAlign.left,
                         style: const TextStyle(
-                            color: Color(0xFFDAEAFE),
+                             color: Colors.white,
                             fontSize: 13,
                             fontWeight: FontWeight.w400,
                             height: 1.6),
@@ -130,7 +130,7 @@ class HeroSection extends StatelessWidget {
                         textAlign:
                             isArabic ? TextAlign.right : TextAlign.left,
                         style: const TextStyle(
-                            color: Color(0xFFDAEAFE),
+                            color: Colors.white,
                             fontSize: 13,
                             fontWeight: FontWeight.w400,
                             height: 1.6),
