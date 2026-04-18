@@ -4,17 +4,30 @@ import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
 
 String _formatDateRange(String dateRange, bool isArabic) {
-  if (!isArabic) return dateRange;
+  // For English, replace م with G and هـ with H
+  if (!isArabic) {
+    return dateRange.replaceAll('م', 'G').replaceAll('هـ', 'H');
+  }
   
   // For Arabic, reverse dates: "2019م — 2021م" becomes "2021م — 2019م"
   // Split by dash (—, –, or -)
   final parts = dateRange.split(RegExp(r'\s*[—–-]\s*'));
   
   if (parts.length == 2) {
-    return '${parts[1].trim()} — ${parts[0].trim()}';
+    // Use RLM to maintain RTL context
+    return '\u200F${parts[1].trim()} — ${parts[0].trim()}\u200F';
   }
   
   return dateRange;
+}
+
+String _translateYear(String year, bool isArabic) {
+  if (!isArabic) {
+    // Replace Arabic text with English
+    year = year.replaceAll('حتى تاريخه', 'to date');
+    year = year.replaceAll('م', 'G').replaceAll('هـ', 'H');
+  }
+  return year;
 }
 
 class ExecutiveManagementDialog extends StatelessWidget {
@@ -100,7 +113,7 @@ class ExecutiveManagementDialog extends StatelessWidget {
                         appointedYear: '2024م',
                         nationalityEn: 'Saudi',
                         nationalityAr: 'سعودي',
-                        academicQualificationsEn: 'Master of Business Administration, Brunel University, United Kingdom, 2010م\nBachelor\'s in Finance, Qassim University, Kingdom of Saudi Arabia, 2006م',
+                        academicQualificationsEn: 'Master of Business Administration, Brunel University, United Kingdom, 2010G\nBachelor\'s in Finance, Qassim University, Kingdom of Saudi Arabia, 2006G',
                         academicQualificationsAr: 'ماجستير في إدارة الأعمال، جامعة برونيل، المملكة المتحدة، 2010م\nبكالوريوس في المالية، جامعة القصيم، المملكة العربية السعودية، 2006م',
                         currentPositions: [
                           _Position(
@@ -332,7 +345,7 @@ class _ExecutiveProfile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
-                  '${isArabic ? 'تم التعيين' : 'Appointed'}: $appointedYear',
+                  '${isArabic ? 'تم التعيين' : 'Appointed'}: ${_translateYear(appointedYear, isArabic)}',
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -528,7 +541,7 @@ class _PositionItem extends StatelessWidget {
                         style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                       TextSpan(
-                        text: position.since,
+                        text: _translateYear(position.since, isArabic),
                       ),
                     ],
                   ),

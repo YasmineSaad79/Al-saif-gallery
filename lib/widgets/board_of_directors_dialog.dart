@@ -4,7 +4,10 @@ import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
 
 String _translateMonth(String text, bool isArabic) {
-  if (!isArabic) return text;
+  if (!isArabic) {
+    // For English, replace م with G
+    text = text.replaceAll('م', 'G').replaceAll('هـ', 'H');
+  }
   
   final monthMap = {
     'January': 'يناير',
@@ -21,24 +24,30 @@ String _translateMonth(String text, bool isArabic) {
     'December': 'ديسمبر',
   };
   
-  String result = text;
-  monthMap.forEach((en, ar) {
-    result = result.replaceAll(en, ar);
-  });
+  if (isArabic) {
+    monthMap.forEach((en, ar) {
+      text = text.replaceAll(en, ar);
+    });
+  }
   
-  return result;
+  return text;
 }
 
 String _formatDateForTable(String from, String to, bool isArabic) {
   if (!isArabic) return '$from — $to';
   
   // For Arabic, reverse: newer date on right, older on left
-  // "2009م — 2012م" becomes "2012م — 2009م"
-  return '${_translateMonth(to, isArabic)} — ${_translateMonth(from, isArabic)}';
+  // "2009م — 2012م" becomes "2012م — 2019م"
+  // Use RLM to maintain RTL context
+  return '\u200F${_translateMonth(to, isArabic)} — ${_translateMonth(from, isArabic)}\u200F';
 }
 
 String _formatAppointmentDate(String date, bool isArabic) {
-  if (!isArabic) return date;
+  // For English, replace م with G and هـ with H first
+  if (!isArabic) {
+    date = date.replaceAll('م', 'G').replaceAll('هـ', 'H');
+    return date;
+  }
   
   // For Arabic, reverse the order: "12/09/1435هـ (09/07/2014م)" becomes "(09/07/2014م) 12/09/1435هـ"
   final regex = RegExp(r'(.+?)\s*\((.+?)\)');
@@ -47,7 +56,8 @@ String _formatAppointmentDate(String date, bool isArabic) {
   if (match != null) {
     final hijri = match.group(1)!.trim();
     final gregorian = match.group(2)!.trim();
-    return '($gregorian) $hijri';
+    // Build the string with explicit LTR override for numbers and parentheses
+    return '\u200F($gregorian)\u200F \u200F$hijri\u200F';
   }
   
   return date;
@@ -328,7 +338,7 @@ class _BoardMembersSection extends StatelessWidget {
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
           appointmentDate: '12/09/1435هـ (09/07/2014م)',
-          academicQualificationsEn: 'Certificate in Islamic Sciences, Scientific Institute, Riyadh, Kingdom of Saudi Arabia, 1974م',
+          academicQualificationsEn: 'Certificate in Islamic Sciences, Scientific Institute, Riyadh, Kingdom of Saudi Arabia, 1974G',
           academicQualificationsAr: 'شهادة في العلوم الإسلامية، المعهد العلمي، الرياض، المملكة العربية السعودية، 1974م',
           currentPositions: [
             _Position(
@@ -417,7 +427,7 @@ class _BoardMembersSection extends StatelessWidget {
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
           appointmentDate: '12/09/1435هـ (09/07/2014م)',
-          academicQualificationsEn: 'Master of Science in Finance, University of Tampa, Florida, United States of America, 2011م\nBachelor\'s in Financial Management, King Saud University, Kingdom of Saudi Arabia, 2006م',
+          academicQualificationsEn: 'Master of Science in Finance, University of Tampa, Florida, United States of America, 2011G\nBachelor\'s in Financial Management, King Saud University, Kingdom of Saudi Arabia, 2006G',
           academicQualificationsAr: 'ماجستير في العلوم المالية، جامعة تامبا، فلوريدا، الولايات المتحدة الأمريكية، 2011م\nبكالوريوس في الإدارة المالية، جامعة الملك سعود، المملكة العربية السعودية، 2006م',
           currentPositions: [
             _Position(
@@ -497,7 +507,7 @@ class _BoardMembersSection extends StatelessWidget {
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
           appointmentDate: '12/09/1435هـ (09/07/2014م)',
-          academicQualificationsEn: 'Master\'s in Islamic Policy, Higher Institute for the Judiciary, Kingdom of Saudi Arabia, 2012م\nBachelor\'s in Sharia, Imam Mohammed bin Saud Islamic University, Kingdom of Saudi Arabia, 2008م',
+          academicQualificationsEn: 'Master\'s in Islamic Policy, Higher Institute for the Judiciary, Kingdom of Saudi Arabia, 2012G\nBachelor\'s in Sharia, Imam Mohammed bin Saud Islamic University, Kingdom of Saudi Arabia, 2008G',
           academicQualificationsAr: 'ماجستير في السياسة الشرعية، المعهد العالي للقضاء، المملكة العربية السعودية، 2012م\nبكالوريوس في الشريعة، جامعة الإمام محمد بن سعود الإسلامية، المملكة العربية السعودية، 2008م',
           currentPositions: [
             _Position(
@@ -584,7 +594,7 @@ class _BoardMembersSection extends StatelessWidget {
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
           appointmentDate: '12/09/1435هـ (09/07/2014م)',
-          academicQualificationsEn: 'Bachelor\'s in Sharia, Imam Mohammed bin Saud Islamic University, Kingdom of Saudi Arabia, 2012م\nBusiness Administration Course Certificate, Indiana University, United States of America, 2012م',
+          academicQualificationsEn: 'Bachelor\'s in Sharia, Imam Mohammed bin Saud Islamic University, Kingdom of Saudi Arabia, 2012G\nBusiness Administration Course Certificate, Indiana University, United States of America, 2012G',
           academicQualificationsAr: 'بكالوريوس في الشريعة، جامعة الإمام محمد بن سعود الإسلامية، المملكة العربية السعودية، 2012م\nشهادة دورة في إدارة الأعمال، جامعة إنديانا، الولايات المتحدة الأمريكية، 2012م',
           currentPositions: [
             _Position(
@@ -672,7 +682,7 @@ class _BoardMembersSection extends StatelessWidget {
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
           appointmentDate: '23/05/1443هـ \u200F(27/12/2021م)\u200F',
-          academicQualificationsEn: 'Certificate in International Wealth & Investment Management (CME4),, 2024م\nCertified in Strategy and Competitive Analysis (CSCA), Institute of Management Accountants, USA, 2021م\nCertified Management Accountant (CMA), Institute of Management Accountants, USA, 2020م\nProject Management Professional (PMP), Project Management Institute, USA, 2017م\nExecutive Venture Investment Program License, UC Berkeley, USA, 2016م\nManagement Acceleration Program (MAP), INSEAD Business School, France, 2015م\nMaster\'s in Manufacturing Systems Engineering and Management, University of Warwick, United Kingdom, 2011م\nBachelor\'s in Chemical Engineering, King Saud University, Kingdom of Saudi Arabia, 2009م',
+          academicQualificationsEn: 'Certificate in International Wealth & Investment Management (CME4), 2024G\nCertified in Strategy and Competitive Analysis (CSCA), Institute of Management Accountants, USA, 2021G\nCertified Management Accountant (CMA), Institute of Management Accountants, USA, 2020G\nProject Management Professional (PMP), Project Management Institute, USA, 2017G\nExecutive Venture Investment Program License, UC Berkeley, USA, 2016G\nManagement Acceleration Program (MAP), INSEAD Business School, France, 2015G\nMaster\'s in Manufacturing Systems Engineering and Management, University of Warwick, United Kingdom, 2011G\nBachelor\'s in Chemical Engineering, King Saud University, Kingdom of Saudi Arabia, 2009G',
           academicQualificationsAr: 'شهادة في إدارة الثروات والاستثمار الدولي (CME4),، 2024م\nمعتمد في الاستراتيجية والتحليل التنافسي (CSCA)، معهد المحاسبين الإداريين، الولايات المتحدة، 2021م\nمحاسب إداري معتمد (CMA)، معهد المحاسبين الإداريين، الولايات المتحدة، 2020م\nمحترف إدارة المشاريع (PMP)، معهد إدارة المشاريع، الولايات المتحدة، 2017م\nترخيص برنامج الاستثمار التنفيذي، جامعة كاليفورنيا بيركلي، الولايات المتحدة، 2016م\nبرنامج تسريع الإدارة (MAP)، كلية إنسياد للأعمال، فرنسا، 2015م\nماجستير في هندسة وإدارة أنظمة التصنيع، جامعة وارويك، المملكة المتحدة، 2011م\nبكالوريوس في الهندسة الكيميائية، جامعة الملك سعود، المملكة العربية السعودية، 2009م',
           currentPositions: [
             _Position(
@@ -824,7 +834,7 @@ class _BoardMembersSection extends StatelessWidget {
           nationalityEn: 'Saudi',
           nationalityAr: 'سعودي',
           appointmentDate: '23/05/1443هـ \u200F(27/12/2021م)\u200F',
-          academicQualificationsEn: 'Bachelor\'s in Accounting Sciences, Southern Utah University, United States of America, 2012م',
+          academicQualificationsEn: 'Bachelor\'s in Accounting Sciences, Southern Utah University, United States of America, 2012G',
           academicQualificationsAr: 'بكالوريوس في علوم المحاسبة، جامعة جنوب يوتا، الولايات المتحدة الأمريكية، 2012م',
           currentPositions: [
             _Position(
@@ -1238,7 +1248,7 @@ class _PositionsTable extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: Text(
-                      _translateMonth(position.since, isArabic),
+                      '\u200E${_translateMonth(position.since, isArabic)}\u200E',
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
@@ -1342,9 +1352,21 @@ class _ExperienceTable extends StatelessWidget {
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  flex: 4,
+                  flex: 2,
                   child: Text(
-                    isArabic ? 'الفترة' : 'Period',
+                    isArabic ? 'إلى' : 'From',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF374151),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    isArabic ? 'من' : 'To',
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -1409,9 +1431,21 @@ class _ExperienceTable extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    flex: 4,
+                    flex: 2,
                     child: Text(
-                      _formatDateForTable(exp.from, exp.to, isArabic),
+                      '\u200E${_translateMonth(isArabic ? exp.to : exp.from, isArabic)}\u200E',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF1F2937),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      '\u200E${_translateMonth(isArabic ? exp.from : exp.to, isArabic)}\u200E',
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
