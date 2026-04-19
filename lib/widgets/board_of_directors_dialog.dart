@@ -1435,32 +1435,26 @@ class _ExperienceTable extends StatelessWidget {
                   const SizedBox(width: 16),
                   Expanded(
                     flex: 2,
-                    child: Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: Text(
-                        _translateMonth(isArabic ? exp.to : exp.from, isArabic),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF1F2937),
-                        ),
-                        textDirection: TextDirection.ltr,
+                    child: Text(
+                      _translateMonth(isArabic ? exp.to : exp.from, isArabic),
+                      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF1F2937),
                       ),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     flex: 2,
-                    child: Directionality(
-                      textDirection: TextDirection.ltr,
-                      child: Text(
-                        _translateMonth(isArabic ? exp.from : exp.to, isArabic),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF1F2937),
-                        ),
-                        textDirection: TextDirection.ltr,
+                    child: Text(
+                      _translateMonth(isArabic ? exp.from : exp.to, isArabic),
+                      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF1F2937),
                       ),
                     ),
                   ),

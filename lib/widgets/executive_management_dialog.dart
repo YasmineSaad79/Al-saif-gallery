@@ -630,34 +630,17 @@ class _ExperienceItem extends StatelessWidget {
                   ),
                 ),
               ),
-              // Build date range with LRI isolates
-              Builder(
-                builder: (context) {
-                  if (!isArabic) {
-                    return Text(
-                      _formatDateRange('${experience.from} — ${experience.to}', isArabic),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF6B7280),
-                      ),
-                    );
-                  }
-                  
-                  // For Arabic: use LRI (U+2066) and PDI (U+2069) to isolate each part
-                  final newerNum = experience.to.replaceAll(RegExp(r'[^\d]'), '');
-                  final olderNum = experience.from.replaceAll(RegExp(r'[^\d]'), '');
-                  
-                  // LRI forces LTR for the isolated text, PDI ends the isolation
-                  return Text(
-                    '\u2066${newerNum}م\u2069 — \u2066${olderNum}م\u2069',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF6B7280),
-                    ),
-                  );
-                },
+              // Build date range for Arabic
+              Text(
+                isArabic 
+                  ? '${experience.to} — ${experience.from}'
+                  : _formatDateRange('${experience.from} — ${experience.to}', isArabic),
+                textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF6B7280),
+                ),
               ),
             ],
           ),
