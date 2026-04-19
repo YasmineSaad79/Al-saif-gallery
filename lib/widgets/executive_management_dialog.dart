@@ -630,17 +630,35 @@ class _ExperienceItem extends StatelessWidget {
                   ),
                 ),
               ),
-              // Build date range for Arabic
-              Text(
-                isArabic 
-                  ? '${experience.to} — ${experience.from}'
-                  : _formatDateRange('${experience.from} — ${experience.to}', isArabic),
-                textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF6B7280),
-                ),
+              // Build date range - separate numbers and letters
+              Builder(
+                builder: (context) {
+                  if (!isArabic) {
+                    return Text(
+                      _formatDateRange('${experience.from} — ${experience.to}', isArabic),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF6B7280),
+                      ),
+                    );
+                  }
+                  
+                  // For Arabic: build manually to avoid BiDi issues
+                  final toNum = experience.to.replaceAll(RegExp(r'[^\d]'), '');
+                  final fromNum = experience.from.replaceAll(RegExp(r'[^\d]'), '');
+                  
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(toNum, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+                      const Text('م', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+                      const Text(' — ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+                      Text(fromNum, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+                      const Text('م', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+                    ],
+                  );
+                },
               ),
             ],
           ),
