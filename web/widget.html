@@ -2,11 +2,23 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { overflow: hidden; background: #ffffff; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { 
+    background: #ffffff; 
+    margin: 0; 
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
   body > div { margin: 0 !important; padding: 0 !important; }
+  #widget-container { 
+    min-height: 100%; 
+    touch-action: pan-y pan-x;
+  }
 </style>
 <script src="https://irp.atnmo.com/v2/widget/widget-loader.js"></script>
 </head>
@@ -22,76 +34,36 @@
   // rename div id to match widget type
   document.getElementById('widget-container').id = widgetType + '-widget';
 
-  // scroll forwarding
-  window.addEventListener('wheel', function(e) {
-    window.parent.postMessage({ type: 'iframe-wheel', deltaY: e.deltaY }, '*');
-  }, { passive: true });
-
-  var _ty = 0;
-  window.addEventListener('touchstart', function(e) { _ty = e.touches[0].clientY; }, { passive: true });
-  window.addEventListener('touchmove', function(e) {
-    var dy = _ty - e.touches[0].clientY;
-    _ty = e.touches[0].clientY;
-    window.parent.postMessage({ type: 'iframe-wheel', deltaY: dy }, '*');
-  }, { passive: true });
-
-  // height reporting
-  var debounceTimer = null;
-  var lastSent = 0;
-
-  function getTrueHeight() {
-    var h = Math.max(
-      document.body.scrollHeight, document.body.offsetHeight,
-      document.documentElement.scrollHeight, document.documentElement.offsetHeight
-    );
-    document.querySelectorAll('iframe').forEach(function(f) {
-      var r = f.getBoundingClientRect();
-      h = Math.max(h, r.bottom + window.pageYOffset);
-      try {
-        var fd = f.contentDocument || f.contentWindow.document;
-        h = Math.max(h, fd.body.scrollHeight + r.top + window.pageYOffset);
-      } catch(e) {}
-    });
-    return Math.ceil(h) + 4;
-  }
-
-  function reportHeight() {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(function() {
-      var h = getTrueHeight();
-      if (h > 20 && Math.abs(h - lastSent) > 2) {
-        lastSent = h;
-        window.parent.postMessage({ type: 'widget-height', id: viewId, height: h }, '*');
-      }
-    }, 300);
-  }
-
-  new MutationObserver(function() {
-    reportHeight();
-    document.querySelectorAll('iframe').forEach(function(f) {
-      if (!f._watched) {
-        f._watched = true;
-        f.addEventListener('load', function() {
-          [500, 1500, 3000].forEach(function(t) { setTimeout(reportHeight, t); });
-        });
-      }
-    });
-  }).observe(document.body, { childList: true, subtree: true, attributes: true });
-
-  if (window.ResizeObserver) {
-    new ResizeObserver(reportHeight).observe(document.body);
-  }
-
-  document.addEventListener('click', function() {
-    [500, 1500].forEach(function(t) { setTimeout(reportHeight, t); });
-  });
-
   window.addEventListener('load', function() {
     if (typeof loadWidget === 'function') {
       loadWidget(widgetType, '5be9c146-613e-4141-a351-1f5e13fc5513', lang, '81a06c05-1a48-4d1b-8dbd-bcf60a76730f', 'v2');
     }
-    [1000, 2000, 4000, 7000, 12000].forEach(function(t) { setTimeout(reportHeight, t); });
   });
+
+  // Mobile scroll fix: forward touch events to parent
+  var touchStartY = 0;
+  var touchStartX = 0;
+  
+  document.addEventListener('touchstart', function(e) {
+    touchStartY = e.touches[0].clientY;
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  
+  document.addEventListener('touchmove', function(e) {
+    var touchY = e.touches[0].clientY;
+    var touchX = e.touches[0].clientX;
+    var deltaY = touchStartY - touchY;
+    var deltaX = touchStartX - touchX;
+    
+    // If vertical scroll is dominant, notify parent
+    if (Math.abs(deltaY) > Math.abs(deltaX)) {
+      window.parent.postMessage({
+        type: 'scroll',
+        deltaY: deltaY,
+        deltaX: 0
+      }, '*');
+    }
+  }, { passive: true });
 })();
 </script>
 </body>
