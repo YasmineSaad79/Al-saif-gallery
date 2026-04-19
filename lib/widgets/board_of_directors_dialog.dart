@@ -52,17 +52,7 @@ String _formatAppointmentDate(String date, bool isArabic) {
     return date;
   }
   
-  // For Arabic, reverse the order: "12/09/1435هـ (09/07/2014م)" becomes "(09/07/2014م) 12/09/1435هـ"
-  final regex = RegExp(r'(.+?)\s*\((.+?)\)');
-  final match = regex.firstMatch(date);
-  
-  if (match != null) {
-    final hijri = match.group(1)!.trim();
-    final gregorian = match.group(2)!.trim();
-    // Build the string with explicit LTR override for numbers and parentheses
-    return '\u200F($gregorian)\u200F \u200F$hijri\u200F';
-  }
-  
+  // For Arabic: keep original order, dates will display correctly in RTL context
   return date;
 }
 
