@@ -25,6 +25,9 @@ String _translateMonth(String text, bool isArabic) {
   };
   
   if (isArabic) {
+    // Translate "Ongoing" to "مستمر"
+    text = text.replaceAll('Ongoing', 'مستمر');
+    
     monthMap.forEach((en, ar) {
       text = text.replaceAll(en, ar);
     });
@@ -361,7 +364,7 @@ class _BoardMembersSection extends StatelessWidget {
             ),
             _Position(
               organizationEn: 'Bait Al-Tasne\'a Al-Blastikia Company',
-              organizationAr: 'شركة بيت التصنيع الشاطئية',
+              organizationAr: 'شركة بيت التصنيع البلاستيكي',
               positionEn: 'Chairman of the Board',
               positionAr: 'رئيس مجلس الإدارة',
               since: '2015م',
@@ -382,7 +385,7 @@ class _BoardMembersSection extends StatelessWidget {
             ),
             _Experience(
               organizationEn: 'Al-Saif Commercial Agencies Company',
-              organizationAr: 'شركة السيف للوكالات التجارية',
+              organizationAr: 'شركة السيف للتوكيلات التجارية',
               positionEn: 'General Manager',
               positionAr: 'المدير العام',
               from: '1982م',
@@ -683,7 +686,7 @@ class _BoardMembersSection extends StatelessWidget {
           nationalityAr: 'سعودي',
           appointmentDate: '23/05/1443هـ \u200F(27/12/2021م)\u200F',
           academicQualificationsEn: 'Certificate in International Wealth & Investment Management (CME4), 2024G\nCertified in Strategy and Competitive Analysis (CSCA), Institute of Management Accountants, USA, 2021G\nCertified Management Accountant (CMA), Institute of Management Accountants, USA, 2020G\nProject Management Professional (PMP), Project Management Institute, USA, 2017G\nExecutive Venture Investment Program License, UC Berkeley, USA, 2016G\nManagement Acceleration Program (MAP), INSEAD Business School, France, 2015G\nMaster\'s in Manufacturing Systems Engineering and Management, University of Warwick, United Kingdom, 2011G\nBachelor\'s in Chemical Engineering, King Saud University, Kingdom of Saudi Arabia, 2009G',
-          academicQualificationsAr: '• الشهادة الدولية لإدارة الثروات والاستثمار CME4، عام 2024م\n• رخصة التحليل الاستراتيجي والمقارن CSCA، معهد المحاسبين الإداريين، الولايات المتحدة الأمريكية، عام 2021م\n• رخصة المحاسب الإداري المعتمد CMA، معهد المحاسبين الإداريين، الولايات المتحدة الأمريكية، عام 2020م\n• شهادة مدير المشاريع المحترف PMP، معهد إدارة المشاريع، الولايات المتحدة الأمريكية، عام 2017م\n• رخصة برنامج الاستثمار الجريء التنفيذي، جامعة كاليفورنيا بيركلي، الولايات المتحدة الأمريكية، عام 2016م\n• رخصة برنامج تسريع الإدارة MAP، كلية إنسياد للأعمال، فرنسا، عام 2015م\n• ماجستير في هندسة وإدارة نظم التصنيع، جامعة وارويك، المملكة المتحدة، عام 2011م\n• بكالوريوس في الهندسة الكيميائية، جامعة الملك سعود، المملكة العربية السعودية، عام 2009م',
+          academicQualificationsAr: '• الشهادة الدولية لإدارة الثروات والاستثمار CME4، عام 2024م\n• رخصة التحليل الاستراتيجي والمقارن CSCA، معهد المحاسبين الإداريين، الولايات المتحدة الأمريكية، عام 2021م\n• رخصة المحاسب الإداري المعتمد CMA، معهد المحاسبين الإداريين، الولايات المتحدة الأمريكية، عام 2020م\n• شهادة مدير المشاريع المحترف PMP، معهد إدارة المشاريع، الولايات المتحدة الأمريكية، عام 2017م\n• رخصة برنامج الاستثمار الجريء التنفيذي، جامعة كاليفورنيا بيركلي، الولايات المتحدة الأمريكية، عام 2016م\n• رخصة برنامج تسريع الإدارة MAP، كلية إنسياد للأعمال، فرنسا، عام 2015م\n• ماجستير في هندسة وإدارة نظم التصنيع، جامعة واروك، المملكة المتحدة، عام 2011م\n• بكالوريوس في الهندسة الكيميائية، جامعة الملك سعود، المملكة العربية السعودية، عام 2009م',
           currentPositions: [
             _Position(
               organizationEn: 'Al-Saif Stores for Development and Investment Company',
@@ -1432,24 +1435,30 @@ class _ExperienceTable extends StatelessWidget {
                   const SizedBox(width: 16),
                   Expanded(
                     flex: 2,
-                    child: Text(
-                      '\u202A${_translateMonth(isArabic ? exp.to : exp.from, isArabic)}\u202C',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF1F2937),
+                    child: Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Text(
+                        _translateMonth(isArabic ? exp.to : exp.from, isArabic),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF1F2937),
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     flex: 2,
-                    child: Text(
-                      '\u202A${_translateMonth(isArabic ? exp.from : exp.to, isArabic)}\u202C',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF1F2937),
+                    child: Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Text(
+                        _translateMonth(isArabic ? exp.from : exp.to, isArabic),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF1F2937),
+                        ),
                       ),
                     ),
                   ),
