@@ -52,7 +52,7 @@ String _formatAppointmentDate(String date, bool isArabic) {
     return date;
   }
   
-  // For Arabic: keep original order, dates will display correctly in RTL context
+  // For Arabic: keep original format (DD/MM/YYYY)
   return date;
 }
 
