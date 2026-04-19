@@ -186,15 +186,15 @@ class _ServiceCard extends StatelessWidget {
   });
 
   String? _getRouteFromTitle() {
-    if (title.contains('Strategy')) return '/strategy-operations';
-    if (title.contains('Investors')) return '/investors-governance';
+    if (title.contains('Strategy') || title.contains('الاستراتيجية')) return '/strategy-operations';
+    if (title.contains('Investors') || title.contains('المستثمرون') || title.contains('الحوكمة')) return '/investors-governance';
     if (title.contains('Careers') || title.contains('الوظائف')) return '/news-careers#careers';
-    if (title.contains('Brands')) return null; // Open dialog instead
+    if (title.contains('Brands') || title.contains('علاماتنا') || title.contains('العلامات')) return null; // Open dialog instead
     return '/';
   }
 
   bool _isBrandsCard() {
-    return title.contains('Brands') || title.contains('العلامات');
+    return title.contains('Brands') || title.contains('علاماتنا') || title.contains('العلامات');
   }
 
   @override
