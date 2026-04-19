@@ -630,7 +630,7 @@ class _ExperienceItem extends StatelessWidget {
                   ),
                 ),
               ),
-              // Build date range with explicit control
+              // Build date range with LRI isolates
               Builder(
                 builder: (context) {
                   if (!isArabic) {
@@ -644,47 +644,17 @@ class _ExperienceItem extends StatelessWidget {
                     );
                   }
                   
-                  // For Arabic: add LRM after numbers to keep letter after number
-                  String formatForLtr(String date) {
-                    // "2024م" -> "2024‎م" (with LRM between)
-                    final number = date.replaceAll(RegExp(r'[^\d]'), '');
-                    final letter = date.replaceAll(RegExp(r'\d'), '');
-                    return '$number\u200E$letter'; // LRM keeps letter on the right
-                  }
+                  // For Arabic: use LRI (U+2066) and PDI (U+2069) to isolate each part
+                  final newerNum = experience.to.replaceAll(RegExp(r'[^\d]'), '');
+                  final olderNum = experience.from.replaceAll(RegExp(r'[^\d]'), '');
                   
-                  final newerDate = formatForLtr(experience.to);
-                  final olderDate = formatForLtr(experience.from);
-                  
-                  return Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          newerDate,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFF6B7280),
-                          ),
-                        ),
-                        const Text(
-                          ' — ',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFF6B7280),
-                          ),
-                        ),
-                        Text(
-                          olderDate,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFF6B7280),
-                          ),
-                        ),
-                      ],
+                  // LRI forces LTR for the isolated text, PDI ends the isolation
+                  return Text(
+                    '\u2066${newerNum}م\u2069 — \u2066${olderNum}م\u2069',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF6B7280),
                     ),
                   );
                 },
