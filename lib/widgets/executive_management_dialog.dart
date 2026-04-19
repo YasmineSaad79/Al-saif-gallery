@@ -9,13 +9,13 @@ String _formatDateRange(String dateRange, bool isArabic) {
     return dateRange.replaceAll('م', 'G').replaceAll('هـ', 'H');
   }
   
-  // For Arabic, reverse dates: "2019م — 2021م" becomes "2021م — 2019م"
+  // For Arabic: "2018م — 2024م" should display as: 2018م (left) — 2024م (right)
   // Split by dash (—, –, or -)
   final parts = dateRange.split(RegExp(r'\s*[—–-]\s*'));
   
   if (parts.length == 2) {
-    // Use RLM to maintain RTL context
-    return '\u200F${parts[1].trim()} — ${parts[0].trim()}\u200F';
+    // Use LTR embedding: older (from) on left, newer (to) on right
+    return '\u202A${parts[0].trim()} — ${parts[1].trim()}\u202C';
   }
   
   return dateRange;
