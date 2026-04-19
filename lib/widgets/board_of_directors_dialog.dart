@@ -57,6 +57,9 @@ String _formatAppointmentDate(String date, bool isArabic) {
 }
 
 Widget _buildArabicAppointmentDate(String date) {
+  // Remove any directional marks that might interfere
+  date = date.replaceAll('\u200F', '').replaceAll('\u200E', '').replaceAll('\u202A', '').replaceAll('\u202C', '');
+  
   // Parse date like "12/09/1435هـ (09/07/2014م)"
   // Build each number separately to avoid BiDi issues
   
