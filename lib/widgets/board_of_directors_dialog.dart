@@ -1023,38 +1023,24 @@ class _BoardMemberProfile extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           // Nationality and Date
-          Row(
-            children: [
-              Expanded(
-                child: RichText(
-                  text: TextSpan(
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF6B7280),
-                    ),
-                    children: [
-                      TextSpan(text: isArabic ? 'الجنسية: ' : 'Nationality: '),
-                      TextSpan(text: isArabic ? nationalityAr : nationalityEn),
-                      const TextSpan(text: ' | '),
-                      TextSpan(text: isArabic ? 'تاريخ التعيين: ' : 'Date of Appointment: '),
-                    ],
-                  ),
-                ),
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF6B7280),
               ),
-              if (isArabic)
-                // For Arabic: build date manually to avoid BiDi issues
-                _buildArabicAppointmentDate(appointmentDate)
-              else
-                Text(
-                  _formatAppointmentDate(appointmentDate, false),
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF6B7280),
-                  ),
-                ),
-            ],
+              children: [
+                TextSpan(text: isArabic ? 'الجنسية: ' : 'Nationality: '),
+                TextSpan(text: isArabic ? nationalityAr : nationalityEn),
+                const TextSpan(text: ' | '),
+                TextSpan(text: isArabic ? 'تاريخ التعيين: ' : 'Date of Appointment: '),
+                if (isArabic)
+                  WidgetSpan(child: _buildArabicAppointmentDate(appointmentDate))
+                else
+                  TextSpan(text: _formatAppointmentDate(appointmentDate, false)),
+              ],
+            ),
           ),
           const SizedBox(height: 24),
           // Academic Qualifications
