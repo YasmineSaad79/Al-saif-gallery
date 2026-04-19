@@ -1,65 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>Investor Relations Widget</title>
 <style>
   * { 
     box-sizing: border-box; 
     margin: 0; 
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
+    padding: 0; 
   }
   
-  html {
-    height: 100%;
-    overflow: hidden;
-  }
-  
-  body { 
-    background: #ffffff; 
-    margin: 0; 
-    padding: 0;
+  html, body {
     width: 100%;
     height: 100%;
-    overflow-y: scroll !important;
+    overflow-y: scroll;
     overflow-x: hidden;
+    background: #ffffff;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
-    position: relative;
   }
   
-  #widget-container { 
-    min-height: 200vh;
+  #widget-container {
     width: 100%;
-    padding: 0;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  /* Header للصفحة */
+  .page-header {
+    background: #F8FAFB;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .page-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1A1A1A;
     margin: 0;
-    position: relative;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #1A1A1A;
+    cursor: pointer;
+    padding: 4px 8px;
+  }
+  
+  .close-btn:hover {
+    opacity: 0.7;
   }
 </style>
 <script src="https://irp.atnmo.com/v2/widget/widget-loader.js"></script>
 </head>
 <body>
+<div class="page-header">
+  <h1 class="page-title" id="page-title">Investor Relations</h1>
+  <button class="close-btn" onclick="window.close()">×</button>
+</div>
 <div id="widget-container"></div>
 <script>
 (function() {
   var params = new URLSearchParams(window.location.search);
   var widgetType = params.get('type') || '';
   var lang = params.get('lang') || 'en';
-  var viewId = params.get('id') || '';
 
-  // rename div id to match widget type
-  document.getElementById('widget-container').id = widgetType + '-widget';
+  // تحديث العنوان
+  var titleMap = {
+    'company-snapshot': lang === 'ar' ? 'لمحة عن الشركة' : 'Company Snapshot',
+    'share-price': lang === 'ar' ? 'سعر السهم' : 'Share Price',
+    'stock-activity': lang === 'ar' ? 'نشاط السهم' : 'Stock Activity',
+    'performance': lang === 'ar' ? 'الأداء' : 'Performance',
+    'fact-sheet': lang === 'ar' ? 'صحيفة الحقائق' : 'Fact Sheet',
+    'company-financials': lang === 'ar' ? 'البيانات المالية' : 'Company Financials',
+    'corporate-actions': lang === 'ar' ? 'إجراءات الشركة' : 'Corporate Actions',
+    'corporate-news': lang === 'ar' ? 'أخبار الشركة' : 'Corporate News'
+  };
+  
+  document.getElementById('page-title').textContent = titleMap[widgetType] || 'Investor Relations';
+  document.title = titleMap[widgetType] || 'Investor Relations';
+
+  var container = document.getElementById('widget-container');
+  container.id = widgetType + '-widget';
 
   window.addEventListener('load', function() {
     if (typeof loadWidget === 'function') {
       loadWidget(widgetType, '5be9c146-613e-4141-a351-1f5e13fc5513', lang, '81a06c05-1a48-4d1b-8dbd-bcf60a76730f', 'v2');
     }
   });
-  
-  // Ensure body is scrollable
-  document.body.style.overflow = 'scroll';
-  document.body.style.webkitOverflowScrolling = 'touch';
 })();
 </script>
 </body>

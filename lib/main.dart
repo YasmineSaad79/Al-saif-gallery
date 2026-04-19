@@ -42,14 +42,11 @@ class _AlSaifGalleryAppState extends State<AlSaifGalleryApp> {
         final type = js_util.getProperty(msg, 'type');
         if (type == 'iframe-wheel') {
           final dy = (js_util.getProperty(msg, 'deltaY') as num?)?.toDouble() ?? 0;
-          if (irScrollController.hasClients) {
+          if (irScrollController.hasClients && dy != 0) {
             final current = irScrollController.offset;
             final max = irScrollController.position.maxScrollExtent;
             final next = (current + dy).clamp(0.0, max);
-            irScrollController.animateTo(next,
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.linear,
-            );
+            irScrollController.jumpTo(next);
           }
         }
       } catch (_) {}

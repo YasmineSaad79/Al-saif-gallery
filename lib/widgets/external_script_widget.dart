@@ -222,6 +222,8 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   html.EventListener? _messageListener;
   Timer? _debounce;
   double _pendingHeight = 0;
+  Timer? _enableTimer;
+  bool _isScrolling = false;
 
   @override
   void initState() {
@@ -234,7 +236,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
       ..style.border = 'none'
       ..style.width = '100%'
       ..style.height = '100%'
-      ..style.pointerEvents = 'auto'
+      ..style.pointerEvents = 'none' // معطل افتراضياً
       ..srcdoc = _buildHtml();
 
     _messageListener = (event) {
@@ -262,6 +264,36 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
         (int id) => _iframe!,
       );
     } catch (_) {}
+  }
+
+  void _onPointerDown() {
+    // لما المستخدم يضغط = فعّل الـ iframe
+    if (_iframe != null) {
+      _iframe!.style.pointerEvents = 'auto';
+    }
+    _isScrolling = false;
+    
+    // بعد 3 ثواني من آخر ضغطة، عطّله
+    _enableTimer?.cancel();
+    _enableTimer = Timer(const Duration(seconds: 3), () {
+      if (_iframe != null && mounted && !_isScrolling) {
+        _iframe!.style.pointerEvents = 'none';
+      }
+    });
+  }
+
+  void _onScroll() {
+    // لما المستخدم يعمل scroll = عطّل الـ iframe
+    _isScrolling = true;
+    if (_iframe != null) {
+      _iframe!.style.pointerEvents = 'none';
+    }
+    
+    // بعد 500ms من آخر scroll، خليه جاهز للتفعيل
+    _enableTimer?.cancel();
+    _enableTimer = Timer(const Duration(milliseconds: 500), () {
+      _isScrolling = false;
+    });
   }
 
   String _buildHtml() {
@@ -375,6 +407,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   @override
   void dispose() {
     _debounce?.cancel();
+    _enableTimer?.cancel();
     if (_messageListener != null) {
       html.window.removeEventListener('message', _messageListener!);
     }
@@ -384,10 +417,18 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   @override
   Widget build(BuildContext context) {
     if (!kIsWeb) return const SizedBox.shrink();
-    return SizedBox(
-      width: double.infinity,
-      height: _height,
-      child: HtmlElementView(viewType: widget.viewId),
+    return Listener(
+      onPointerDown: (_) => _onPointerDown(),
+      onPointerSignal: (signal) {
+        if (signal is PointerScrollEvent) {
+          _onScroll();
+        }
+      },
+      child: SizedBox(
+        width: double.infinity,
+        height: _height,
+        child: HtmlElementView(viewType: widget.viewId),
+      ),
     );
   }
 }
