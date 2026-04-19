@@ -9,8 +9,15 @@ String _formatDateRange(String dateRange, bool isArabic) {
     return dateRange.replaceAll('م', 'G').replaceAll('هـ', 'H');
   }
   
-  // For Arabic: keep the original order (from — to)
-  // We'll use Directionality widget to force LTR display
+  // For Arabic: reverse the dates and add LRM marks
+  // "2018م — 2024م" becomes "2024م — 2018م"
+  final parts = dateRange.split(RegExp(r'\s*[—–-]\s*'));
+  
+  if (parts.length == 2) {
+    // Add LRM (Left-to-Right Mark) around each part to prevent reordering
+    return '\u200E${parts[1].trim()}\u200E — \u200E${parts[0].trim()}\u200E';
+  }
+  
   return dateRange;
 }
 
@@ -623,16 +630,64 @@ class _ExperienceItem extends StatelessWidget {
                   ),
                 ),
               ),
-              Directionality(
-                textDirection: TextDirection.ltr,
-                child: Text(
-                  _formatDateRange('${experience.from} — ${experience.to}', isArabic),
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xFF6B7280),
-                  ),
-                ),
+              // Build date range with explicit control
+              Builder(
+                builder: (context) {
+                  if (!isArabic) {
+                    return Text(
+                      _formatDateRange('${experience.from} — ${experience.to}', isArabic),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF6B7280),
+                      ),
+                    );
+                  }
+                  
+                  // For Arabic: add LRM after numbers to keep letter after number
+                  String formatForLtr(String date) {
+                    // "2024م" -> "2024‎م" (with LRM between)
+                    final number = date.replaceAll(RegExp(r'[^\d]'), '');
+                    final letter = date.replaceAll(RegExp(r'\d'), '');
+                    return '$number\u200E$letter'; // LRM keeps letter on the right
+                  }
+                  
+                  final newerDate = formatForLtr(experience.to);
+                  final olderDate = formatForLtr(experience.from);
+                  
+                  return Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          newerDate,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xFF6B7280),
+                          ),
+                        ),
+                        const Text(
+                          ' — ',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xFF6B7280),
+                          ),
+                        ),
+                        Text(
+                          olderDate,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xFF6B7280),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ],
           ),
