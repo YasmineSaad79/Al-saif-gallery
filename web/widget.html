@@ -2,22 +2,39 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { 
+  * { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  html {
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  body { 
     background: #ffffff; 
     margin: 0; 
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
+    overflow-y: scroll !important;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    position: relative;
   }
-  body > div { margin: 0 !important; padding: 0 !important; }
+  
   #widget-container { 
-    min-height: 100%; 
-    touch-action: pan-y pan-x;
+    min-height: 200vh;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    position: relative;
   }
 </style>
 <script src="https://irp.atnmo.com/v2/widget/widget-loader.js"></script>
@@ -39,31 +56,10 @@
       loadWidget(widgetType, '5be9c146-613e-4141-a351-1f5e13fc5513', lang, '81a06c05-1a48-4d1b-8dbd-bcf60a76730f', 'v2');
     }
   });
-
-  // Mobile scroll fix: forward touch events to parent
-  var touchStartY = 0;
-  var touchStartX = 0;
   
-  document.addEventListener('touchstart', function(e) {
-    touchStartY = e.touches[0].clientY;
-    touchStartX = e.touches[0].clientX;
-  }, { passive: true });
-  
-  document.addEventListener('touchmove', function(e) {
-    var touchY = e.touches[0].clientY;
-    var touchX = e.touches[0].clientX;
-    var deltaY = touchStartY - touchY;
-    var deltaX = touchStartX - touchX;
-    
-    // If vertical scroll is dominant, notify parent
-    if (Math.abs(deltaY) > Math.abs(deltaX)) {
-      window.parent.postMessage({
-        type: 'scroll',
-        deltaY: deltaY,
-        deltaX: 0
-      }, '*');
-    }
-  }, { passive: true });
+  // Ensure body is scrollable
+  document.body.style.overflow = 'scroll';
+  document.body.style.webkitOverflowScrolling = 'touch';
 })();
 </script>
 </body>

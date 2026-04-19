@@ -42,13 +42,11 @@ class WidgetModal extends StatefulWidget {
 class _WidgetModalState extends State<WidgetModal> {
   html.IFrameElement? _iframe;
   final String _viewId = 'modal-widget-${DateTime.now().millisecondsSinceEpoch}';
-  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _createIframe();
-    _setupMessageListener();
   }
 
   void _createIframe() {
@@ -57,7 +55,6 @@ class _WidgetModalState extends State<WidgetModal> {
       ..style.width = '100%'
       ..style.height = '100%'
       ..style.display = 'block'
-      ..style.touchAction = 'pan-y pan-x'
       ..allowFullscreen = true
       ..src = '${html.window.location.origin}/widget.html?type=${widget.widgetType}&lang=${widget.lang}&id=$_viewId';
 
@@ -68,29 +65,13 @@ class _WidgetModalState extends State<WidgetModal> {
     }
   }
 
-  void _setupMessageListener() {
-    html.window.onMessage.listen((event) {
-      if (event.data is Map && event.data['type'] == 'scroll') {
-        final deltaY = event.data['deltaY'] as num?;
-        if (deltaY != null && _scrollController.hasClients) {
-          final newOffset = _scrollController.offset + deltaY;
-          _scrollController.jumpTo(newOffset.clamp(
-            _scrollController.position.minScrollExtent,
-            _scrollController.position.maxScrollExtent,
-          ));
-        }
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final appBarHeight = AppBar().preferredSize.height;
+    final statusBarHeight = MediaQuery.of(context).padding.top;
+    final availableHeight = screenHeight - appBarHeight - statusBarHeight;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -109,13 +90,11 @@ class _WidgetModalState extends State<WidgetModal> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        controller: _scrollController,
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 2,
-          child: HtmlElementView(viewType: _viewId),
-        ),
+      body: Container(
+        height: availableHeight,
+        width: double.infinity,
+        color: Colors.white,
+        child: HtmlElementView(viewType: _viewId),
       ),
     );
   }
