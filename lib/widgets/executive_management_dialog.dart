@@ -630,7 +630,7 @@ class _ExperienceItem extends StatelessWidget {
                   ),
                 ),
               ),
-              // Build date range - separate numbers and letters
+              // Build date range - use superscript م to avoid BiDi
               Builder(
                 builder: (context) {
                   if (!isArabic) {
@@ -644,19 +644,35 @@ class _ExperienceItem extends StatelessWidget {
                     );
                   }
                   
-                  // For Arabic: build manually to avoid BiDi issues
+                  // For Arabic: use RichText with baseline shift for م
                   final toNum = experience.to.replaceAll(RegExp(r'[^\d]'), '');
                   final fromNum = experience.from.replaceAll(RegExp(r'[^\d]'), '');
                   
-                  return Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(toNum, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
-                      const Text('م', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
-                      const Text(' — ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
-                      Text(fromNum, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
-                      const Text('م', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
-                    ],
+                  return RichText(
+                    text: TextSpan(
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF6B7280),
+                      ),
+                      children: [
+                        TextSpan(text: toNum),
+                        WidgetSpan(
+                          child: Transform.translate(
+                            offset: const Offset(0, -3),
+                            child: const Text('م', style: TextStyle(fontSize: 10, color: Color(0xFF6B7280))),
+                          ),
+                        ),
+                        const TextSpan(text: ' — '),
+                        TextSpan(text: fromNum),
+                        WidgetSpan(
+                          child: Transform.translate(
+                            offset: const Offset(0, -3),
+                            child: const Text('م', style: TextStyle(fontSize: 10, color: Color(0xFF6B7280))),
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 },
               ),
