@@ -58,7 +58,7 @@ String _formatAppointmentDate(String date, bool isArabic) {
 
 Widget _buildArabicAppointmentDate(String date) {
   // Parse date like "12/09/1435هـ (09/07/2014م)"
-  // Build each part separately to avoid BiDi issues
+  // Build each number separately to avoid BiDi issues
   
   final regex = RegExp(r'(\d+)/(\d+)/(\d+)(هـ)\s*\((\d+)/(\d+)/(\d+)(م)\)');
   final match = regex.firstMatch(date);
@@ -67,16 +67,20 @@ Widget _buildArabicAppointmentDate(String date) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('${match.group(1)}/${match.group(2)}/${match.group(3)}', 
-          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
-        Text('هـ ', 
-          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
-        const Text('(', 
-          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
-        Text('${match.group(5)}/${match.group(6)}/${match.group(7)}', 
-          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
-        const Text('م)', 
-          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        // Hijri date: DD/MM/YYYY
+        Text(match.group(1)!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        const Text('/', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        Text(match.group(2)!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        const Text('/', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        Text(match.group(3)!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        const Text('هـ (', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        // Gregorian date: DD/MM/YYYY
+        Text(match.group(5)!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        const Text('/', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        Text(match.group(6)!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        const Text('/', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        Text(match.group(7)!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        const Text('م)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
       ],
     );
   }
