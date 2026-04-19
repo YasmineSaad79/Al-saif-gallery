@@ -56,6 +56,36 @@ String _formatAppointmentDate(String date, bool isArabic) {
   return date;
 }
 
+Widget _buildArabicAppointmentDate(String date) {
+  // Parse date like "12/09/1435هـ (09/07/2014م)"
+  // Build each part separately to avoid BiDi issues
+  
+  final regex = RegExp(r'(\d+)/(\d+)/(\d+)(هـ)\s*\((\d+)/(\d+)/(\d+)(م)\)');
+  final match = regex.firstMatch(date);
+  
+  if (match != null) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('${match.group(1)}/${match.group(2)}/${match.group(3)}', 
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        Text('هـ ', 
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        const Text('(', 
+          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        Text('${match.group(5)}/${match.group(6)}/${match.group(7)}', 
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+        const Text('م)', 
+          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280))),
+      ],
+    );
+  }
+  
+  // Fallback: return as text
+  return Text(date, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFF6B7280)));
+}
+
+
 class BoardOfDirectorsDialog extends StatelessWidget {
   const BoardOfDirectorsDialog({super.key});
 
@@ -993,21 +1023,38 @@ class _BoardMemberProfile extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           // Nationality and Date
-          RichText(
-            text: TextSpan(
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w400,
-                color: Color(0xFF6B7280),
+          Row(
+            children: [
+              Expanded(
+                child: RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF6B7280),
+                    ),
+                    children: [
+                      TextSpan(text: isArabic ? 'الجنسية: ' : 'Nationality: '),
+                      TextSpan(text: isArabic ? nationalityAr : nationalityEn),
+                      const TextSpan(text: ' | '),
+                      TextSpan(text: isArabic ? 'تاريخ التعيين: ' : 'Date of Appointment: '),
+                    ],
+                  ),
+                ),
               ),
-              children: [
-                TextSpan(text: isArabic ? 'الجنسية: ' : 'Nationality: '),
-                TextSpan(text: isArabic ? nationalityAr : nationalityEn),
-                const TextSpan(text: ' | '),
-                TextSpan(text: isArabic ? 'تاريخ التعيين: ' : 'Date of Appointment: '),
-                TextSpan(text: _formatAppointmentDate(appointmentDate, isArabic)),
-              ],
-            ),
+              if (isArabic)
+                // For Arabic: build date manually to avoid BiDi issues
+                _buildArabicAppointmentDate(appointmentDate)
+              else
+                Text(
+                  _formatAppointmentDate(appointmentDate, false),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF6B7280),
+                  ),
+                ),
+            ],
           ),
           const SizedBox(height: 24),
           // Academic Qualifications
