@@ -48,15 +48,15 @@ class _FactSheetWidgetState extends State<FactSheetWidget> {
         Offstage(
           offstage: _tab != 0,
           child: Stack(children: [
-            Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'fact-sheet-table-view-en', widgetType: 'fact-sheet-table', fallbackHeight: 400, lang: 'en')),
-            Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'fact-sheet-table-view-ar', widgetType: 'fact-sheet-table', fallbackHeight: 400, lang: 'ar')),
+            Offstage(offstage: isAr,  child: const ExternalScriptWidget(viewId: 'fact-sheet-table-view-en', widgetType: 'fact-sheet-table', fallbackHeight: 400, lang: 'en')),
+            Offstage(offstage: !isAr, child: const ExternalScriptWidget(viewId: 'fact-sheet-table-view-ar', widgetType: 'fact-sheet-table', fallbackHeight: 400, lang: 'ar')),
           ]),
         ),
         Offstage(
           offstage: _tab != 1,
           child: Stack(children: [
-            Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'fact-sheet-charts-view-en', widgetType: 'fact-sheet-charts', fallbackHeight: 400, lang: 'en')),
-            Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'fact-sheet-charts-view-ar', widgetType: 'fact-sheet-charts', fallbackHeight: 400, lang: 'ar')),
+            Offstage(offstage: isAr,  child: const ExternalScriptWidget(viewId: 'fact-sheet-charts-view-en', widgetType: 'fact-sheet-charts', fallbackHeight: 400, lang: 'en')),
+            Offstage(offstage: !isAr, child: const ExternalScriptWidget(viewId: 'fact-sheet-charts-view-ar', widgetType: 'fact-sheet-charts', fallbackHeight: 400, lang: 'ar')),
           ]),
         ),
       ],

@@ -48,7 +48,7 @@ class _StockActivityWidgetState extends State<StockActivityWidget> {
         // ── Content — keep both mounted ──
         Offstage(
           offstage: _tab != 0,
-          child: LazyExternalScriptWidget(
+          child: ExternalScriptWidget(
             key: ValueKey('stock-activity-simple-$lang'),
             viewId: 'stock-activity-simple-view-$lang',
             widgetType: 'stock-activity-simple',
@@ -58,7 +58,7 @@ class _StockActivityWidgetState extends State<StockActivityWidget> {
         ),
         Offstage(
           offstage: _tab != 1,
-          child: LazyExternalScriptWidget(
+          child: ExternalScriptWidget(
             key: ValueKey('stock-activity-advanced-$lang'),
             viewId: 'stock-activity-advanced-view-$lang',
             widgetType: 'stock-activity-advanced',
