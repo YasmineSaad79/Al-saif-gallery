@@ -35,11 +35,22 @@ import '../widgets/external_script_widget.dart';
 // Global key عشان الـ navbar يقدر يغير الـ tab
 final GlobalKey<_IRTabBodyState> irTabBodyKey = GlobalKey<_IRTabBodyState>();
 
-class InvestorsGovernanceScreen extends StatelessWidget {
+class InvestorsGovernanceScreen extends StatefulWidget {
   const InvestorsGovernanceScreen({super.key});
 
   @override
+  State<InvestorsGovernanceScreen> createState() => _InvestorsGovernanceScreenState();
+}
+
+class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen>
+    with AutomaticKeepAliveClientMixin {
+  
+  @override
+  bool get wantKeepAlive => true; // احتفظ بحالة الصفحة
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context); // مهم للـ AutomaticKeepAliveClientMixin
     final isMobile = Responsive.isMobile(context);
     return Scaffold(
       backgroundColor: Colors.white,

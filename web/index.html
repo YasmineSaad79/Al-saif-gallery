@@ -46,23 +46,50 @@
     }
   </script>
   <script>
-    // Preload IR widgets
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        var link = document.createElement('link');
-        link.rel = 'prefetch';
-        link.href = 'https://irp.atnmo.com/v2/widget/widget-loader.js';
-        document.head.appendChild(link);
-      }, 2000);
-    });
-  </script>
-  <script>
     // بعد ما يخسر الـ window الـ focus للـ iframe، ارجعه
     window.addEventListener('blur', function() {
       setTimeout(function() { window.focus(); }, 50);
     });
   </script>
   <script src="flutter_bootstrap.js" async></script>
+  
+  <!-- Hidden container for preloading Stock Ticker -->
+  <div id="stock-ticker-preload" style="position: fixed; left: -9999px; top: -9999px; width: 800px; height: 60px; opacity: 0; pointer-events: none; overflow: hidden;"></div>
+  
+  <script>
+    // تحميل Stock Ticker في الخلفية فوراً
+    (function() {
+      // انتظر تحميل الصفحة
+      window.addEventListener('load', function() {
+        // بعد ثانية، ابدأ تحميل الـ Stock Ticker
+        setTimeout(function() {
+          var script = document.createElement('script');
+          script.src = 'https://irp.atnmo.com/v3/widget/widget-loader.js';
+          script.onload = function() {
+            // بعد تحميل الـ script، حمّل الـ Stock Ticker
+            if (typeof loadWidget === 'function') {
+              var container = document.getElementById('stock-ticker-preload');
+              var widgetDiv = document.createElement('div');
+              widgetDiv.id = 'stock-ticker-widget-preload';
+              container.appendChild(widgetDiv);
+              
+              loadWidget(
+                'stock-ticker',
+                "5be9c146-613e-4141-a351-1f5e13fc5513",
+                "en",
+                "81a06c05-1a48-4d1b-8dbd-bcf60a76730f",
+                "v3"
+              );
+              
+              console.log('Stock Ticker preloaded successfully');
+              window._stockTickerPreloaded = true;
+            }
+          };
+          document.head.appendChild(script);
+        }, 1000);
+      });
+    })();
+  </script>
 </head>
 <body>
 </body>

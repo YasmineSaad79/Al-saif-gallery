@@ -15,6 +15,9 @@ import '../utils/app_colors.dart';
 final List<VoidCallback> _loadQueue = [];
 bool _queueRunning = false;
 
+// Cache للـ iframes المحملة
+final Map<String, html.IFrameElement> _iframeCache = {};
+
 void _enqueueLoad(VoidCallback load, {bool priority = false}) {
   if (priority) {
     // تحميل فوري بدون انتظار (للـ Stock Ticker)
@@ -30,8 +33,8 @@ void _processQueue() {
   _queueRunning = true;
   final next = _loadQueue.removeAt(0);
   next();
-  // تقليل التأخير إلى 200ms لتحميل أسرع
-  Future.delayed(const Duration(milliseconds: 200), _processQueue);
+  // تقليل التأخير إلى 150ms لتحميل أسرع (كان 200ms)
+  Future.delayed(const Duration(milliseconds: 150), _processQueue);
 }
 
 /// Interface عام عشان نقدر نستدعي loadNow من ملفات ثانية
@@ -56,6 +59,7 @@ class LazyExternalScriptWidget extends StatefulWidget {
   final double fallbackHeight;
   final String lang;
   final bool priority; // للتحميل الفوري
+  final Widget? customPlaceholder; // placeholder مخصص
 
   const LazyExternalScriptWidget({
     super.key,
@@ -64,6 +68,7 @@ class LazyExternalScriptWidget extends StatefulWidget {
     this.fallbackHeight = 200,
     this.lang = 'en',
     this.priority = false,
+    this.customPlaceholder,
   });
 
   @override
@@ -89,12 +94,14 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
   void initState() {
     super.initState();
     
-    // إذا كان priority (مثل Stock Ticker)، حمّل فوراً
+    // إذا كان priority (مثل Stock Ticker)، حمّل بعد تأخير بسيط لإظهار الـ loading
     if (widget.priority) {
       _queued = true;
-      _enqueueLoad(() {
-        if (mounted) setState(() => _visible = true);
-      }, priority: true);
+      Future.delayed(const Duration(milliseconds: 600), () {
+        _enqueueLoad(() {
+          if (mounted) setState(() => _visible = true);
+        }, priority: true);
+      });
       return;
     }
     
@@ -109,8 +116,8 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
       final pos = box.localToGlobal(Offset.zero);
       final screenH = MediaQuery.of(ctx).size.height;
       
-      // حمّل فوراً إذا كان في أول 3 شاشات (زيادة من 2 إلى 3)
-      if (pos.dy < screenH * 3) {
+      // حمّل فوراً إذا كان في أول 4 شاشات (زيادة من 3 إلى 4)
+      if (pos.dy < screenH * 4) {
         _queued = true;
         _enqueueLoad(() {
           if (mounted) setState(() => _visible = true);
@@ -126,25 +133,25 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
     if (!mounted || _queued) return;
     final ctx = _key.currentContext;
     if (ctx == null) {
-      Future.delayed(const Duration(milliseconds: 300), _checkVisibility);
+      Future.delayed(const Duration(milliseconds: 250), _checkVisibility);
       return;
     }
     final box = ctx.findRenderObject() as RenderBox?;
     if (box == null || !box.hasSize) {
-      Future.delayed(const Duration(milliseconds: 300), _checkVisibility);
+      Future.delayed(const Duration(milliseconds: 250), _checkVisibility);
       return;
     }
     final pos = box.localToGlobal(Offset.zero);
     final screenH = MediaQuery.of(ctx).size.height;
     
-    // حمّل لما يكون قريب من الشاشة (2 شاشات بدل 1.5)
-    if (pos.dy >= 0 && pos.dy < screenH * 2) {
+    // حمّل لما يكون قريب من الشاشة (2.5 شاشات)
+    if (pos.dy >= 0 && pos.dy < screenH * 2.5) {
       _queued = true;
       _enqueueLoad(() {
         if (mounted) setState(() => _visible = true);
       });
     } else {
-      Future.delayed(const Duration(milliseconds: 600), _checkVisibility);
+      Future.delayed(const Duration(milliseconds: 500), _checkVisibility);
     }
   }
 
@@ -156,6 +163,13 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
         widgetType: widget.widgetType,
         fallbackHeight: widget.fallbackHeight,
         lang: widget.lang,
+      );
+    }
+    // استخدم placeholder مخصص إذا كان موجود
+    if (widget.customPlaceholder != null) {
+      return Container(
+        key: _key,
+        child: widget.customPlaceholder!,
       );
     }
     return _SkeletonPlaceholder(
@@ -239,7 +253,8 @@ class ExternalScriptWidget extends StatefulWidget {
   final String widgetType;
   final double fallbackHeight;
   final String lang;
-  final bool priority; // للتحميل الفوري
+  final bool priority;
+  final bool showLoadingIndicator; // إظهار loading indicator
 
   const ExternalScriptWidget({
     super.key,
@@ -248,6 +263,7 @@ class ExternalScriptWidget extends StatefulWidget {
     this.fallbackHeight = 200,
     this.lang = 'en',
     this.priority = false,
+    this.showLoadingIndicator = false,
   });
 
   @override
@@ -262,6 +278,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   double _pendingHeight = 0;
   Timer? _enableTimer;
   bool _isScrolling = false;
+  bool _isLoading = true; // حالة التحميل
 
   @override
   void initState() {
@@ -270,12 +287,30 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
 
     _height = widget.fallbackHeight;
 
-    _iframe = html.IFrameElement()
-      ..style.border = 'none'
-      ..style.width = '100%'
-      ..style.height = '100%'
-      ..style.pointerEvents = 'none' // معطل افتراضياً
-      ..srcdoc = _buildHtml();
+    // تحقق من وجود iframe محفوظ في الـ cache
+    final cacheKey = '${widget.viewId}-${widget.lang}';
+    if (_iframeCache.containsKey(cacheKey)) {
+      _iframe = _iframeCache[cacheKey];
+      _isLoading = false; // الويدجت محمّل مسبقاً
+    } else {
+      // إنشاء iframe جديد
+      _iframe = html.IFrameElement()
+        ..style.border = 'none'
+        ..style.width = '100%'
+        ..style.height = '100%'
+        ..style.pointerEvents = 'none'
+        ..srcdoc = _buildHtml();
+      
+      // حفظ في الـ cache
+      _iframeCache[cacheKey] = _iframe!;
+    }
+
+    // أخفي الـ loading بعد نصف ثانية (الـ script محمّل مسبقاً)
+    if (widget.showLoadingIndicator && _isLoading) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) setState(() => _isLoading = false);
+      });
+    }
 
     _messageListener = (event) {
       final msg = (event as html.MessageEvent).data;
@@ -449,30 +484,56 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     if (_messageListener != null) {
       html.window.removeEventListener('message', _messageListener!);
     }
+    // لا تحذف الـ iframe - احتفظ به في الـ cache
+    // _iframe?.remove(); // معلق
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     if (!kIsWeb) return const SizedBox.shrink();
-    return Listener(
-      onPointerDown: (_) => _onPointerDown(),
-      onPointerMove: (event) {
-        // إذا في حركة سريعة = scroll
-        if (event.delta.dy.abs() > 2 || event.delta.dx.abs() > 2) {
-          _onScroll();
-        }
-      },
-      onPointerSignal: (signal) {
-        if (signal is PointerScrollEvent) {
-          _onScroll();
-        }
-      },
-      child: SizedBox(
-        width: double.infinity,
-        height: _height,
-        child: HtmlElementView(viewType: widget.viewId),
-      ),
+    
+    return Stack(
+      children: [
+        Listener(
+          onPointerDown: (_) => _onPointerDown(),
+          onPointerMove: (event) {
+            // إذا في حركة سريعة = scroll
+            if (event.delta.dy.abs() > 2 || event.delta.dx.abs() > 2) {
+              _onScroll();
+            }
+          },
+          onPointerSignal: (signal) {
+            if (signal is PointerScrollEvent) {
+              _onScroll();
+            }
+          },
+          child: SizedBox(
+            width: double.infinity,
+            height: _height,
+            child: HtmlElementView(viewType: widget.viewId),
+          ),
+        ),
+        // Loading indicator
+        if (widget.showLoadingIndicator && _isLoading)
+          Positioned.fill(
+            child: Container(
+              color: const Color(0xFFF8F9FA),
+              child: Center(
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.primary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
