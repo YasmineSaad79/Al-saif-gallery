@@ -38,8 +38,8 @@ void _processQueue() {
   final next = _loadQueue.removeAt(0);
   next();
   
-  // على iOS: تأخير 800ms، على الباقي: فوري
-  final delay = _isIOS() ? 800 : 0;
+  // على iOS: تأخير 1.5 ثانية (أبطأ لكن أأمن)، على الباقي: فوري
+  final delay = _isIOS() ? 1500 : 0;
   Future.delayed(Duration(milliseconds: delay), _processQueue);
 }
 
@@ -156,7 +156,7 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
   
   void _startVisibilityCheck() {
     _checkVisibility();
-    _visibilityChecker = Timer.periodic(const Duration(milliseconds: 800), (_) {
+    _visibilityChecker = Timer.periodic(const Duration(milliseconds: 1000), (_) {
       if (!_queued && !_visible) {
         _checkVisibility();
       }
@@ -164,8 +164,8 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
   }
   
   void _startDisposeCheck() {
-    // على iOS: فحص كل ثانية إذا الويدجت خارج الشاشة
-    _disposeChecker = Timer.periodic(const Duration(seconds: 1), (_) {
+    // على iOS: فحص كل 500ms إذا الويدجت خارج الشاشة (أسرع)
+    _disposeChecker = Timer.periodic(const Duration(milliseconds: 500), (_) {
       if (_visible && mounted) {
         _checkIfShouldDispose();
       }
@@ -182,8 +182,8 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
     final pos = box.localToGlobal(Offset.zero);
     final screenH = MediaQuery.of(ctx).size.height;
     
-    // إذا الويدجت خارج الشاشة بأكثر من شاشة واحدة، احذفه
-    if (pos.dy < -screenH || pos.dy > screenH * 2) {
+    // إذا الويدجت خارج الشاشة بنصف شاشة، احذفه فوراً (أقوى)
+    if (pos.dy < -screenH * 0.5 || pos.dy > screenH * 1.5) {
       setState(() {
         _visible = false;
         _queued = false;
@@ -213,9 +213,9 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
     final pos = box.localToGlobal(Offset.zero);
     final screenH = MediaQuery.of(ctx).size.height;
     
-    // على iOS: شاشة واحدة فقط، على الباقي: 2.5 شاشة
-    final multiplier = _isIOS() ? 1.2 : 2.5;
-    if (pos.dy >= -screenH * 0.5 && pos.dy < screenH * multiplier) {
+    // على iOS: نصف شاشة فقط (محافظ جداً)، على الباقي: 2.5 شاشة
+    final multiplier = _isIOS() ? 0.8 : 2.5;
+    if (pos.dy >= -screenH * 0.2 && pos.dy < screenH * multiplier) {
       _queued = true;
       _enqueueLoad(() {
         if (mounted) setState(() => _visible = true);
