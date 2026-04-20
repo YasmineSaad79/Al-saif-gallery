@@ -18,14 +18,14 @@ class _PriceLookupWidgetState extends State<PriceLookupWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isAr = localeProvider.isArabic;
+    final lang = localeProvider.isArabic ? 'ar' : 'en';
     final isMobile = Responsive.isMobile(context);
-    return ConstrainedBox(
-      constraints: BoxConstraints(minHeight: isMobile ? 600 : 400),
-      child: Stack(children: [
-        Visibility(visible: !isAr, maintainState: true, child: LazyExternalScriptWidget(viewId: 'price-lookup-view-en', widgetType: 'price-lookup', fallbackHeight: isMobile ? 600 : 400, lang: 'en')),
-        Visibility(visible: isAr,  maintainState: true, child: LazyExternalScriptWidget(viewId: 'price-lookup-view-ar', widgetType: 'price-lookup', fallbackHeight: isMobile ? 600 : 400, lang: 'ar')),
-      ]),
+    return ExternalScriptWidget(
+      key: ValueKey('price-lookup-$lang'),
+      viewId: 'price-lookup-view-$lang',
+      widgetType: 'price-lookup',
+      fallbackHeight: isMobile ? 600 : 400,
+      lang: lang,
     );
   }
 }

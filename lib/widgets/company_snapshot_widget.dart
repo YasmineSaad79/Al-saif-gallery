@@ -18,14 +18,14 @@ class _CompanySnapshotWidgetState extends State<CompanySnapshotWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isAr = localeProvider.isArabic;
+    final lang = localeProvider.isArabic ? 'ar' : 'en';
     final isMobile = Responsive.isMobile(context);
-    return ConstrainedBox(
-      constraints: BoxConstraints(minHeight: isMobile ? 600 : 400),
-      child: Stack(children: [
-        Visibility(visible: !isAr, maintainState: true, child: LazyExternalScriptWidget(viewId: 'company-snapshot-view-en', widgetType: 'company-snapshot', fallbackHeight: isMobile ? 600 : 400, lang: 'en')),
-        Visibility(visible: isAr,  maintainState: true, child: LazyExternalScriptWidget(viewId: 'company-snapshot-view-ar', widgetType: 'company-snapshot', fallbackHeight: isMobile ? 600 : 400, lang: 'ar')),
-      ]),
+    return ExternalScriptWidget(
+      key: ValueKey('company-snapshot-$lang'),
+      viewId: 'company-snapshot-view-$lang',
+      widgetType: 'company-snapshot',
+      fallbackHeight: isMobile ? 600 : 400,
+      lang: lang,
     );
   }
 }

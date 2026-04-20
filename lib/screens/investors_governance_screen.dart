@@ -29,28 +29,14 @@ import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
 import '../utils/scroll_keys.dart';
-import '../utils/widget_cache.dart';
 import '../main.dart';
 import '../widgets/external_script_widget.dart';
 
 // Global key عشان الـ navbar يقدر يغير الـ tab
 final GlobalKey<_IRTabBodyState> irTabBodyKey = GlobalKey<_IRTabBodyState>();
 
-class InvestorsGovernanceScreen extends StatefulWidget {
+class InvestorsGovernanceScreen extends StatelessWidget {
   const InvestorsGovernanceScreen({super.key});
-
-  @override
-  State<InvestorsGovernanceScreen> createState() => _InvestorsGovernanceScreenState();
-}
-
-class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {  
-  // إنشاء الويدجتات مرة واحدة فقط
-  Widget _getCachedWidget(String key, Widget Function() builder) {
-    if (!WidgetCache.has(key)) {
-      WidgetCache.store(key, builder());
-    }
-    return WidgetCache.get(key)!;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +62,8 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
                               const IGHeroSection(),
                               const IGIntroSection(),
                               KeyedSubtree(key: ScrollKeys.get('ig-investment-case'), child: const IGInvestmentCaseSection()),
-                              _getCachedWidget('stock-ticker-section', () => const _StockTickerSection()),
-                              KeyedSubtree(key: ScrollKeys.get('ir-widgets'), child: _getCachedWidget('ir-tab-content', () => _IRTabContent(key: irTabBodyKey))),
+                              const _StockTickerSection(),
+                              KeyedSubtree(key: ScrollKeys.get('ir-widgets'), child: _IRTabContent(key: irTabBodyKey)),
                               const FooterSection(),
                             ],
                           ),
@@ -88,8 +74,8 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
                             const SliverToBoxAdapter(child: IGHeroSection()),
                             const SliverToBoxAdapter(child: IGIntroSection()),
                             SliverToBoxAdapter(child: KeyedSubtree(key: ScrollKeys.get('ig-investment-case'), child: const IGInvestmentCaseSection())),
-                            SliverToBoxAdapter(child: _getCachedWidget('stock-ticker-section', () => const _StockTickerSection())),
-                            SliverToBoxAdapter(child: KeyedSubtree(key: ScrollKeys.get('ir-widgets'), child: _getCachedWidget('ir-tab-content', () => _IRTabContent(key: irTabBodyKey)))),
+                            const SliverToBoxAdapter(child: _StockTickerSection()),
+                            SliverToBoxAdapter(child: KeyedSubtree(key: ScrollKeys.get('ir-widgets'), child: _IRTabContent(key: irTabBodyKey))),
                             const SliverToBoxAdapter(child: FooterSection()),
                           ],
                         ),

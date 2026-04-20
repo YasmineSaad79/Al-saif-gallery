@@ -17,11 +17,13 @@ class _FactSheetTableWidgetState extends State<FactSheetTableWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isAr = localeProvider.isArabic;
-    return Stack(children: [
-      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'fact-sheet-view-en', widgetType: 'fact-sheet', lang: 'en')),
-      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'fact-sheet-view-ar', widgetType: 'fact-sheet', lang: 'ar')),
-    ]);
+    final lang = localeProvider.isArabic ? 'ar' : 'en';
+    return ExternalScriptWidget(
+      key: ValueKey('fact-sheet-$lang'),
+      viewId: 'fact-sheet-view-$lang',
+      widgetType: 'fact-sheet',
+      lang: lang,
+    );
   }
 }
 

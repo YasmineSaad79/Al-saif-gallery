@@ -17,11 +17,13 @@ class _CorporateActionsWidgetState extends State<CorporateActionsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isAr = localeProvider.isArabic;
-    return Stack(children: [
-      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'corporate-actions-view-en', widgetType: 'corporate-actions', lang: 'en')),
-      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'corporate-actions-view-ar', widgetType: 'corporate-actions', lang: 'ar')),
-    ]);
+    final lang = localeProvider.isArabic ? 'ar' : 'en';
+    return ExternalScriptWidget(
+      key: ValueKey('corporate-actions-$lang'),
+      viewId: 'corporate-actions-view-$lang',
+      widgetType: 'corporate-actions',
+      lang: lang,
+    );
   }
 }
 

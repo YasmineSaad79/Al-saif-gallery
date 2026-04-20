@@ -18,14 +18,14 @@ class _ZakatCalculatorWidgetState extends State<ZakatCalculatorWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isAr = localeProvider.isArabic;
+    final lang = localeProvider.isArabic ? 'ar' : 'en';
     final isMobile = Responsive.isMobile(context);
-    return ConstrainedBox(
-      constraints: BoxConstraints(minHeight: isMobile ? 600 : 400),
-      child: Stack(children: [
-        Visibility(visible: !isAr, maintainState: true, child: LazyExternalScriptWidget(viewId: 'zakat-calculator-view-en', widgetType: 'zakat-calculator', fallbackHeight: isMobile ? 600 : 400, lang: 'en')),
-        Visibility(visible: isAr,  maintainState: true, child: LazyExternalScriptWidget(viewId: 'zakat-calculator-view-ar', widgetType: 'zakat-calculator', fallbackHeight: isMobile ? 600 : 400, lang: 'ar')),
-      ]),
+    return ExternalScriptWidget(
+      key: ValueKey('zakat-calculator-$lang'),
+      viewId: 'zakat-calculator-view-$lang',
+      widgetType: 'zakat-calculator',
+      fallbackHeight: isMobile ? 600 : 400,
+      lang: lang,
     );
   }
 }

@@ -17,11 +17,13 @@ class _CorporateNewsWidgetState extends State<CorporateNewsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isAr = localeProvider.isArabic;
-    return Stack(children: [
-      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'corporate-news-view-en', widgetType: 'corporate-news', lang: 'en')),
-      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'corporate-news-view-ar', widgetType: 'corporate-news', lang: 'ar')),
-    ]);
+    final lang = localeProvider.isArabic ? 'ar' : 'en';
+    return ExternalScriptWidget(
+      key: ValueKey('corporate-news-$lang'),
+      viewId: 'corporate-news-view-$lang',
+      widgetType: 'corporate-news',
+      lang: lang,
+    );
   }
 }
 

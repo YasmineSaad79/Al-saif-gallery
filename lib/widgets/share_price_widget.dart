@@ -17,11 +17,13 @@ class _SharePriceWidgetState extends State<SharePriceWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isAr = localeProvider.isArabic;
-    return Stack(children: [
-      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'share-price-view-en', widgetType: 'share-price', lang: 'en')),
-      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'share-price-view-ar', widgetType: 'share-price', lang: 'ar')),
-    ]);
+    final lang = localeProvider.isArabic ? 'ar' : 'en';
+    return ExternalScriptWidget(
+      key: ValueKey('share-price-$lang'),
+      viewId: 'share-price-view-$lang',
+      widgetType: 'share-price',
+      lang: lang,
+    );
   }
 }
 

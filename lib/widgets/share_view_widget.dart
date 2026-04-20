@@ -18,14 +18,14 @@ class _ShareViewWidgetState extends State<ShareViewWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isAr = localeProvider.isArabic;
+    final lang = localeProvider.isArabic ? 'ar' : 'en';
     final isMobile = Responsive.isMobile(context);
-    return ConstrainedBox(
-      constraints: BoxConstraints(minHeight: isMobile ? 600 : 400),
-      child: Stack(children: [
-        Visibility(visible: !isAr, maintainState: true, child: LazyExternalScriptWidget(viewId: 'share-view-view-en', widgetType: 'share-view', fallbackHeight: isMobile ? 600 : 400, lang: 'en')),
-        Visibility(visible: isAr,  maintainState: true, child: LazyExternalScriptWidget(viewId: 'share-view-view-ar', widgetType: 'share-view', fallbackHeight: isMobile ? 600 : 400, lang: 'ar')),
-      ]),
+    return ExternalScriptWidget(
+      key: ValueKey('share-view-$lang'),
+      viewId: 'share-view-view-$lang',
+      widgetType: 'share-view',
+      fallbackHeight: isMobile ? 600 : 400,
+      lang: lang,
     );
   }
 }

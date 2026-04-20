@@ -18,7 +18,7 @@ class _EmailSubscriptionWidgetState extends State<EmailSubscriptionWidget> {
   @override
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return LazyExternalScriptWidget(
+    return ExternalScriptWidget(
       key: ValueKey('email-subscription-$lang'),
       viewId: 'email-subscription-view-$lang',
       widgetType: 'email-subscription',

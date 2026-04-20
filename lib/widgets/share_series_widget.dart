@@ -18,7 +18,7 @@ class _ShareSeriesWidgetState extends State<ShareSeriesWidget> {
   @override
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return LazyExternalScriptWidget(
+    return ExternalScriptWidget(
       key: ValueKey('share-series-$lang'),
       viewId: 'share-series-view-$lang',
       widgetType: 'share-series',

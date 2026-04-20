@@ -17,11 +17,14 @@ class _PerformanceWidgetState extends State<PerformanceWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isAr = localeProvider.isArabic;
-    return Stack(children: [
-      Offstage(offstage: isAr,  child: const LazyExternalScriptWidget(viewId: 'performance-view-en', widgetType: 'performance', fallbackHeight: 400, lang: 'en')),
-      Offstage(offstage: !isAr, child: const LazyExternalScriptWidget(viewId: 'performance-view-ar', widgetType: 'performance', fallbackHeight: 400, lang: 'ar')),
-    ]);
+    final lang = localeProvider.isArabic ? 'ar' : 'en';
+    return ExternalScriptWidget(
+      key: ValueKey('performance-$lang'),
+      viewId: 'performance-view-$lang',
+      widgetType: 'performance',
+      fallbackHeight: 400,
+      lang: lang,
+    );
   }
 }
 
