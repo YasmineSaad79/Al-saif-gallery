@@ -15,6 +15,13 @@ import '../utils/app_colors.dart';
 final List<VoidCallback> _loadQueue = [];
 bool _queueRunning = false;
 
+// فحص إذا المستخدم على iOS
+bool _isIOS() {
+  if (!kIsWeb) return false;
+  final userAgent = html.window.navigator.userAgent.toLowerCase();
+  return userAgent.contains('iphone') || userAgent.contains('ipad') || userAgent.contains('ipod');
+}
+
 void _enqueueLoad(VoidCallback load, {bool priority = false}) {
   if (priority) {
     // تحميل فوري بدون انتظار (للـ Stock Ticker)
@@ -30,8 +37,9 @@ void _processQueue() {
   _queueRunning = true;
   final next = _loadQueue.removeAt(0);
   next();
-  // تحميل فوري بدون تأخير
-  Future.delayed(const Duration(milliseconds: 0), _processQueue);
+  // على iOS: تأخير 300ms، على الباقي: فوري
+  final delay = _isIOS() ? 300 : 0;
+  Future.delayed(Duration(milliseconds: delay), _processQueue);
 }
 
 /// Interface عام عشان نقدر نستدعي loadNow من ملفات ثانية
@@ -124,8 +132,9 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
       final pos = box.localToGlobal(Offset.zero);
       final screenH = MediaQuery.of(ctx).size.height;
       
-      // حمّل فوراً إذا كان في أول 4 شاشات (زيادة من 3 إلى 4)
-      if (pos.dy < screenH * 4) {
+      // على iOS: حمّل أول شاشتين، على الباقي: أول 4 شاشات
+      final multiplier = _isIOS() ? 2.0 : 4.0;
+      if (pos.dy < screenH * multiplier) {
         _queued = true;
         _enqueueLoad(() {
           if (mounted) setState(() => _visible = true);
@@ -152,8 +161,9 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
     final pos = box.localToGlobal(Offset.zero);
     final screenH = MediaQuery.of(ctx).size.height;
     
-    // حمّل لما يكون قريب من الشاشة (2.5 شاشات)
-    if (pos.dy >= 0 && pos.dy < screenH * 2.5) {
+    // على iOS: 1.5 شاشة، على الباقي: 2.5 شاشة
+    final multiplier = _isIOS() ? 1.5 : 2.5;
+    if (pos.dy >= 0 && pos.dy < screenH * multiplier) {
       _queued = true;
       _enqueueLoad(() {
         if (mounted) setState(() => _visible = true);
