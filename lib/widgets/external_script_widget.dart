@@ -15,9 +15,6 @@ import '../utils/app_colors.dart';
 final List<VoidCallback> _loadQueue = [];
 bool _queueRunning = false;
 
-// Cache للـ iframes المحملة
-final Map<String, html.IFrameElement> _iframeCache = {};
-
 void _enqueueLoad(VoidCallback load, {bool priority = false}) {
   if (priority) {
     // تحميل فوري بدون انتظار (للـ Stock Ticker)
@@ -287,29 +284,20 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
 
     _height = widget.fallbackHeight;
 
-    // تحقق من وجود iframe محفوظ في الـ cache
-    final cacheKey = '${widget.viewId}-${widget.lang}';
-    if (_iframeCache.containsKey(cacheKey)) {
-      _iframe = _iframeCache[cacheKey];
-      _isLoading = false; // الويدجت محمّل مسبقاً
-    } else {
-      // إنشاء iframe جديد
-      _iframe = html.IFrameElement()
-        ..style.border = 'none'
-        ..style.width = '100%'
-        ..style.height = '100%'
-        ..style.pointerEvents = 'none'
-        ..srcdoc = _buildHtml();
-      
-      // حفظ في الـ cache
-      _iframeCache[cacheKey] = _iframe!;
-    }
+    _iframe = html.IFrameElement()
+      ..style.border = 'none'
+      ..style.width = '100%'
+      ..style.height = '100%'
+      ..style.pointerEvents = 'none'
+      ..srcdoc = _buildHtml();
 
-    // أخفي الـ loading بعد نصف ثانية (الـ script محمّل مسبقاً)
-    if (widget.showLoadingIndicator && _isLoading) {
-      Future.delayed(const Duration(milliseconds: 500), () {
+    // أخفي الـ loading بعد 300ms فقط (الويدجتات محملة مسبقاً)
+    if (widget.showLoadingIndicator) {
+      Future.delayed(const Duration(milliseconds: 300), () {
         if (mounted) setState(() => _isLoading = false);
       });
+    } else {
+      _isLoading = false;
     }
 
     _messageListener = (event) {
@@ -484,8 +472,6 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     if (_messageListener != null) {
       html.window.removeEventListener('message', _messageListener!);
     }
-    // لا تحذف الـ iframe - احتفظ به في الـ cache
-    // _iframe?.remove(); // معلق
     super.dispose();
   }
 

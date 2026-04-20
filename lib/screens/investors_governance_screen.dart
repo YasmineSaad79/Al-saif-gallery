@@ -29,6 +29,7 @@ import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
 import '../utils/responsive.dart';
 import '../utils/scroll_keys.dart';
+import '../utils/widget_cache.dart';
 import '../main.dart';
 import '../widgets/external_script_widget.dart';
 
@@ -42,15 +43,17 @@ class InvestorsGovernanceScreen extends StatefulWidget {
   State<InvestorsGovernanceScreen> createState() => _InvestorsGovernanceScreenState();
 }
 
-class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen>
-    with AutomaticKeepAliveClientMixin {
-  
-  @override
-  bool get wantKeepAlive => true; // احتفظ بحالة الصفحة
+class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {  
+  // إنشاء الويدجتات مرة واحدة فقط
+  Widget _getCachedWidget(String key, Widget Function() builder) {
+    if (!WidgetCache.has(key)) {
+      WidgetCache.store(key, builder());
+    }
+    return WidgetCache.get(key)!;
+  }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // مهم للـ AutomaticKeepAliveClientMixin
     final isMobile = Responsive.isMobile(context);
     return Scaffold(
       backgroundColor: Colors.white,
@@ -73,8 +76,8 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen>
                               const IGHeroSection(),
                               const IGIntroSection(),
                               KeyedSubtree(key: ScrollKeys.get('ig-investment-case'), child: const IGInvestmentCaseSection()),
-                              const _StockTickerSection(),
-                              KeyedSubtree(key: ScrollKeys.get('ir-widgets'), child: _IRTabContent(key: irTabBodyKey)),
+                              _getCachedWidget('stock-ticker-section', () => const _StockTickerSection()),
+                              KeyedSubtree(key: ScrollKeys.get('ir-widgets'), child: _getCachedWidget('ir-tab-content', () => _IRTabContent(key: irTabBodyKey))),
                               const FooterSection(),
                             ],
                           ),
@@ -85,8 +88,8 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen>
                             const SliverToBoxAdapter(child: IGHeroSection()),
                             const SliverToBoxAdapter(child: IGIntroSection()),
                             SliverToBoxAdapter(child: KeyedSubtree(key: ScrollKeys.get('ig-investment-case'), child: const IGInvestmentCaseSection())),
-                            const SliverToBoxAdapter(child: _StockTickerSection()),
-                            SliverToBoxAdapter(child: KeyedSubtree(key: ScrollKeys.get('ir-widgets'), child: _IRTabContent(key: irTabBodyKey))),
+                            SliverToBoxAdapter(child: _getCachedWidget('stock-ticker-section', () => const _StockTickerSection())),
+                            SliverToBoxAdapter(child: KeyedSubtree(key: ScrollKeys.get('ir-widgets'), child: _getCachedWidget('ir-tab-content', () => _IRTabContent(key: irTabBodyKey)))),
                             const SliverToBoxAdapter(child: FooterSection()),
                           ],
                         ),

@@ -53,40 +53,65 @@
   </script>
   <script src="flutter_bootstrap.js" async></script>
   
-  <!-- Hidden container for preloading Stock Ticker -->
-  <div id="stock-ticker-preload" style="position: fixed; left: -9999px; top: -9999px; width: 800px; height: 60px; opacity: 0; pointer-events: none; overflow: hidden;"></div>
+  <!-- Hidden container for preloading ALL IR widgets -->
+  <div id="ir-widgets-preload" style="position: fixed; left: -9999px; top: -9999px; width: 1000px; height: 5000px; opacity: 0; pointer-events: none; overflow: hidden;"></div>
   
   <script>
-    // تحميل Stock Ticker في الخلفية فوراً
+    // تحميل جميع الويدجتات في الخلفية فوراً
     (function() {
-      // انتظر تحميل الصفحة
+      var widgetsToPreload = [
+        'stock-ticker',
+        'company-snapshot',
+        'corporate-news',
+        'fact-sheet',
+        'stock-activity',
+        'corporate-actions',
+        'company-financials',
+        'share-price',
+        'performance',
+        'investment-calculator',
+        'share-series',
+        'zakat-calculator',
+        'share-view',
+        'price-lookup',
+        'peer-group-analysis',
+        'email-subscription'
+      ];
+      
       window.addEventListener('load', function() {
-        // بعد ثانية، ابدأ تحميل الـ Stock Ticker
         setTimeout(function() {
           var script = document.createElement('script');
           script.src = 'https://irp.atnmo.com/v3/widget/widget-loader.js';
           script.onload = function() {
-            // بعد تحميل الـ script، حمّل الـ Stock Ticker
             if (typeof loadWidget === 'function') {
-              var container = document.getElementById('stock-ticker-preload');
-              var widgetDiv = document.createElement('div');
-              widgetDiv.id = 'stock-ticker-widget-preload';
-              container.appendChild(widgetDiv);
+              var container = document.getElementById('ir-widgets-preload');
               
-              loadWidget(
-                'stock-ticker',
-                "5be9c146-613e-4141-a351-1f5e13fc5513",
-                "en",
-                "81a06c05-1a48-4d1b-8dbd-bcf60a76730f",
-                "v3"
-              );
+              // حمّل كل ويدجت بتأخير بسيط بينهم
+              widgetsToPreload.forEach(function(widgetType, index) {
+                setTimeout(function() {
+                  var widgetDiv = document.createElement('div');
+                  widgetDiv.id = widgetType + '-widget-preload';
+                  widgetDiv.style.marginBottom = '20px';
+                  container.appendChild(widgetDiv);
+                  
+                  loadWidget(
+                    widgetType,
+                    "5be9c146-613e-4141-a351-1f5e13fc5513",
+                    "en",
+                    "81a06c05-1a48-4d1b-8dbd-bcf60a76730f",
+                    "v3"
+                  );
+                  
+                  console.log('Preloaded: ' + widgetType);
+                }, index * 300); // 300ms بين كل ويدجت
+              });
               
-              console.log('Stock Ticker preloaded successfully');
-              window._stockTickerPreloaded = true;
+              window._irWidgetsPreloaded = true;
+              console.log('All IR widgets preloading started');
             }
           };
           document.head.appendChild(script);
-        }, 1000);
+        }, 1500); // ابدأ بعد 1.5 ثانية من تحميل الصفحة
       });
     })();
   </script>
