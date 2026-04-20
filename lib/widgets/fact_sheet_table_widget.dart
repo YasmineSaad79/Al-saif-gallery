@@ -22,6 +22,7 @@ class _FactSheetTableWidgetState extends State<FactSheetTableWidget> {
       key: ValueKey('fact-sheet-$lang'),
       viewId: 'fact-sheet-view-$lang',
       widgetType: 'fact-sheet',
+      fallbackHeight: 600,
       lang: lang,
     );
   }

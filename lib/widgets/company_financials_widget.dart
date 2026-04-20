@@ -22,6 +22,7 @@ class _CompanyFinancialsWidgetState extends State<CompanyFinancialsWidget> {
       key: ValueKey('company-financials-$lang'),
       viewId: 'company-financials-view-$lang',
       widgetType: 'company-financials',
+      fallbackHeight: 500,
       lang: lang,
     );
   }

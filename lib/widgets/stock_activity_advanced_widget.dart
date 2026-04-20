@@ -22,6 +22,7 @@ class _StockActivityAdvancedWidgetState extends State<StockActivityAdvancedWidge
       key: ValueKey('stock-activity-advanced-$lang'),
       viewId: 'stock-activity-advanced-view-$lang',
       widgetType: 'stock-activity-advanced',
+      fallbackHeight: 500,
       lang: lang,
     );
   }

@@ -22,6 +22,7 @@ class _InvestmentCalculatorWidgetState extends State<InvestmentCalculatorWidget>
       key: ValueKey('investment-calculator-$lang'),
       viewId: 'investment-calculator-view-$lang',
       widgetType: 'investment-calculator',
+      fallbackHeight: 400,
       lang: lang,
     );
   }

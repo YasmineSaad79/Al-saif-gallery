@@ -22,6 +22,7 @@ class _CorporateActionsWidgetState extends State<CorporateActionsWidget> {
       key: ValueKey('corporate-actions-$lang'),
       viewId: 'corporate-actions-view-$lang',
       widgetType: 'corporate-actions',
+      fallbackHeight: 400,
       lang: lang,
     );
   }

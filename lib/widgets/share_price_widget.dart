@@ -22,6 +22,7 @@ class _SharePriceWidgetState extends State<SharePriceWidget> {
       key: ValueKey('share-price-$lang'),
       viewId: 'share-price-view-$lang',
       widgetType: 'share-price',
+      fallbackHeight: 400,
       lang: lang,
     );
   }

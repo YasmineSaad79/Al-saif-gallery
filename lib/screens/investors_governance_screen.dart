@@ -53,18 +53,10 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
     Future.delayed(const Duration(milliseconds: 500), () {
       setAllIframesPointerEvents(false);
     });
-    
-    // استمع للـ scroll وعطّل الـ iframes
-    irScrollController.addListener(_onScroll);
-  }
-  
-  void _onScroll() {
-    setAllIframesPointerEvents(false);
   }
   
   @override
   void dispose() {
-    irScrollController.removeListener(_onScroll);
     super.dispose();
   }
 

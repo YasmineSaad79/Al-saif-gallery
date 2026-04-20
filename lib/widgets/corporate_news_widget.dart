@@ -22,6 +22,7 @@ class _CorporateNewsWidgetState extends State<CorporateNewsWidget> {
       key: ValueKey('corporate-news-$lang'),
       viewId: 'corporate-news-view-$lang',
       widgetType: 'corporate-news',
+      fallbackHeight: 500,
       lang: lang,
     );
   }
