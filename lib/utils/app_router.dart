@@ -40,7 +40,13 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/investors-governance',
       name: 'investors-governance',
-      pageBuilder: (context, state) => _fadePage(context, state, const InvestorsGovernanceScreen()),
+      pageBuilder: (context, state) => CustomTransitionPage(
+        key: const ValueKey('investors-governance-page'),
+        child: const InvestorsGovernanceScreen(),
+        transitionDuration: const Duration(milliseconds: 200),
+        transitionsBuilder: (context, animation, _, child) =>
+            FadeTransition(opacity: animation, child: child),
+      ),
     ),
     GoRoute(
       path: '/news-careers',

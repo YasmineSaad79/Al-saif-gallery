@@ -49,6 +49,7 @@ class _NewsCareersScreenState extends State<NewsCareersScreen> {
             const CustomNavigationBar(),
             Expanded(
               child: SingleChildScrollView(
+                controller: newsScrollController,
                 child: Column(
                   children: [
                     const NCHeroSection(),

@@ -26,6 +26,7 @@ class _ZakatCalculatorWidgetState extends State<ZakatCalculatorWidget> {
       widgetType: 'zakat-calculator',
       fallbackHeight: isMobile ? 600 : 400,
       lang: lang,
+      showBorder: false, // بدون بوردر
     );
   }
 }

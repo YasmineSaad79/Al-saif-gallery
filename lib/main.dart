@@ -17,6 +17,15 @@ final LocaleProvider localeProvider = LocaleProvider();
 // Global scroll controller for IR page - receives iframe wheel events
 final ScrollController irScrollController = ScrollController();
 
+// Global scroll controller for Strategy page
+final ScrollController strategyScrollController = ScrollController();
+
+// Global scroll controller for About page
+final ScrollController aboutScrollController = ScrollController();
+
+// Global scroll controller for News page
+final ScrollController newsScrollController = ScrollController();
+
 // Global notifier for contact section highlight
 final ValueNotifier<bool> contactHighlightNotifier = ValueNotifier(false);
 

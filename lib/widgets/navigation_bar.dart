@@ -304,7 +304,15 @@ class _AboutDropdownNavItemState extends State<_AboutDropdownNavItem> {
         onEnter: (_) { setState(() => _hovered = true); _show(); },
         onExit:  (_) { setState(() => _hovered = false); },
         child: GestureDetector(
-          onTap: () => GoRouter.of(context).go('/about-us'),
+          onTap: () {
+            final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+            if (currentPath == '/about-us') {
+              // إذا كان بنفس الصفحة، ارجع للأعلى
+              _scrollToTopOfCurrentPage(context);
+            } else {
+              GoRouter.of(context).go('/about-us');
+            }
+          },
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -425,7 +433,15 @@ class _StrategyDropdownNavItemState extends State<_StrategyDropdownNavItem> {
         onEnter: (_) { setState(() => _hovered = true); _show(); },
         onExit:  (_) { setState(() => _hovered = false); },
         child: GestureDetector(
-          onTap: () => GoRouter.of(context).go('/strategy-operations'),
+          onTap: () {
+            final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+            if (currentPath == '/strategy-operations') {
+              // إذا كان بنفس الصفحة، ارجع للأعلى
+              _scrollToTopOfCurrentPage(context);
+            } else {
+              GoRouter.of(context).go('/strategy-operations');
+            }
+          },
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -544,7 +560,15 @@ class _NewsroomDropdownNavItemState extends State<_NewsroomDropdownNavItem> {
         onEnter: (_) { setState(() => _hovered = true); _show(); },
         onExit:  (_) { setState(() => _hovered = false); },
         child: GestureDetector(
-          onTap: () => GoRouter.of(context).go('/news-careers'),
+          onTap: () {
+            final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+            if (currentPath == '/news-careers') {
+              // إذا كان بنفس الصفحة، ارجع للأعلى
+              _scrollToTopOfCurrentPage(context);
+            } else {
+              GoRouter.of(context).go('/news-careers');
+            }
+          },
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -723,7 +747,7 @@ class _IRDropdownNavItemState extends State<_IRDropdownNavItem> {
   void _removeDropdown() {
     _overlay?.remove();
     _overlay = null;
-    setAllIframesPointerEvents(true);
+    // ما تفعّل الـ iframes! خليهم معطّلين
     if (_activeNavDropdownCloser == _removeDropdown) _activeNavDropdownCloser = null;
   }
 
@@ -742,7 +766,15 @@ class _IRDropdownNavItemState extends State<_IRDropdownNavItem> {
         onEnter: (_) { setState(() => _hovered = true); _showDropdown(); },
         onExit:  (_) { setState(() => _hovered = false); },
         child: GestureDetector(
-          onTap: () => GoRouter.of(context).go('/investors-governance'),
+          onTap: () {
+            final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+            if (currentPath == '/investors-governance') {
+              // إذا كان بنفس الصفحة، ارجع للأعلى
+              _scrollToTopOfCurrentPage(context);
+            } else {
+              GoRouter.of(context).go('/investors-governance');
+            }
+          },
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -776,7 +808,15 @@ class _NavItem extends StatelessWidget {  final String text;
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
-          onTap: onTap,
+          onTap: () {
+            final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+            if (currentPath == '/') {
+              // إذا كان بنفس الصفحة، ارجع للأعلى
+              _scrollToTopOfCurrentPage(context);
+            } else {
+              onTap?.call();
+            }
+          },
           behavior: HitTestBehavior.opaque,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -797,6 +837,37 @@ class _NavItem extends StatelessWidget {  final String text;
           ),
         ),
       ),
+    );
+  }
+}
+
+void _scrollToTopOfCurrentPage(BuildContext context) {
+  final currentPath = GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+  
+  // ابحث عن الـ ScrollController في الصفحة الحالية
+  ScrollController? controller;
+  
+  if (currentPath == '/investors-governance') {
+    controller = irScrollController;
+  } else if (currentPath == '/strategy-operations') {
+    controller = strategyScrollController;
+  } else if (currentPath == '/about-us') {
+    controller = aboutScrollController;
+  } else if (currentPath == '/news-careers') {
+    controller = newsScrollController;
+  } else {
+    // للصفحات الأخرى (Home)، ابحث عن أي ScrollView في الـ widget tree
+    final scrollable = Scrollable.maybeOf(context);
+    if (scrollable != null) {
+      controller = scrollable.widget.controller;
+    }
+  }
+  
+  if (controller != null && controller.hasClients) {
+    controller.animateTo(
+      0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
     );
   }
 }
@@ -861,6 +932,12 @@ class _MobileMenuSheetState extends State<_MobileMenuSheet> {
     Navigator.pop(context);
     final ctx = widget.parentContext;
     final currentPath = GoRouter.of(ctx).routerDelegate.currentConfiguration.uri.path;
+
+    // إذا كبس على نفس الصفحة بدون sub-section، ارجع للأعلى
+    if (currentPath == route && scrollKey == null && tabIndex == -1) {
+      _scrollToTopOfCurrentPage(ctx);
+      return;
+    }
 
     void doNavigate() {
       if (tabIndex >= 0) {

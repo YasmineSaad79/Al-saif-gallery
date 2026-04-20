@@ -48,6 +48,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
             const CustomNavigationBar(),
             Expanded(
               child: SingleChildScrollView(
+                controller: aboutScrollController,
                 child: Column(
                   children: [
                     const AboutHeroSection(),

@@ -59,7 +59,7 @@
     opacity: 0.7;
   }
 </style>
-<script src="https://irp.atnmo.com/v2/widget/widget-loader.js"></script>
+<script src="https://irp.atnmo.com/v3/widget/widget-loader.js"></script>
 </head>
 <body>
 <div class="page-header">
@@ -75,14 +75,22 @@
 
   // تحديث العنوان
   var titleMap = {
+    'stock-ticker': lang === 'ar' ? 'شريط الأسهم' : 'Stock Ticker',
     'company-snapshot': lang === 'ar' ? 'لمحة عن الشركة' : 'Company Snapshot',
-    'share-price': lang === 'ar' ? 'سعر السهم' : 'Share Price',
-    'stock-activity': lang === 'ar' ? 'نشاط السهم' : 'Stock Activity',
-    'performance': lang === 'ar' ? 'الأداء' : 'Performance',
+    'corporate-news': lang === 'ar' ? 'أخبار الشركة' : 'Corporate News',
     'fact-sheet': lang === 'ar' ? 'صحيفة الحقائق' : 'Fact Sheet',
-    'company-financials': lang === 'ar' ? 'البيانات المالية' : 'Company Financials',
+    'stock-activity': lang === 'ar' ? 'نشاط السهم' : 'Stock Activity',
     'corporate-actions': lang === 'ar' ? 'إجراءات الشركة' : 'Corporate Actions',
-    'corporate-news': lang === 'ar' ? 'أخبار الشركة' : 'Corporate News'
+    'company-financials': lang === 'ar' ? 'البيانات المالية' : 'Company Financials',
+    'share-price': lang === 'ar' ? 'سعر السهم' : 'Share Price',
+    'performance': lang === 'ar' ? 'الأداء' : 'Performance',
+    'investment-calculator': lang === 'ar' ? 'حاسبة الاستثمار' : 'Investment Calculator',
+    'share-series': lang === 'ar' ? 'سلسلة الأسهم' : 'Share Series',
+    'zakat-calculator': lang === 'ar' ? 'حاسبة الزكاة' : 'Zakat Calculator',
+    'share-view': lang === 'ar' ? 'عرض الأسهم' : 'Share View',
+    'price-lookup': lang === 'ar' ? 'البحث عن السعر' : 'Price Lookup',
+    'peer-group-analysis': lang === 'ar' ? 'تحليل المجموعة المماثلة' : 'Peer Group Analysis',
+    'email-subscription': lang === 'ar' ? 'الاشتراك بالبريد' : 'Email Subscription'
   };
   
   document.getElementById('page-title').textContent = titleMap[widgetType] || 'Investor Relations';
@@ -93,7 +101,7 @@
 
   window.addEventListener('load', function() {
     if (typeof loadWidget === 'function') {
-      loadWidget(widgetType, '5be9c146-613e-4141-a351-1f5e13fc5513', lang, '81a06c05-1a48-4d1b-8dbd-bcf60a76730f', 'v2');
+      loadWidget(widgetType, '5be9c146-613e-4141-a351-1f5e13fc5513', lang, '81a06c05-1a48-4d1b-8dbd-bcf60a76730f', 'v3');
     }
   });
 })();

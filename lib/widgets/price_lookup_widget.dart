@@ -26,6 +26,7 @@ class _PriceLookupWidgetState extends State<PriceLookupWidget> {
       widgetType: 'price-lookup',
       fallbackHeight: isMobile ? 600 : 400,
       lang: lang,
+      showBorder: false, // بدون بوردر
     );
   }
 }

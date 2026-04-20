@@ -26,6 +26,7 @@ class _ShareViewWidgetState extends State<ShareViewWidget> {
       widgetType: 'share-view',
       fallbackHeight: isMobile ? 600 : 400,
       lang: lang,
+      showBorder: false, // بدون بوردر
     );
   }
 }

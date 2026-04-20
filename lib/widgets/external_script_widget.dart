@@ -46,6 +46,17 @@ void setAllIframesPointerEvents(bool enabled) {
     (el as html.HtmlElement).style.pointerEvents = enabled ? 'auto' : 'none';
   }
 }
+
+/// حذف كل الـ iframes القديمة من الـ DOM
+void removeAllOldIframes() {
+  final iframes = html.document.querySelectorAll('iframe');
+  for (final el in iframes) {
+    // احذف الـ iframes اللي pointer-events تبعها auto (يعني كانت مفعّلة)
+    if ((el as html.HtmlElement).style.pointerEvents == 'auto') {
+      el.remove();
+    }
+  }
+}
 // ────────────────────────────────────────────────────────────────────────────
 
 /// Wraps [ExternalScriptWidget] and only initializes the iframe
@@ -252,6 +263,7 @@ class ExternalScriptWidget extends StatefulWidget {
   final String lang;
   final bool priority;
   final bool showLoadingIndicator; // إظهار loading indicator
+  final bool showBorder; // إظهار البوردر
 
   const ExternalScriptWidget({
     super.key,
@@ -261,6 +273,7 @@ class ExternalScriptWidget extends StatefulWidget {
     this.lang = 'en',
     this.priority = false,
     this.showLoadingIndicator = false,
+    this.showBorder = true, // البوردر مفعّل افتراضياً
   });
 
   @override
@@ -276,6 +289,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   Timer? _enableTimer;
   bool _isScrolling = false;
   bool _isLoading = true; // حالة التحميل
+  late String _uniqueViewId; // viewId فريد لكل instance
 
   @override
   void initState() {
@@ -283,16 +297,61 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     if (!kIsWeb) return;
 
     _height = widget.fallbackHeight;
+    
+    // اعمل viewId فريد باستخدام timestamp
+    _uniqueViewId = '${widget.viewId}-${DateTime.now().millisecondsSinceEpoch}';
+
+    // احذف أي iframe قديم بنفس الـ viewId الأساسي
+    final oldIframes = html.document.querySelectorAll('iframe');
+    for (final el in oldIframes) {
+      final iframe = el as html.IFrameElement;
+      // احذف الـ iframes اللي في الـ platform view بنفس الـ ID الأساسي
+      final parent = iframe.parent;
+      if (parent != null && parent.id.contains(widget.viewId)) {
+        iframe.remove();
+      }
+    }
 
     _iframe = html.IFrameElement()
       ..style.border = 'none'
       ..style.width = '100%'
       ..style.height = '100%'
-      ..style.pointerEvents = 'none'
+      ..style.pointerEvents = 'none' // ابدأ معطّل
       ..srcdoc = _buildHtml();
     
-    // تأكد من تعطيل pointer-events عند إنشاء الويدجت
+    // تأكد من تعطيل pointer-events عند إنشاء الويدجت (عدة مرات)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_iframe != null && mounted) {
+        _iframe!.style.pointerEvents = 'none';
+      }
+    });
+    
+    Future.delayed(const Duration(milliseconds: 10), () {
+      if (_iframe != null && mounted) {
+        _iframe!.style.pointerEvents = 'none';
+      }
+    });
+    Future.delayed(const Duration(milliseconds: 50), () {
+      if (_iframe != null && mounted) {
+        _iframe!.style.pointerEvents = 'none';
+      }
+    });
     Future.delayed(const Duration(milliseconds: 100), () {
+      if (_iframe != null && mounted) {
+        _iframe!.style.pointerEvents = 'none';
+      }
+    });
+    Future.delayed(const Duration(milliseconds: 200), () {
+      if (_iframe != null && mounted) {
+        _iframe!.style.pointerEvents = 'none';
+      }
+    });
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (_iframe != null && mounted) {
+        _iframe!.style.pointerEvents = 'none';
+      }
+    });
+    Future.delayed(const Duration(milliseconds: 1000), () {
       if (_iframe != null && mounted) {
         _iframe!.style.pointerEvents = 'none';
       }
@@ -328,10 +387,19 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
 
     try {
       ui.platformViewRegistry.registerViewFactory(
-        widget.viewId,
+        _uniqueViewId, // استخدم الـ viewId الفريد
         (int id) => _iframe!,
       );
-    } catch (_) {}
+    } catch (e) {
+      // إذا فشل التسجيل، حاول مرة ثانية بـ viewId مختلف
+      _uniqueViewId = '${widget.viewId}-${DateTime.now().millisecondsSinceEpoch}-retry';
+      try {
+        ui.platformViewRegistry.registerViewFactory(
+          _uniqueViewId,
+          (int id) => _iframe!,
+        );
+      } catch (_) {}
+    }
   }
 
   void _onPointerDown() {
@@ -371,9 +439,15 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { overflow: hidden; background: #ffffff; margin: 0; padding: 0; }
-  body > div { margin: 0 !important; padding: 0 !important; }
+  html, body { 
+    overflow: hidden; 
+    margin: 0; 
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+  body::-webkit-scrollbar { display: none; }
+  body { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 <script src="https://irp.atnmo.com/v3/widget/widget-loader.js"></script>
 </head>
@@ -398,6 +472,8 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   var ID = '${widget.viewId}';
   var debounceTimer = null;
   var lastSent = 0;
+  var updateCount = 0;
+  var maxUpdates = 10; // أقصى عدد تحديثات
 
   function getTrueHeight() {
     var h = Math.max(
@@ -415,15 +491,18 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
         h = Math.max(h, fDoc.body.scrollHeight + fRect.top + window.pageYOffset);
       } catch(e) {}
     }
-    return Math.ceil(h) + 4;
+    return Math.ceil(h);
   }
 
   function reportDebounced() {
+    if (updateCount >= maxUpdates) return; // توقف بعد 10 تحديثات
+    
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(function() {
       var h = getTrueHeight();
-      if (h > 20 && Math.abs(h - lastSent) > 2) {
+      if (h > 20 && Math.abs(h - lastSent) > 5) {
         lastSent = h;
+        updateCount++;
         window.parent.postMessage({ type: 'widget-height', id: ID, height: h }, '*');
       }
     }, 100);
@@ -448,8 +527,11 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   }
 
   document.addEventListener('click', function() {
-    setTimeout(reportDebounced, 500);
-    setTimeout(reportDebounced, 1500);
+    reportDebounced();
+    setTimeout(reportDebounced, 100);
+    setTimeout(reportDebounced, 300);
+    setTimeout(reportDebounced, 600);
+    setTimeout(reportDebounced, 1000);
   });
 
   window.addEventListener('load', function() {
@@ -475,58 +557,100 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   @override
   void dispose() {
     _debounce?.cancel();
-    _enableTimer?.cancel();
+    _enableTimer?.cancel(); // إلغاء الـ timer قبل الـ dispose
     if (_messageListener != null) {
       html.window.removeEventListener('message', _messageListener!);
     }
+    // تأكد من تعطيل الـ iframe قبل الـ dispose
+    if (_iframe != null) {
+      _iframe!.style.pointerEvents = 'none';
+    }
     super.dispose();
+  }
+
+  @override
+  void deactivate() {
+    // لما تطلع من الصفحة، عطّل الـ iframe فوراً
+    _enableTimer?.cancel();
+    if (_iframe != null) {
+      _iframe!.style.pointerEvents = 'none';
+    }
+    super.deactivate();
+  }
+
+  @override
+  void didUpdateWidget(ExternalScriptWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // لما الـ widget يتحدث، تأكد إنه الـ iframe معطّل
+    if (_iframe != null) {
+      _iframe!.style.pointerEvents = 'none';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     if (!kIsWeb) return const SizedBox.shrink();
     
-    return Stack(
-      children: [
-        Listener(
-          onPointerDown: (_) => _onPointerDown(),
-          onPointerMove: (event) {
-            // إذا في حركة سريعة = scroll
-            if (event.delta.dy.abs() > 2 || event.delta.dx.abs() > 2) {
-              _onScroll();
-            }
-          },
-          onPointerSignal: (signal) {
-            if (signal is PointerScrollEvent) {
-              _onScroll();
-            }
-          },
-          child: SizedBox(
-            width: double.infinity,
-            height: _height,
-            child: HtmlElementView(viewType: widget.viewId),
-          ),
-        ),
-        // Loading indicator
-        if (widget.showLoadingIndicator && _isLoading)
-          Positioned.fill(
-            child: Container(
-              color: const Color(0xFFF8F9FA),
-              child: Center(
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      AppColors.primary,
+    final content = Stack(
+          children: [
+            Listener(
+              onPointerDown: (_) => _onPointerDown(),
+              onPointerMove: (event) {
+                // إذا في حركة سريعة = scroll
+                if (event.delta.dy.abs() > 2 || event.delta.dx.abs() > 2) {
+                  _onScroll();
+                }
+              },
+              onPointerSignal: (signal) {
+                if (signal is PointerScrollEvent) {
+                  _onScroll();
+                }
+              },
+              child: SizedBox(
+                width: double.infinity,
+                height: _height,
+                child: HtmlElementView(viewType: _uniqueViewId),
+              ),
+            ),
+            // Loading indicator
+            if (widget.showLoadingIndicator && _isLoading)
+              Positioned.fill(
+                child: Container(
+                  color: const Color(0xFFF8F9FA),
+                  child: Center(
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppColors.primary,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+          ],
+        );
+    
+    // إذا البوردر مطلوب، لفّه بـ Container
+    if (widget.showBorder) {
+      return Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color(0xFFE5E7EB),
+            width: 1,
           ),
-      ],
-    );
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: content,
+        ),
+      );
+    }
+    
+    return content;
   }
 }

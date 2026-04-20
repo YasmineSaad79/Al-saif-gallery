@@ -143,7 +143,9 @@ class _TopBarState extends State<TopBar> {
           ),
         ),
       ),
-    ).then((_) => setAllIframesPointerEvents(true));
+    ).then((_) {
+      // ما تفعّل الـ iframes! خليهم معطّلين
+    });
   }
 
   Widget _buildItem(String text, String iconPath, VoidCallback? onTap) {

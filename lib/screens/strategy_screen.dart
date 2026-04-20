@@ -50,6 +50,7 @@ class _StrategyScreenState extends State<StrategyScreen> {
             const CustomNavigationBar(),
             Expanded(
               child: SingleChildScrollView(
+                controller: strategyScrollController,
                 child: Column(
                   children: [
                     const StrategyHeroSection(),

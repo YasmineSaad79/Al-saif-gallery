@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_web_libraries_in_flutter
+import 'dart:async';
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import '../widgets/top_bar.dart';
@@ -43,20 +44,134 @@ class InvestorsGovernanceScreen extends StatefulWidget {
 }
 
 class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
+  Timer? _scrollTimer;
+  bool _initialized = false;
+  
   @override
   void initState() {
     super.initState();
-    // تعطيل جميع الـ iframes عند دخول الصفحة
+    _disableAllIframes();
+    
+    // استمع للـ scroll وعطّل الـ iframes باستمرار
+    irScrollController.addListener(_onScroll);
+  }
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // عطّل الـ iframes كل مرة تتغير الـ dependencies (مثلاً لما ترجع للصفحة)
+    _disableAllIframes();
+  }
+  
+  void _disableAllIframes() {
+    // الحل الجذري: احذف كل الـ iframes القديمة اللي pointer-events تبعها auto
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final iframes = html.document.querySelectorAll('iframe');
+      for (final el in iframes) {
+        final iframe = el as html.IFrameElement;
+        // عطّل كل الـ iframes
+        iframe.style.pointerEvents = 'none';
+      }
+    });
+    
+    // استمر بالتعطيل على فترات متعددة
+    Future.delayed(const Duration(milliseconds: 50), () {
+      if (mounted) {
+        final iframes = html.document.querySelectorAll('iframe');
+        for (final el in iframes) {
+          (el as html.IFrameElement).style.pointerEvents = 'none';
+        }
+      }
+    });
     Future.delayed(const Duration(milliseconds: 100), () {
-      setAllIframesPointerEvents(false);
+      if (mounted) {
+        final iframes = html.document.querySelectorAll('iframe');
+        for (final el in iframes) {
+          (el as html.IFrameElement).style.pointerEvents = 'none';
+        }
+      }
+    });
+    Future.delayed(const Duration(milliseconds: 200), () {
+      if (mounted) {
+        final iframes = html.document.querySelectorAll('iframe');
+        for (final el in iframes) {
+          (el as html.IFrameElement).style.pointerEvents = 'none';
+        }
+      }
+    });
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (mounted) {
+        final iframes = html.document.querySelectorAll('iframe');
+        for (final el in iframes) {
+          (el as html.IFrameElement).style.pointerEvents = 'none';
+        }
+      }
     });
     Future.delayed(const Duration(milliseconds: 500), () {
-      setAllIframesPointerEvents(false);
+      if (mounted) {
+        final iframes = html.document.querySelectorAll('iframe');
+        for (final el in iframes) {
+          (el as html.IFrameElement).style.pointerEvents = 'none';
+        }
+      }
+    });
+    Future.delayed(const Duration(milliseconds: 800), () {
+      if (mounted) {
+        final iframes = html.document.querySelectorAll('iframe');
+        for (final el in iframes) {
+          (el as html.IFrameElement).style.pointerEvents = 'none';
+        }
+      }
+    });
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      if (mounted) {
+        final iframes = html.document.querySelectorAll('iframe');
+        for (final el in iframes) {
+          (el as html.IFrameElement).style.pointerEvents = 'none';
+        }
+      }
+    });
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (mounted) {
+        final iframes = html.document.querySelectorAll('iframe');
+        for (final el in iframes) {
+          (el as html.IFrameElement).style.pointerEvents = 'none';
+        }
+      }
+    });
+    Future.delayed(const Duration(milliseconds: 2000), () {
+      if (mounted) {
+        final iframes = html.document.querySelectorAll('iframe');
+        for (final el in iframes) {
+          (el as html.IFrameElement).style.pointerEvents = 'none';
+        }
+      }
+    });
+  }
+  
+  void _onScroll() {
+    // عطّل كل الـ iframes عند أي scroll بشكل مباشر
+    final iframes = html.document.querySelectorAll('iframe');
+    for (final el in iframes) {
+      (el as html.IFrameElement).style.pointerEvents = 'none';
+    }
+    
+    // استمر بالتعطيل لمدة ثانية بعد السكرول
+    _scrollTimer?.cancel();
+    _scrollTimer = Timer(const Duration(milliseconds: 1000), () {
+      if (mounted) {
+        final iframes = html.document.querySelectorAll('iframe');
+        for (final el in iframes) {
+          (el as html.IFrameElement).style.pointerEvents = 'none';
+        }
+      }
     });
   }
   
   @override
   void dispose() {
+    _scrollTimer?.cancel();
+    irScrollController.removeListener(_onScroll);
     super.dispose();
   }
 
@@ -114,7 +229,7 @@ class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
 // ── Shared Tab State ──────────────────────────────────────────────────────────
 class _IRTabBodyState extends State<_IRTabContent> {
   int _selectedTab = -1; // -1 = show all
-
+  
   void switchTab(int index) {
     if (mounted) setState(() => _selectedTab = index);
   }
@@ -138,42 +253,9 @@ class _IRTabBodyState extends State<_IRTabContent> {
     final l = AppLocalizations.of(context);
     final isArabic = l.isArabic;
     final hp = Responsive.getHorizontalPadding(context);
-    final isMobile = Responsive.isMobile(context);
 
-    final allTitles = isArabic ? [
-      'نظرة عامة عن الشركة', 'الإعلانات', 'نشرة المعلومات', 'نشاط السهم',
-      'الإجراءات النظامية', 'البيانات المالية', 'سعر السهم', 'الأداء',
-      'حاسبة الاستثمار', 'سلسلة الأسهم', 'حاسبة الزكاة', 'عرض الأسهم', 'البحث عن السعر', 'تحليل المجموعة المماثلة', 'الاشتراك',
-    ] : [
-      'Company Snapshot', 'Announcements', 'Fact Sheet', 'Stock Activity',
-      'Corporate Actions', 'Company Financials', 'Share Price', 'Performance',
-      'Investment Calculator', 'Share Series', 'Zakat Calculator', 'Share View', 'Price Lookup', 'Peer Group Analysis', 'Subscribe',
-    ];
-
-    // الموبايل: نفس منطق الديسكتوب بدون dropdown
-    if (isMobile) {
-      if (_selectedTab == -1) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-0'),  child: _buildSectionWithTitle('Company Snapshot', 'نظرة عامة عن الشركة', const CompanySnapshotWidget(), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-1'),  child: _buildSectionWithTitle('Announcements', 'الإعلانات', const CorporateNewsWidget(), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-2'),  child: _buildSectionWithTitle('Fact Sheet', 'نشرة المعلومات', _FactSheetContent(isArabic: isArabic), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-3'),  child: _buildSectionWithTitle('Stock Activity', 'نشاط السهم', _StockActivityContent(isArabic: isArabic), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-4'),  child: _buildSectionWithTitle('Corporate Actions', 'الإجراءات النظامية', const CorporateActionsWidget(), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-5'),  child: _buildSectionWithTitle('Company Financials', 'البيانات المالية', const CompanyFinancialsWidget(), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-6'),  child: _buildSectionWithTitle('Share Price', 'سعر السهم', const SharePriceWidget(), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-7'),  child: _buildSectionWithTitle('Performance', 'الأداء', const PerformanceWidget(), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-8'),  child: _buildSectionWithTitle('Investment Calculator', 'حاسبة الاستثمار', const InvestmentCalculatorWidget(), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-9'),  child: _buildSectionWithTitle('Share Series', 'سلسلة الأسهم', const ShareSeriesWidget(), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-10'), child: _buildSectionWithTitle('Zakat Calculator', 'حاسبة الزكاة', const ZakatCalculatorWidget(), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-11'), child: _buildSectionWithTitle('Share View', 'عرض الأسهم', const ShareViewWidget(), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-12'), child: _buildSectionWithTitle('Price Lookup', 'البحث عن السعر', const PriceLookupWidget(), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-13'), child: _buildSectionWithTitle('Peer Group Analysis', 'تحليل المجموعة المماثلة', const PeerGroupAnalysisWidget(), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-14'), child: _buildSectionWithTitle('Subscribe', 'الاشتراك', const EmailSubscriptionWidget(), isArabic, hp)),
-          ],
-        );
-      }
+    // إذا في tab محدد، اعرضه بس
+    if (_selectedTab >= 0) {
       return Container(
         width: double.infinity,
         color: Colors.white,
@@ -182,35 +264,26 @@ class _IRTabBodyState extends State<_IRTabContent> {
       );
     }
 
-    // ديسكتوب: نفس المنطق القديم
-    if (_selectedTab == -1) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-0'), child: _buildSectionWithTitle('Company Snapshot', 'نظرة عامة عن الشركة', const CompanySnapshotWidget(), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-1'), child: _buildSectionWithTitle('Announcements', 'الإعلانات', const CorporateNewsWidget(), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-2'), child: _buildSectionWithTitle('Fact Sheet', 'نشرة المعلومات', _FactSheetContent(isArabic: isArabic), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-3'), child: _buildSectionWithTitle('Stock Activity', 'نشاط السهم', _StockActivityContent(isArabic: isArabic), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-4'), child: _buildSectionWithTitle('Corporate Actions', 'الإجراءات النظامية', const CorporateActionsWidget(), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-5'), child: _buildSectionWithTitle('Company Financials', 'البيانات المالية', const CompanyFinancialsWidget(), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-6'), child: _buildSectionWithTitle('Share Price', 'سعر السهم', const SharePriceWidget(), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-7'), child: _buildSectionWithTitle('Performance', 'الأداء', const PerformanceWidget(), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-8'), child: _buildSectionWithTitle('Investment Calculator', 'حاسبة الاستثمار', const InvestmentCalculatorWidget(), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-9'), child: _buildSectionWithTitle('Share Series', 'سلسلة الأسهم', const ShareSeriesWidget(), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-10'), child: _buildSectionWithTitle('Zakat Calculator', 'حاسبة الزكاة', const ZakatCalculatorWidget(), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-11'), child: _buildSectionWithTitle('Share View', 'عرض الأسهم', const ShareViewWidget(), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-12'), child: _buildSectionWithTitle('Price Lookup', 'البحث عن السعر', const PriceLookupWidget(), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-13'), child: _buildSectionWithTitle('Peer Group Analysis', 'تحليل المجموعة المماثلة', const PeerGroupAnalysisWidget(), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-14'), child: _buildSectionWithTitle('Subscribe', 'الاشتراك', const EmailSubscriptionWidget(), isArabic, hp)),
-        ],
-      );
-    }
-
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(color: Colors.white),
-      padding: EdgeInsets.symmetric(horizontal: hp, vertical: 16),
-      child: _buildTabContent(_selectedTab, isArabic),
+    // وإلا اعرض الكل
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        KeyedSubtree(key: ScrollKeys.get('ir-tab-0'),  child: _buildSectionWithTitle('Company Snapshot', 'نظرة عامة عن الشركة', const CompanySnapshotWidget(), isArabic, hp)),
+        KeyedSubtree(key: ScrollKeys.get('ir-tab-1'),  child: _buildSectionWithTitle('Announcements', 'الإعلانات', const CorporateNewsWidget(), isArabic, hp)),
+        KeyedSubtree(key: ScrollKeys.get('ir-tab-2'),  child: _buildSectionWithTitle('Fact Sheet', 'نشرة المعلومات', _FactSheetContent(isArabic: isArabic), isArabic, hp)),
+        KeyedSubtree(key: ScrollKeys.get('ir-tab-3'),  child: _buildSectionWithTitle('Stock Activity', 'نشاط السهم', _StockActivityContent(isArabic: isArabic), isArabic, hp)),
+        KeyedSubtree(key: ScrollKeys.get('ir-tab-4'),  child: _buildSectionWithTitle('Corporate Actions', 'الإجراءات النظامية', const CorporateActionsWidget(), isArabic, hp)),
+        KeyedSubtree(key: ScrollKeys.get('ir-tab-5'),  child: _buildSectionWithTitle('Company Financials', 'البيانات المالية', const CompanyFinancialsWidget(), isArabic, hp)),
+        KeyedSubtree(key: ScrollKeys.get('ir-tab-6'),  child: _buildSectionWithTitle('Share Price', 'سعر السهم', const SharePriceWidget(), isArabic, hp)),
+        KeyedSubtree(key: ScrollKeys.get('ir-tab-7'),  child: _buildSectionWithTitle('Performance', 'الأداء', const PerformanceWidget(), isArabic, hp)),
+        KeyedSubtree(key: ScrollKeys.get('ir-tab-8'),  child: _buildSectionWithTitle('Investment Calculator', 'حاسبة الاستثمار', const InvestmentCalculatorWidget(), isArabic, hp)),
+        KeyedSubtree(key: ScrollKeys.get('ir-tab-9'),  child: _buildSectionWithTitle('Share Series', 'سلسلة الأسهم', const ShareSeriesWidget(), isArabic, hp)),
+        // KeyedSubtree(key: ScrollKeys.get('ir-tab-10'), child: _buildSectionWithTitle('Zakat Calculator', 'حاسبة الزكاة', const ZakatCalculatorWidget(), isArabic, hp)),
+        KeyedSubtree(key: ScrollKeys.get('ir-tab-11'), child: _buildSectionWithTitle('Share View', 'عرض الأسهم', const ShareViewWidget(), isArabic, hp)),
+        KeyedSubtree(key: ScrollKeys.get('ir-tab-12'), child: _buildSectionWithTitle('Price Lookup', 'البحث عن السعر', const PriceLookupWidget(), isArabic, hp)),
+        KeyedSubtree(key: ScrollKeys.get('ir-tab-13'), child: _buildSectionWithTitle('Peer Group Analysis', 'تحليل المجموعة المماثلة', const PeerGroupAnalysisWidget(), isArabic, hp)),
+        KeyedSubtree(key: ScrollKeys.get('ir-tab-14'), child: _buildSectionWithTitle('Subscribe', 'الاشتراك', const EmailSubscriptionWidget(), isArabic, hp)),
+      ],
     );
   }
 
@@ -337,6 +410,16 @@ class _IRStickyTabBarState extends State<_IRStickyTabBar> {
     super.dispose();
   }
 
+  void _scrollToTop() {
+    if (irScrollController.hasClients) {
+      irScrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
@@ -387,8 +470,13 @@ class _IRStickyTabBarState extends State<_IRStickyTabBar> {
                 selectedIndex: _selectedTab,
                 allTabs: allTabs,
                 onSelect: (i) {
-                  setState(() => _selectedTab = i);
-                  widget.tabBodyKey.currentState?.switchTab(i);
+                  if (_selectedTab == i) {
+                    // إذا كبس على نفس التاب، ارجع للأعلى
+                    _scrollToTop();
+                  } else {
+                    setState(() => _selectedTab = i);
+                    widget.tabBodyKey.currentState?.switchTab(i);
+                  }
                 },
                 isArabic: isArabic,
                 hp: hp,
@@ -403,8 +491,13 @@ class _IRStickyTabBarState extends State<_IRStickyTabBar> {
                         label: tabs[i],
                         isActive: _selectedTab == i,
                         onTap: () {
-                          setState(() => _selectedTab = i);
-                          widget.tabBodyKey.currentState?.switchTab(i);
+                          if (_selectedTab == i) {
+                            // إذا كبس على نفس التاب، ارجع للأعلى
+                            _scrollToTop();
+                          } else {
+                            setState(() => _selectedTab = i);
+                            widget.tabBodyKey.currentState?.switchTab(i);
+                          }
                         },
                       );
                     }),
@@ -413,16 +506,27 @@ class _IRStickyTabBarState extends State<_IRStickyTabBar> {
                       isActive: _selectedTab >= 8 && _selectedTab <= 10,
                       items: analyticsItems,
                       onSelect: (i) {
-                        setState(() => _selectedTab = 8 + i);
-                        widget.tabBodyKey.currentState?.switchTab(8 + i);
+                        final newTab = 8 + i;
+                        if (_selectedTab == newTab) {
+                          // إذا كبس على نفس التاب، ارجع للأعلى
+                          _scrollToTop();
+                        } else {
+                          setState(() => _selectedTab = newTab);
+                          widget.tabBodyKey.currentState?.switchTab(newTab);
+                        }
                       },
                     ),
                     _IRTab(
                       label: isArabic ? 'الاشتراك' : 'Subscribe',
                       isActive: _selectedTab == 11,
                       onTap: () {
-                        setState(() => _selectedTab = 11);
-                        widget.tabBodyKey.currentState?.switchTab(11);
+                        if (_selectedTab == 11) {
+                          // إذا كبس على نفس التاب، ارجع للأعلى
+                          _scrollToTop();
+                        } else {
+                          setState(() => _selectedTab = 11);
+                          widget.tabBodyKey.currentState?.switchTab(11);
+                        }
                       },
                     ),
                   ],
@@ -825,7 +929,7 @@ class _IRDropdownTabState extends State<_IRDropdownTab> {
       html.document.removeEventListener('click', _outsideClickListener!);
       _outsideClickListener = null;
     }
-    setAllIframesPointerEvents(true);
+    // ما تفعّل الـ iframes! خليهم معطّلين
     _overlay?.remove();
     _overlay = null;
   }
