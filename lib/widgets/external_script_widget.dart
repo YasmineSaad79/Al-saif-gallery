@@ -30,8 +30,8 @@ void _processQueue() {
   _queueRunning = true;
   final next = _loadQueue.removeAt(0);
   next();
-  // تقليل التأخير إلى 150ms لتحميل أسرع (كان 200ms)
-  Future.delayed(const Duration(milliseconds: 150), _processQueue);
+  // تحميل فوري بدون تأخير
+  Future.delayed(const Duration(milliseconds: 0), _processQueue);
 }
 
 /// Interface عام عشان نقدر نستدعي loadNow من ملفات ثانية

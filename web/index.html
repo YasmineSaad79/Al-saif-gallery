@@ -16,6 +16,9 @@
   <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://irp.atnmo.com">
   <link rel="dns-prefetch" href="https://irp.atnmo.com">
+  <!-- تحميل مسبق للـ widget script -->
+  <link rel="preload" href="https://irp.atnmo.com/v3/widget/widget-loader.js" as="script">
+  <script src="https://irp.atnmo.com/v3/widget/widget-loader.js" defer></script>
   <style>
     ::selection { background: #1f415c; color: inherit; }
     ::-moz-selection { background: #406583; color: inherit; }
@@ -52,69 +55,6 @@
     });
   </script>
   <script src="flutter_bootstrap.js" async></script>
-  
-  <!-- Hidden container for preloading ALL IR widgets -->
-  <div id="ir-widgets-preload" style="position: fixed; left: -9999px; top: -9999px; width: 1000px; height: 5000px; opacity: 0; pointer-events: none; overflow: hidden;"></div>
-  
-  <script>
-    // تحميل جميع الويدجتات في الخلفية فوراً
-    (function() {
-      var widgetsToPreload = [
-        'stock-ticker',
-        'company-snapshot',
-        'corporate-news',
-        'fact-sheet',
-        'stock-activity',
-        'corporate-actions',
-        'company-financials',
-        'share-price',
-        'performance',
-        'investment-calculator',
-        'share-series',
-        'zakat-calculator',
-        'share-view',
-        'price-lookup',
-        'peer-group-analysis',
-        'email-subscription'
-      ];
-      
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          var script = document.createElement('script');
-          script.src = 'https://irp.atnmo.com/v3/widget/widget-loader.js';
-          script.onload = function() {
-            if (typeof loadWidget === 'function') {
-              var container = document.getElementById('ir-widgets-preload');
-              
-              // حمّل كل ويدجت بتأخير بسيط بينهم
-              widgetsToPreload.forEach(function(widgetType, index) {
-                setTimeout(function() {
-                  var widgetDiv = document.createElement('div');
-                  widgetDiv.id = widgetType + '-widget-preload';
-                  widgetDiv.style.marginBottom = '20px';
-                  container.appendChild(widgetDiv);
-                  
-                  loadWidget(
-                    widgetType,
-                    "5be9c146-613e-4141-a351-1f5e13fc5513",
-                    "en",
-                    "81a06c05-1a48-4d1b-8dbd-bcf60a76730f",
-                    "v3"
-                  );
-                  
-                  console.log('Preloaded: ' + widgetType);
-                }, index * 300); // 300ms بين كل ويدجت
-              });
-              
-              window._irWidgetsPreloaded = true;
-              console.log('All IR widgets preloading started');
-            }
-          };
-          document.head.appendChild(script);
-        }, 1500); // ابدأ بعد 1.5 ثانية من تحميل الصفحة
-      });
-    })();
-  </script>
 </head>
 <body>
 </body>
