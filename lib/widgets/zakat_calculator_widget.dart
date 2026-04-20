@@ -20,13 +20,12 @@ class _ZakatCalculatorWidgetState extends State<ZakatCalculatorWidget> {
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
     final isMobile = Responsive.isMobile(context);
-    return ExternalScriptWidget(
+    return LazyExternalScriptWidget(
       key: ValueKey('zakat-calculator-$lang'),
       viewId: 'zakat-calculator-view-$lang',
       widgetType: 'zakat-calculator',
       fallbackHeight: isMobile ? 600 : 400,
       lang: lang,
-      showBorder: false, // بدون بوردر
     );
   }
 }

@@ -20,7 +20,7 @@ class _CompanySnapshotWidgetState extends State<CompanySnapshotWidget> {
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
     final isMobile = Responsive.isMobile(context);
-    return ExternalScriptWidget(
+    return LazyExternalScriptWidget(
       key: ValueKey('company-snapshot-$lang'),
       viewId: 'company-snapshot-view-$lang',
       widgetType: 'company-snapshot',

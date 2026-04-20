@@ -18,7 +18,7 @@ class _PerformanceWidgetState extends State<PerformanceWidget> {
   @override
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return ExternalScriptWidget(
+    return LazyExternalScriptWidget(
       key: ValueKey('performance-$lang'),
       viewId: 'performance-view-$lang',
       widgetType: 'performance',

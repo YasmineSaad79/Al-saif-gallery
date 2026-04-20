@@ -18,7 +18,7 @@ class _FactSheetTableWidgetState extends State<FactSheetTableWidget> {
   @override
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return ExternalScriptWidget(
+    return LazyExternalScriptWidget(
       key: ValueKey('fact-sheet-$lang'),
       viewId: 'fact-sheet-view-$lang',
       widgetType: 'fact-sheet',

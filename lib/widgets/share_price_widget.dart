@@ -18,7 +18,7 @@ class _SharePriceWidgetState extends State<SharePriceWidget> {
   @override
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return ExternalScriptWidget(
+    return LazyExternalScriptWidget(
       key: ValueKey('share-price-$lang'),
       viewId: 'share-price-view-$lang',
       widgetType: 'share-price',

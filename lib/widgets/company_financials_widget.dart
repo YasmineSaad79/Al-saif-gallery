@@ -18,7 +18,7 @@ class _CompanyFinancialsWidgetState extends State<CompanyFinancialsWidget> {
   @override
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return ExternalScriptWidget(
+    return LazyExternalScriptWidget(
       key: ValueKey('company-financials-$lang'),
       viewId: 'company-financials-view-$lang',
       widgetType: 'company-financials',

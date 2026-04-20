@@ -18,7 +18,7 @@ class _StockActivityAdvancedWidgetState extends State<StockActivityAdvancedWidge
   @override
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
-    return ExternalScriptWidget(
+    return LazyExternalScriptWidget(
       key: ValueKey('stock-activity-advanced-$lang'),
       viewId: 'stock-activity-advanced-view-$lang',
       widgetType: 'stock-activity-advanced',

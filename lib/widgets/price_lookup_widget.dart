@@ -20,13 +20,12 @@ class _PriceLookupWidgetState extends State<PriceLookupWidget> {
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
     final isMobile = Responsive.isMobile(context);
-    return ExternalScriptWidget(
+    return LazyExternalScriptWidget(
       key: ValueKey('price-lookup-$lang'),
       viewId: 'price-lookup-view-$lang',
       widgetType: 'price-lookup',
       fallbackHeight: isMobile ? 600 : 400,
       lang: lang,
-      showBorder: false, // بدون بوردر
     );
   }
 }
