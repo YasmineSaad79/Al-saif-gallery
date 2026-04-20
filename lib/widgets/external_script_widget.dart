@@ -190,8 +190,8 @@ class _LazyExternalScriptWidgetIOSState extends State<_LazyExternalScriptWidgetI
   }
   
   void _startDisposeCheck() {
-    // على iOS: فحص كل 200ms - حذف سريع جداً
-    _disposeChecker = Timer.periodic(const Duration(milliseconds: 200), (_) {
+    // على iOS: فحص كل 400ms - حذف معتدل
+    _disposeChecker = Timer.periodic(const Duration(milliseconds: 400), (_) {
       if (_visible && mounted) {
         _checkIfShouldDispose();
       }
@@ -208,8 +208,8 @@ class _LazyExternalScriptWidgetIOSState extends State<_LazyExternalScriptWidgetI
     final pos = box.localToGlobal(Offset.zero);
     final screenH = MediaQuery.of(ctx).size.height;
     
-    // حذف قوي: بمجرد ما يطلع من الشاشة بـ 50 pixels
-    if (pos.dy < -50 || pos.dy > screenH + 50) {
+    // حذف بمجرد ما يطلع من الشاشة بـ 150 pixels
+    if (pos.dy < -150 || pos.dy > screenH + 150) {
       setState(() {
         _visible = false;
         _queued = false;
