@@ -368,19 +368,22 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
 
     _messageListener = (event) {
       final msg = (event as html.MessageEvent).data;
-      if (msg is Map &&
-          msg['type'] == 'widget-height' &&
-          msg['id'] == _uniqueViewId) {
-        final h = (msg['height'] as num).toDouble();
-        if (h > 20) {
-          _pendingHeight = h;
-          _debounce?.cancel();
-          _debounce = Timer(const Duration(milliseconds: 200), () {
-            // حدّث الارتفاع حتى لو الفرق صغير (1 pixel)
-            if (mounted && (_pendingHeight - _height).abs() > 1) {
-              setState(() => _height = _pendingHeight);
-            }
-          });
+      if (msg is Map && msg['type'] == 'widget-height') {
+        print('Received height message: id=${msg['id']}, height=${msg['height']}, expected=$_uniqueViewId');
+        
+        if (msg['id'] == _uniqueViewId) {
+          final h = (msg['height'] as num).toDouble();
+          if (h > 20) {
+            _pendingHeight = h;
+            _debounce?.cancel();
+            _debounce = Timer(const Duration(milliseconds: 200), () {
+              // حدّث الارتفاع حتى لو الفرق صغير (1 pixel)
+              if (mounted && (_pendingHeight - _height).abs() > 1) {
+                print('Updating height from $_height to $_pendingHeight');
+                setState(() => _height = _pendingHeight);
+              }
+            });
+          }
         }
       }
     };
@@ -477,47 +480,46 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   var maxUpdates = 20; // زيادة العدد الأقصى للتحديثات
 
   function getTrueHeight() {
-    // احسب الارتفاع الفعلي للمحتوى المرئي فقط
-    var body = document.body;
-    var html = document.documentElement;
-    
-    // جرّب كل الطرق واختار الأصغر (مش الأكبر) لما المحتوى يصير أقصر
-    var heights = [
-      body.scrollHeight,
-      body.offsetHeight,
-      body.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight,
-      html.clientHeight
-    ];
-    
-    // احسب الارتفاع الفعلي من آخر عنصر مرئي
-    var allElements = document.querySelectorAll('body *');
+    // طريقة جديدة: احسب من آخر عنصر مرئي فقط
     var maxBottom = 0;
-    for (var i = 0; i < allElements.length; i++) {
-      var rect = allElements[i].getBoundingClientRect();
-      if (rect.height > 0) { // فقط العناصر المرئية
+    
+    // احصل على كل العناصر المباشرة في الـ body
+    var children = document.body.children;
+    for (var i = 0; i < children.length; i++) {
+      var rect = children[i].getBoundingClientRect();
+      // فقط العناصر المرئية (display != none)
+      var style = window.getComputedStyle(children[i]);
+      if (style.display !== 'none' && rect.height > 0) {
         maxBottom = Math.max(maxBottom, rect.bottom);
       }
     }
     
-    heights.push(maxBottom);
-    
-    // استخدم أكبر قيمة من كل الحسابات
-    var h = Math.max.apply(null, heights);
+    // إذا ما لقينا عناصر، استخدم الطرق التقليدية
+    if (maxBottom === 0) {
+      maxBottom = Math.max(
+        document.body.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.clientHeight
+      );
+    }
     
     // تحقق من الـ iframes الداخلية
     var frames = document.querySelectorAll('iframe');
     for (var j = 0; j < frames.length; j++) {
       var fRect = frames[j].getBoundingClientRect();
-      h = Math.max(h, fRect.bottom + window.pageYOffset);
-      try {
-        var fDoc = frames[j].contentDocument || frames[j].contentWindow.document;
-        h = Math.max(h, fDoc.body.scrollHeight + fRect.top + window.pageYOffset);
-      } catch(e) {}
+      var fStyle = window.getComputedStyle(frames[j]);
+      if (fStyle.display !== 'none') {
+        maxBottom = Math.max(maxBottom, fRect.bottom);
+        try {
+          var fDoc = frames[j].contentDocument || frames[j].contentWindow.document;
+          if (fDoc && fDoc.body) {
+            maxBottom = Math.max(maxBottom, fDoc.body.scrollHeight + fRect.top);
+          }
+        } catch(e) {}
+      }
     }
     
-    return Math.ceil(h);
+    return Math.ceil(maxBottom);
   }
 
   function reportDebounced() {
