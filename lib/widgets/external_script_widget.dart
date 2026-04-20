@@ -37,8 +37,8 @@ void _processQueue() {
   _queueRunning = true;
   final next = _loadQueue.removeAt(0);
   next();
-  // على iOS: تأخير 300ms، على الباقي: فوري
-  final delay = _isIOS() ? 300 : 0;
+  // على iOS: تأخير 500ms، على الباقي: فوري
+  final delay = _isIOS() ? 500 : 0;
   Future.delayed(Duration(milliseconds: delay), _processQueue);
 }
 
@@ -121,29 +121,35 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
       return;
     }
     
-    // حمّل الويدجتات الأولى فوراً، والباقي لما يظهروا
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final ctx = _key.currentContext;
-      if (ctx == null) return;
-      
-      final box = ctx.findRenderObject() as RenderBox?;
-      if (box == null || !box.hasSize) return;
-      
-      final pos = box.localToGlobal(Offset.zero);
-      final screenH = MediaQuery.of(ctx).size.height;
-      
-      // على iOS: حمّل أول شاشتين، على الباقي: أول 4 شاشات
-      final multiplier = _isIOS() ? 2.0 : 4.0;
-      if (pos.dy < screenH * multiplier) {
-        _queued = true;
-        _enqueueLoad(() {
-          if (mounted) setState(() => _visible = true);
-        });
-      } else {
-        // الباقي انتظر لما يظهروا
+    // على iOS: كل الويدجتات lazy load (ما في تحميل مسبق)
+    // على الباقي: حمّل أول 4 شاشات
+    if (_isIOS()) {
+      // على iOS، كل شي lazy load
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         _checkVisibility();
-      }
-    });
+      });
+    } else {
+      // على Desktop/Android، حمّل أول 4 شاشات
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final ctx = _key.currentContext;
+        if (ctx == null) return;
+        
+        final box = ctx.findRenderObject() as RenderBox?;
+        if (box == null || !box.hasSize) return;
+        
+        final pos = box.localToGlobal(Offset.zero);
+        final screenH = MediaQuery.of(ctx).size.height;
+        
+        if (pos.dy < screenH * 4.0) {
+          _queued = true;
+          _enqueueLoad(() {
+            if (mounted) setState(() => _visible = true);
+          });
+        } else {
+          _checkVisibility();
+        }
+      });
+    }
   }
 
   void _checkVisibility() {
@@ -161,8 +167,8 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
     final pos = box.localToGlobal(Offset.zero);
     final screenH = MediaQuery.of(ctx).size.height;
     
-    // على iOS: 1.5 شاشة، على الباقي: 2.5 شاشة
-    final multiplier = _isIOS() ? 1.5 : 2.5;
+    // على iOS: شاشة واحدة فقط، على الباقي: 2.5 شاشة
+    final multiplier = _isIOS() ? 1.0 : 2.5;
     if (pos.dy >= 0 && pos.dy < screenH * multiplier) {
       _queued = true;
       _enqueueLoad(() {
