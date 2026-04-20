@@ -296,10 +296,10 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     super.initState();
     if (!kIsWeb) return;
 
-    _height = widget.fallbackHeight;
-    
-    // اعمل viewId فريد باستخدام timestamp
+    // اعمل viewId فريد باستخدام timestamp أول شي
     _uniqueViewId = '${widget.viewId}-${DateTime.now().millisecondsSinceEpoch}';
+
+    _height = widget.fallbackHeight;
 
     // احذف أي iframe قديم بنفس الـ viewId الأساسي
     final oldIframes = html.document.querySelectorAll('iframe');
@@ -370,13 +370,14 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
       final msg = (event as html.MessageEvent).data;
       if (msg is Map &&
           msg['type'] == 'widget-height' &&
-          msg['id'] == widget.viewId) {
+          msg['id'] == _uniqueViewId) {
         final h = (msg['height'] as num).toDouble();
         if (h > 20) {
           _pendingHeight = h;
           _debounce?.cancel();
-          _debounce = Timer(const Duration(milliseconds: 400), () {
-            if (mounted && (_pendingHeight - _height).abs() > 2) {
+          _debounce = Timer(const Duration(milliseconds: 200), () {
+            // حدّث الارتفاع حتى لو الفرق صغير (1 pixel)
+            if (mounted && (_pendingHeight - _height).abs() > 1) {
               setState(() => _height = _pendingHeight);
             }
           });
@@ -469,19 +470,43 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     window.parent.postMessage({ type: 'iframe-wheel', deltaY: dy }, '*');
   }, { passive: true });
 
-  var ID = '${widget.viewId}';
+  var ID = '$_uniqueViewId'; // استخدم الـ unique ID
   var debounceTimer = null;
   var lastSent = 0;
   var updateCount = 0;
-  var maxUpdates = 10; // أقصى عدد تحديثات
+  var maxUpdates = 20; // زيادة العدد الأقصى للتحديثات
 
   function getTrueHeight() {
-    var h = Math.max(
-      document.body.scrollHeight,
-      document.body.offsetHeight,
-      document.documentElement.scrollHeight,
-      document.documentElement.offsetHeight
-    );
+    // احسب الارتفاع الفعلي للمحتوى المرئي فقط
+    var body = document.body;
+    var html = document.documentElement;
+    
+    // جرّب كل الطرق واختار الأصغر (مش الأكبر) لما المحتوى يصير أقصر
+    var heights = [
+      body.scrollHeight,
+      body.offsetHeight,
+      body.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight,
+      html.clientHeight
+    ];
+    
+    // احسب الارتفاع الفعلي من آخر عنصر مرئي
+    var allElements = document.querySelectorAll('body *');
+    var maxBottom = 0;
+    for (var i = 0; i < allElements.length; i++) {
+      var rect = allElements[i].getBoundingClientRect();
+      if (rect.height > 0) { // فقط العناصر المرئية
+        maxBottom = Math.max(maxBottom, rect.bottom);
+      }
+    }
+    
+    heights.push(maxBottom);
+    
+    // استخدم أكبر قيمة من كل الحسابات
+    var h = Math.max.apply(null, heights);
+    
+    // تحقق من الـ iframes الداخلية
     var frames = document.querySelectorAll('iframe');
     for (var j = 0; j < frames.length; j++) {
       var fRect = frames[j].getBoundingClientRect();
@@ -491,16 +516,17 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
         h = Math.max(h, fDoc.body.scrollHeight + fRect.top + window.pageYOffset);
       } catch(e) {}
     }
+    
     return Math.ceil(h);
   }
 
   function reportDebounced() {
-    if (updateCount >= maxUpdates) return; // توقف بعد 10 تحديثات
-    
+    // لا تتوقف عن التحديثات - دائماً أبلغ عن التغييرات
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(function() {
       var h = getTrueHeight();
-      if (h > 20 && Math.abs(h - lastSent) > 5) {
+      // أبلغ حتى لو الارتفاع أقل (لحل مشكلة الفراغ)
+      if (h > 20 && Math.abs(h - lastSent) > 3) {
         lastSent = h;
         updateCount++;
         window.parent.postMessage({ type: 'widget-height', id: ID, height: h }, '*');
@@ -533,6 +559,16 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     setTimeout(reportDebounced, 600);
     setTimeout(reportDebounced, 1000);
   });
+
+  // استمع لأي تغيير في الـ DOM - فحص مستمر كل 200ms
+  setInterval(function() {
+    var currentHeight = getTrueHeight();
+    if (currentHeight > 20 && Math.abs(currentHeight - lastSent) > 3) {
+      console.log('Height changed from', lastSent, 'to', currentHeight);
+      lastSent = currentHeight;
+      window.parent.postMessage({ type: 'widget-height', id: ID, height: currentHeight }, '*');
+    }
+  }, 200); // فحص كل 200ms
 
   window.addEventListener('load', function() {
     if (typeof loadWidget === 'function') {
