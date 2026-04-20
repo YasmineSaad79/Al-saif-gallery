@@ -426,7 +426,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
         lastSent = h;
         window.parent.postMessage({ type: 'widget-height', id: ID, height: h }, '*');
       }
-    }, 300);
+    }, 100);
   }
 
   new MutationObserver(function() {

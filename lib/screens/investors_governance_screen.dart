@@ -953,7 +953,7 @@ class _StockTickerSection extends StatelessWidget {
         child: Container(
           clipBehavior: Clip.hardEdge,
           decoration: const BoxDecoration(
-            color: Color(0xFFF8F9FA),
+            color: Colors.white,
             border: Border(
               top: BorderSide(color: Color(0xFFE53935), width: 2),
               bottom: BorderSide(color: Color(0xFFE53935), width: 2),
