@@ -290,6 +290,13 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
       ..style.height = '100%'
       ..style.pointerEvents = 'none'
       ..srcdoc = _buildHtml();
+    
+    // تأكد من تعطيل pointer-events عند إنشاء الويدجت
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (_iframe != null && mounted) {
+        _iframe!.style.pointerEvents = 'none';
+      }
+    });
 
     // أخفي الـ loading بعد 300ms فقط (الويدجتات محملة مسبقاً)
     if (widget.showLoadingIndicator) {

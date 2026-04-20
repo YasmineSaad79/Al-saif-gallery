@@ -35,8 +35,38 @@ import '../widgets/external_script_widget.dart';
 // Global key عشان الـ navbar يقدر يغير الـ tab
 final GlobalKey<_IRTabBodyState> irTabBodyKey = GlobalKey<_IRTabBodyState>();
 
-class InvestorsGovernanceScreen extends StatelessWidget {
+class InvestorsGovernanceScreen extends StatefulWidget {
   const InvestorsGovernanceScreen({super.key});
+
+  @override
+  State<InvestorsGovernanceScreen> createState() => _InvestorsGovernanceScreenState();
+}
+
+class _InvestorsGovernanceScreenState extends State<InvestorsGovernanceScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // تعطيل جميع الـ iframes عند دخول الصفحة
+    Future.delayed(const Duration(milliseconds: 100), () {
+      setAllIframesPointerEvents(false);
+    });
+    Future.delayed(const Duration(milliseconds: 500), () {
+      setAllIframesPointerEvents(false);
+    });
+    
+    // استمع للـ scroll وعطّل الـ iframes
+    irScrollController.addListener(_onScroll);
+  }
+  
+  void _onScroll() {
+    setAllIframesPointerEvents(false);
+  }
+  
+  @override
+  void dispose() {
+    irScrollController.removeListener(_onScroll);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
