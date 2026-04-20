@@ -80,37 +80,14 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
   @override
   void initState() {
     super.initState();
-    // لا تحمل تلقائياً، انتظر السكرول اليدوي أو الطلب من الـ dropdown
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkVisibility());
-  }
-
-  void _checkVisibility() {
-    if (!mounted || _queued) return;
-    final ctx = _key.currentContext;
-    if (ctx == null) {
-      Future.delayed(const Duration(milliseconds: 400), _checkVisibility);
-      return;
-    }
-    final box = ctx.findRenderObject() as RenderBox?;
-    if (box == null || !box.hasSize) {
-      Future.delayed(const Duration(milliseconds: 400), _checkVisibility);
-      return;
-    }
-    final pos = box.localToGlobal(Offset.zero);
-    final screenH = MediaQuery.of(ctx).size.height;
-    // حمّل بس لما تكون على الشاشة فعلاً (بدون buffer)
-    if (pos.dy >= 0 && pos.dy < screenH) {
+    // حمّل فوراً بدون انتظار
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _queued = true;
       _enqueueLoad(() {
         if (mounted) setState(() => _visible = true);
       });
-    } else {
-      Future.delayed(const Duration(milliseconds: 800), _checkVisibility);
-    }
+    });
   }
-
-  /// يُستدعى من الخارج عشان يحمل الـ widget فوراً (من الـ dropdown)
-  // (handled above in loadNow)
 
   @override
   Widget build(BuildContext context) {
@@ -307,7 +284,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   html, body { overflow: hidden; background: #ffffff; margin: 0; padding: 0; }
   body > div { margin: 0 !important; padding: 0 !important; }
 </style>
-<script src="https://irp.atnmo.com/v2/widget/widget-loader.js"></script>
+<script src="https://irp.atnmo.com/v3/widget/widget-loader.js"></script>
 </head>
 <body>
 <div id="${widget.widgetType}-widget"></div>
@@ -391,7 +368,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
         "5be9c146-613e-4141-a351-1f5e13fc5513",
         "${widget.lang}",
         "81a06c05-1a48-4d1b-8dbd-bcf60a76730f",
-        "v2"
+        "v3"
       );
     }
     [1000, 2000, 4000, 7000, 12000].forEach(function(t) {
@@ -419,6 +396,12 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     if (!kIsWeb) return const SizedBox.shrink();
     return Listener(
       onPointerDown: (_) => _onPointerDown(),
+      onPointerMove: (event) {
+        // إذا في حركة سريعة = scroll
+        if (event.delta.dy.abs() > 2 || event.delta.dx.abs() > 2) {
+          _onScroll();
+        }
+      },
       onPointerSignal: (signal) {
         if (signal is PointerScrollEvent) {
           _onScroll();

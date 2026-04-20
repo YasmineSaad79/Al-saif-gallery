@@ -21,6 +21,9 @@ import '../widgets/email_subscription_widget.dart';
 import '../widgets/peer_group_analysis_widget.dart';
 import '../widgets/performance_widget.dart';
 import '../widgets/share_series_widget.dart';
+import '../widgets/zakat_calculator_widget.dart';
+import '../widgets/share_view_widget.dart';
+import '../widgets/price_lookup_widget.dart';
 import '../widgets/footer_section.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_localizations.dart';
@@ -118,11 +121,11 @@ class _IRTabBodyState extends State<_IRTabContent> {
     final allTitles = isArabic ? [
       'نظرة عامة عن الشركة', 'الإعلانات', 'نشرة المعلومات', 'نشاط السهم',
       'الإجراءات النظامية', 'البيانات المالية', 'سعر السهم', 'الأداء',
-      'حاسبة الاستثمار', 'سلسلة الأسهم', 'تحليل المجموعة المماثلة', 'الاشتراك',
+      'حاسبة الاستثمار', 'سلسلة الأسهم', 'حاسبة الزكاة', 'عرض الأسهم', 'البحث عن السعر', 'تحليل المجموعة المماثلة', 'الاشتراك',
     ] : [
       'Company Snapshot', 'Announcements', 'Fact Sheet', 'Stock Activity',
       'Corporate Actions', 'Company Financials', 'Share Price', 'Performance',
-      'Investment Calculator', 'Share Series', 'Peer Group Analysis', 'Subscribe',
+      'Investment Calculator', 'Share Series', 'Zakat Calculator', 'Share View', 'Price Lookup', 'Peer Group Analysis', 'Subscribe',
     ];
 
     // الموبايل: نفس منطق الديسكتوب بدون dropdown
@@ -141,8 +144,11 @@ class _IRTabBodyState extends State<_IRTabContent> {
             KeyedSubtree(key: ScrollKeys.get('ir-tab-7'),  child: _buildSectionWithTitle('Performance', 'الأداء', const PerformanceWidget(), isArabic, hp)),
             KeyedSubtree(key: ScrollKeys.get('ir-tab-8'),  child: _buildSectionWithTitle('Investment Calculator', 'حاسبة الاستثمار', const InvestmentCalculatorWidget(), isArabic, hp)),
             KeyedSubtree(key: ScrollKeys.get('ir-tab-9'),  child: _buildSectionWithTitle('Share Series', 'سلسلة الأسهم', const ShareSeriesWidget(), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-10'), child: _buildSectionWithTitle('Peer Group Analysis', 'تحليل المجموعة المماثلة', const PeerGroupAnalysisWidget(), isArabic, hp)),
-            KeyedSubtree(key: ScrollKeys.get('ir-tab-11'), child: _buildSectionWithTitle('Subscribe', 'الاشتراك', const EmailSubscriptionWidget(), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-10'), child: _buildSectionWithTitle('Zakat Calculator', 'حاسبة الزكاة', const ZakatCalculatorWidget(), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-11'), child: _buildSectionWithTitle('Share View', 'عرض الأسهم', const ShareViewWidget(), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-12'), child: _buildSectionWithTitle('Price Lookup', 'البحث عن السعر', const PriceLookupWidget(), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-13'), child: _buildSectionWithTitle('Peer Group Analysis', 'تحليل المجموعة المماثلة', const PeerGroupAnalysisWidget(), isArabic, hp)),
+            KeyedSubtree(key: ScrollKeys.get('ir-tab-14'), child: _buildSectionWithTitle('Subscribe', 'الاشتراك', const EmailSubscriptionWidget(), isArabic, hp)),
           ],
         );
       }
@@ -169,8 +175,11 @@ class _IRTabBodyState extends State<_IRTabContent> {
           KeyedSubtree(key: ScrollKeys.get('ir-tab-7'), child: _buildSectionWithTitle('Performance', 'الأداء', const PerformanceWidget(), isArabic, hp)),
           KeyedSubtree(key: ScrollKeys.get('ir-tab-8'), child: _buildSectionWithTitle('Investment Calculator', 'حاسبة الاستثمار', const InvestmentCalculatorWidget(), isArabic, hp)),
           KeyedSubtree(key: ScrollKeys.get('ir-tab-9'), child: _buildSectionWithTitle('Share Series', 'سلسلة الأسهم', const ShareSeriesWidget(), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-10'), child: _buildSectionWithTitle('Peer Group Analysis', 'تحليل المجموعة المماثلة', const PeerGroupAnalysisWidget(), isArabic, hp)),
-          KeyedSubtree(key: ScrollKeys.get('ir-tab-11'), child: _buildSectionWithTitle('Subscribe', 'الاشتراك', const EmailSubscriptionWidget(), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-10'), child: _buildSectionWithTitle('Zakat Calculator', 'حاسبة الزكاة', const ZakatCalculatorWidget(), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-11'), child: _buildSectionWithTitle('Share View', 'عرض الأسهم', const ShareViewWidget(), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-12'), child: _buildSectionWithTitle('Price Lookup', 'البحث عن السعر', const PriceLookupWidget(), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-13'), child: _buildSectionWithTitle('Peer Group Analysis', 'تحليل المجموعة المماثلة', const PeerGroupAnalysisWidget(), isArabic, hp)),
+          KeyedSubtree(key: ScrollKeys.get('ir-tab-14'), child: _buildSectionWithTitle('Subscribe', 'الاشتراك', const EmailSubscriptionWidget(), isArabic, hp)),
         ],
       );
     }
@@ -206,11 +215,11 @@ class _IRTabBodyState extends State<_IRTabContent> {
     final titles = isArabic ? [
       'نظرة عامة عن الشركة', 'الإعلانات', 'نشرة المعلومات', 'نشاط السهم',
       'الإجراءات النظامية', 'البيانات المالية', 'سعر السهم', 'الأداء',
-      'حاسبة الاستثمار', 'سلسلة الأسهم', 'تحليل المجموعة المماثلة', 'الاشتراك بالبريد الإلكتروني',
+      'حاسبة الاستثمار', 'سلسلة الأسهم', 'حاسبة الزكاة', 'عرض الأسهم', 'البحث عن السعر', 'تحليل المجموعة المماثلة', 'الاشتراك بالبريد الإلكتروني',
     ] : [
       'Company Snapshot', 'Announcements', 'Fact Sheet', 'Stock Activity',
       'Corporate Actions', 'Company Financials', 'Share Price', 'Performance',
-      'Investment Calculator', 'Share Series', 'Peer Group Analysis', 'Email Subscription',
+      'Investment Calculator', 'Share Series', 'Zakat Calculator', 'Share View', 'Price Lookup', 'Peer Group Analysis', 'Email Subscription',
     ];
 
     final widgets = [
@@ -224,6 +233,9 @@ class _IRTabBodyState extends State<_IRTabContent> {
       const PerformanceWidget(),
       const InvestmentCalculatorWidget(),
       const ShareSeriesWidget(),
+      const ZakatCalculatorWidget(),
+      const ShareViewWidget(),
+      const PriceLookupWidget(),
       const PeerGroupAnalysisWidget(),
       const EmailSubscriptionWidget(),
     ];
@@ -731,6 +743,21 @@ class _MoreContent extends StatelessWidget {
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
         const SizedBox(height: 12),
         const ShareSeriesWidget(),
+        const SizedBox(height: 24),
+        Text(isArabic ? 'حاسبة الزكاة' : 'Zakat Calculator',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 12),
+        const ZakatCalculatorWidget(),
+        const SizedBox(height: 24),
+        Text(isArabic ? 'عرض الأسهم' : 'Share View',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 12),
+        const ShareViewWidget(),
+        const SizedBox(height: 24),
+        Text(isArabic ? 'البحث عن السعر' : 'Price Lookup',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 12),
+        const PriceLookupWidget(),
         const SizedBox(height: 24),
         const EmailSubscriptionWidget(),
       ],
