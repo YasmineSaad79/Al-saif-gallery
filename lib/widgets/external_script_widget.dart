@@ -68,15 +68,15 @@ void removeAllOldIframes() {
 }
 // ────────────────────────────────────────────────────────────────────────────
 
-/// Wraps [ExternalScriptWidget] and only initializes the iframe
-/// once the placeholder enters the viewport (lazy loading).
-class LazyExternalScriptWidget extends StatefulWidget {
+/// Smart wrapper: على iOS يستخدم lazy loading، على Desktop/Android يحمل مباشرة
+class LazyExternalScriptWidget extends StatelessWidget {
   final String viewId;
   final String widgetType;
   final double fallbackHeight;
   final String lang;
-  final bool priority; // للتحميل الفوري
-  final Widget? customPlaceholder; // placeholder مخصص
+  final bool priority;
+  final Widget? customPlaceholder;
+  final bool showBorder;
 
   const LazyExternalScriptWidget({
     super.key,
@@ -86,18 +86,67 @@ class LazyExternalScriptWidget extends StatefulWidget {
     this.lang = 'en',
     this.priority = false,
     this.customPlaceholder,
+    this.showBorder = true,
   });
 
   @override
-  State<LazyExternalScriptWidget> createState() => _LazyExternalScriptWidgetState();
+  Widget build(BuildContext context) {
+    // على iOS: استخدم lazy loading
+    if (_isIOS()) {
+      return _LazyExternalScriptWidgetIOS(
+        viewId: viewId,
+        widgetType: widgetType,
+        fallbackHeight: fallbackHeight,
+        lang: lang,
+        priority: priority,
+        customPlaceholder: customPlaceholder,
+        showBorder: showBorder,
+      );
+    }
+    
+    // على Desktop/Android: حمّل مباشرة بدون lazy loading
+    return ExternalScriptWidget(
+      viewId: viewId,
+      widgetType: widgetType,
+      fallbackHeight: fallbackHeight,
+      lang: lang,
+      priority: priority,
+      showBorder: showBorder,
+    );
+  }
 }
 
-class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> implements LazyLoadable {
+/// النسخة الـ lazy loading للـ iOS فقط
+class _LazyExternalScriptWidgetIOS extends StatefulWidget {
+  final String viewId;
+  final String widgetType;
+  final double fallbackHeight;
+  final String lang;
+  final bool priority;
+  final Widget? customPlaceholder;
+  final bool showBorder;
+
+  const _LazyExternalScriptWidgetIOS({
+    super.key,
+    required this.viewId,
+    required this.widgetType,
+    this.fallbackHeight = 200,
+    this.lang = 'en',
+    this.priority = false,
+    this.customPlaceholder,
+    this.showBorder = true,
+  });
+
+  @override
+  State<_LazyExternalScriptWidgetIOS> createState() => _LazyExternalScriptWidgetIOSState();
+}
+
+class _LazyExternalScriptWidgetIOSState extends State<_LazyExternalScriptWidgetIOS> implements LazyLoadable {
   bool _visible = false;
   bool _queued = false;
   final _key = GlobalKey();
   Timer? _visibilityChecker;
-  Timer? _disposeChecker; // للتحقق من الـ visibility وحذف الـ iframe إذا خرج من الشاشة
+  Timer? _disposeChecker;
 
   // public method للاستدعاء من الخارج
   // ignore: library_private_types_in_public_api
@@ -124,34 +173,11 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
       return;
     }
     
-    // على iOS: كل الويدجتات lazy load + إعادة تدوير (dispose عند الخروج من الشاشة)
-    // على الباقي: حمّل أول 4 شاشات
-    if (_isIOS()) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _startVisibilityCheck();
-        _startDisposeCheck(); // ابدأ فحص الـ disposal
-      });
-    } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final ctx = _key.currentContext;
-        if (ctx == null) return;
-        
-        final box = ctx.findRenderObject() as RenderBox?;
-        if (box == null || !box.hasSize) return;
-        
-        final pos = box.localToGlobal(Offset.zero);
-        final screenH = MediaQuery.of(ctx).size.height;
-        
-        if (pos.dy < screenH * 4.0) {
-          _queued = true;
-          _enqueueLoad(() {
-            if (mounted) setState(() => _visible = true);
-          });
-        } else {
-          _checkVisibility();
-        }
-      });
-    }
+    // على iOS: كل الويدجتات lazy load + إعادة تدوير
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startVisibilityCheck();
+      _startDisposeCheck();
+    });
   }
   
   void _startVisibilityCheck() {
@@ -213,9 +239,8 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
     final pos = box.localToGlobal(Offset.zero);
     final screenH = MediaQuery.of(ctx).size.height;
     
-    // على iOS: نصف شاشة فقط (محافظ جداً)، على الباقي: 2.5 شاشة
-    final multiplier = _isIOS() ? 0.8 : 2.5;
-    if (pos.dy >= -screenH * 0.2 && pos.dy < screenH * multiplier) {
+    // على iOS: نصف شاشة فقط (محافظ جداً)
+    if (pos.dy >= -screenH * 0.2 && pos.dy < screenH * 0.8) {
       _queued = true;
       _enqueueLoad(() {
         if (mounted) setState(() => _visible = true);
@@ -233,6 +258,7 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
         widgetType: widget.widgetType,
         fallbackHeight: widget.fallbackHeight,
         lang: widget.lang,
+        showBorder: widget.showBorder,
       );
     }
     // استخدم placeholder مخصص إذا كان موجود
