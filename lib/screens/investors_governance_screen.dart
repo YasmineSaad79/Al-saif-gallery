@@ -659,62 +659,24 @@ class _MobileIRDropdownState extends State<_MobileIRDropdown> {
 }
 
 // ── Fact Sheet Tab ────────────────────────────────────────────────────────────
-class _FactSheetContent extends StatefulWidget {
+class _FactSheetContent extends StatelessWidget {
   final bool isArabic;
   const _FactSheetContent({required this.isArabic});
-  @override
-  State<_FactSheetContent> createState() => _FactSheetContentState();
-}
 
-class _FactSheetContentState extends State<_FactSheetContent> {
-  int _tab = 0;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            _SubTab(label: widget.isArabic ? 'جدول' : 'Table', selected: _tab == 0, onTap: () => setState(() => _tab = 0)),
-            const SizedBox(width: 8),
-            _SubTab(label: widget.isArabic ? 'رسم بياني' : 'Chart', selected: _tab == 1, onTap: () => setState(() => _tab = 1)),
-          ],
-        ),
-        const SizedBox(height: 16),
-        if (_tab == 0) const FactSheetTableWidget(),
-        if (_tab == 1) const FactSheetChartsWidget(),
-      ],
-    );
+    return const FactSheetTableWidget();
   }
 }
 
 // ── Stock Activity Tab ────────────────────────────────────────────────────────
-class _StockActivityContent extends StatefulWidget {
+class _StockActivityContent extends StatelessWidget {
   final bool isArabic;
   const _StockActivityContent({required this.isArabic});
-  @override
-  State<_StockActivityContent> createState() => _StockActivityContentState();
-}
 
-class _StockActivityContentState extends State<_StockActivityContent> {
-  int _tab = 0;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            _SubTab(label: widget.isArabic ? 'بسيط' : 'Simple', selected: _tab == 0, onTap: () => setState(() => _tab = 0)),
-            const SizedBox(width: 8),
-            _SubTab(label: widget.isArabic ? 'متقدم' : 'Advanced', selected: _tab == 1, onTap: () => setState(() => _tab = 1)),
-          ],
-        ),
-        const SizedBox(height: 16),
-        if (_tab == 0) const StockActivitySimpleWidget(),
-        if (_tab == 1) const StockActivityAdvancedWidget(),
-      ],
-    );
+    return const StockActivitySimpleWidget();
   }
 }
 
@@ -976,6 +938,7 @@ class _StockTickerSection extends StatelessWidget {
             ),
           ),
           height: isMobile ? 50 : 70,
+          alignment: isMobile ? Alignment.center : null,
           child: const StockTickerWidget(),
         ),
       ),

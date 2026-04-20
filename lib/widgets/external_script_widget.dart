@@ -15,9 +15,14 @@ import '../utils/app_colors.dart';
 final List<VoidCallback> _loadQueue = [];
 bool _queueRunning = false;
 
-void _enqueueLoad(VoidCallback load) {
-  _loadQueue.add(load);
-  if (!_queueRunning) _processQueue();
+void _enqueueLoad(VoidCallback load, {bool priority = false}) {
+  if (priority) {
+    // تحميل فوري بدون انتظار (للـ Stock Ticker)
+    load();
+  } else {
+    _loadQueue.add(load);
+    if (!_queueRunning) _processQueue();
+  }
 }
 
 void _processQueue() {
@@ -25,7 +30,8 @@ void _processQueue() {
   _queueRunning = true;
   final next = _loadQueue.removeAt(0);
   next();
-  Future.delayed(const Duration(milliseconds: 1500), _processQueue);
+  // تقليل التأخير إلى 200ms لتحميل أسرع
+  Future.delayed(const Duration(milliseconds: 200), _processQueue);
 }
 
 /// Interface عام عشان نقدر نستدعي loadNow من ملفات ثانية
@@ -49,6 +55,7 @@ class LazyExternalScriptWidget extends StatefulWidget {
   final String widgetType;
   final double fallbackHeight;
   final String lang;
+  final bool priority; // للتحميل الفوري
 
   const LazyExternalScriptWidget({
     super.key,
@@ -56,6 +63,7 @@ class LazyExternalScriptWidget extends StatefulWidget {
     required this.widgetType,
     this.fallbackHeight = 200,
     this.lang = 'en',
+    this.priority = false,
   });
 
   @override
@@ -80,13 +88,64 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
   @override
   void initState() {
     super.initState();
-    // حمّل فوراً بدون انتظار
+    
+    // إذا كان priority (مثل Stock Ticker)، حمّل فوراً
+    if (widget.priority) {
+      _queued = true;
+      _enqueueLoad(() {
+        if (mounted) setState(() => _visible = true);
+      }, priority: true);
+      return;
+    }
+    
+    // حمّل الويدجتات الأولى فوراً، والباقي لما يظهروا
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = _key.currentContext;
+      if (ctx == null) return;
+      
+      final box = ctx.findRenderObject() as RenderBox?;
+      if (box == null || !box.hasSize) return;
+      
+      final pos = box.localToGlobal(Offset.zero);
+      final screenH = MediaQuery.of(ctx).size.height;
+      
+      // حمّل فوراً إذا كان في أول 3 شاشات (زيادة من 2 إلى 3)
+      if (pos.dy < screenH * 3) {
+        _queued = true;
+        _enqueueLoad(() {
+          if (mounted) setState(() => _visible = true);
+        });
+      } else {
+        // الباقي انتظر لما يظهروا
+        _checkVisibility();
+      }
+    });
+  }
+
+  void _checkVisibility() {
+    if (!mounted || _queued) return;
+    final ctx = _key.currentContext;
+    if (ctx == null) {
+      Future.delayed(const Duration(milliseconds: 300), _checkVisibility);
+      return;
+    }
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) {
+      Future.delayed(const Duration(milliseconds: 300), _checkVisibility);
+      return;
+    }
+    final pos = box.localToGlobal(Offset.zero);
+    final screenH = MediaQuery.of(ctx).size.height;
+    
+    // حمّل لما يكون قريب من الشاشة (2 شاشات بدل 1.5)
+    if (pos.dy >= 0 && pos.dy < screenH * 2) {
       _queued = true;
       _enqueueLoad(() {
         if (mounted) setState(() => _visible = true);
       });
-    });
+    } else {
+      Future.delayed(const Duration(milliseconds: 600), _checkVisibility);
+    }
   }
 
   @override
@@ -180,6 +239,7 @@ class ExternalScriptWidget extends StatefulWidget {
   final String widgetType;
   final double fallbackHeight;
   final String lang;
+  final bool priority; // للتحميل الفوري
 
   const ExternalScriptWidget({
     super.key,
@@ -187,6 +247,7 @@ class ExternalScriptWidget extends StatefulWidget {
     required this.widgetType,
     this.fallbackHeight = 200,
     this.lang = 'en',
+    this.priority = false,
   });
 
   @override

@@ -19,9 +19,9 @@ class _StockActivitySimpleWidgetState extends State<StockActivitySimpleWidget> {
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
     return LazyExternalScriptWidget(
-      key: ValueKey('stock-activity-simple-$lang'),
-      viewId: 'stock-activity-simple-view-$lang',
-      widgetType: 'stock-activity-simple',
+      key: ValueKey('stock-activity-$lang'),
+      viewId: 'stock-activity-view-$lang',
+      widgetType: 'stock-activity',
       lang: lang,
     );
   }
