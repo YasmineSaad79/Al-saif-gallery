@@ -268,9 +268,12 @@ class _LazyExternalScriptWidgetIOSState extends State<_LazyExternalScriptWidgetI
         child: widget.customPlaceholder!,
       );
     }
-    return _SkeletonPlaceholder(
+    // على iOS: placeholder شفاف تماماً (بدون رمشة)
+    return Container(
       key: _key,
+      width: double.infinity,
       height: widget.fallbackHeight,
+      color: Colors.transparent,
     );
   }
 }
