@@ -369,8 +369,6 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
     _messageListener = (event) {
       final msg = (event as html.MessageEvent).data;
       if (msg is Map && msg['type'] == 'widget-height') {
-        print('Received height message: id=${msg['id']}, height=${msg['height']}, expected=$_uniqueViewId');
-        
         if (msg['id'] == _uniqueViewId) {
           final h = (msg['height'] as num).toDouble();
           if (h > 20) {
@@ -379,7 +377,6 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
             _debounce = Timer(const Duration(milliseconds: 200), () {
               // حدّث الارتفاع حتى لو الفرق صغير (1 pixel)
               if (mounted && (_pendingHeight - _height).abs() > 1) {
-                print('Updating height from $_height to $_pendingHeight');
                 setState(() => _height = _pendingHeight);
               }
             });
@@ -407,13 +404,13 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   }
 
   void _onPointerDown() {
-    // لما المستخدم يضغط = فعّل الـ iframe
+    // لما المستخدم يضغط = فعّل الـ iframe فوراً
+    _isScrolling = false;
     if (_iframe != null) {
       _iframe!.style.pointerEvents = 'auto';
     }
-    _isScrolling = false;
     
-    // بعد 3 ثواني من آخر ضغطة، عطّله
+    // بعد 3 ثواني، عطّله
     _enableTimer?.cancel();
     _enableTimer = Timer(const Duration(seconds: 3), () {
       if (_iframe != null && mounted && !_isScrolling) {
@@ -423,13 +420,13 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   }
 
   void _onScroll() {
-    // لما المستخدم يعمل scroll = عطّل الـ iframe
+    // لما المستخدم يعمل scroll = عطّل الـ iframe فوراً
     _isScrolling = true;
     if (_iframe != null) {
       _iframe!.style.pointerEvents = 'none';
     }
     
-    // بعد 500ms من آخر scroll، خليه جاهز للتفعيل
+    // بعد 500ms من آخر scroll، خليه جاهز للتفاعل
     _enableTimer?.cancel();
     _enableTimer = Timer(const Duration(milliseconds: 500), () {
       _isScrolling = false;
@@ -566,7 +563,6 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
   setInterval(function() {
     var currentHeight = getTrueHeight();
     if (currentHeight > 20 && Math.abs(currentHeight - lastSent) > 3) {
-      console.log('Height changed from', lastSent, 'to', currentHeight);
       lastSent = currentHeight;
       window.parent.postMessage({ type: 'widget-height', id: ID, height: currentHeight }, '*');
     }
@@ -634,7 +630,7 @@ class _ExternalScriptWidgetState extends State<ExternalScriptWidget> {
             Listener(
               onPointerDown: (_) => _onPointerDown(),
               onPointerMove: (event) {
-                // إذا في حركة سريعة = scroll
+                // إذا في حركة أكثر من 2 pixels = scroll
                 if (event.delta.dy.abs() > 2 || event.delta.dx.abs() > 2) {
                   _onScroll();
                 }
