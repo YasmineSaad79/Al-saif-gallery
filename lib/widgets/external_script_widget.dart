@@ -38,8 +38,8 @@ void _processQueue() {
   final next = _loadQueue.removeAt(0);
   next();
   
-  // على iOS: تأخير 2.5 ثانية (أبطأ لكن أأمن)، على الباقي: فوري
-  final delay = _isIOS() ? 2500 : 0;
+  // على iOS: تأخير 3 ثواني (بطيء جداً لكن آمن 100%)، على الباقي: فوري
+  final delay = _isIOS() ? 3000 : 0;
   Future.delayed(Duration(milliseconds: delay), _processQueue);
 }
 
@@ -173,7 +173,7 @@ class _LazyExternalScriptWidgetIOSState extends State<_LazyExternalScriptWidgetI
       return;
     }
     
-    // على iOS: كل الويدجتات lazy load + إعادة تدوير
+    // على iOS: lazy load مع disposal قوي
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _startVisibilityCheck();
       _startDisposeCheck();
@@ -190,8 +190,8 @@ class _LazyExternalScriptWidgetIOSState extends State<_LazyExternalScriptWidgetI
   }
   
   void _startDisposeCheck() {
-    // على iOS: فحص كل 300ms إذا الويدجت خارج الشاشة (أسرع للحذف)
-    _disposeChecker = Timer.periodic(const Duration(milliseconds: 300), (_) {
+    // على iOS: فحص كل 200ms - حذف سريع جداً
+    _disposeChecker = Timer.periodic(const Duration(milliseconds: 200), (_) {
       if (_visible && mounted) {
         _checkIfShouldDispose();
       }
@@ -208,8 +208,8 @@ class _LazyExternalScriptWidgetIOSState extends State<_LazyExternalScriptWidgetI
     final pos = box.localToGlobal(Offset.zero);
     final screenH = MediaQuery.of(ctx).size.height;
     
-    // إذا الويدجت خارج الشاشة بـ 200 pixels، احذفه فوراً (أقوى)
-    if (pos.dy < -200 || pos.dy > screenH + 200) {
+    // حذف قوي: بمجرد ما يطلع من الشاشة بـ 50 pixels
+    if (pos.dy < -50 || pos.dy > screenH + 50) {
       setState(() {
         _visible = false;
         _queued = false;
@@ -239,8 +239,8 @@ class _LazyExternalScriptWidgetIOSState extends State<_LazyExternalScriptWidgetI
     final pos = box.localToGlobal(Offset.zero);
     final screenH = MediaQuery.of(ctx).size.height;
     
-    // على iOS: نطاق أضيق - فقط لما يكون على الشاشة تماماً
-    if (pos.dy >= -100 && pos.dy < screenH * 0.6) {
+    // على iOS: نطاق ضيق جداً - فقط لما يكون على الشاشة
+    if (pos.dy >= -50 && pos.dy < screenH * 0.5) {
       _queued = true;
       _enqueueLoad(() {
         if (mounted) setState(() => _visible = true);
