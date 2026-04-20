@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import '../main.dart';
 import '../utils/app_colors.dart';
 
-// ── Global load queue: max 1 iframe loaded every 1.5s ──────────────────────
+// ── Global load queue ──────────────────────────────────────────────────────
 final List<VoidCallback> _loadQueue = [];
 bool _queueRunning = false;
 
@@ -24,7 +24,6 @@ bool _isIOS() {
 
 void _enqueueLoad(VoidCallback load, {bool priority = false}) {
   if (priority) {
-    // تحميل فوري بدون انتظار (للـ Stock Ticker)
     load();
   } else {
     _loadQueue.add(load);
@@ -34,11 +33,13 @@ void _enqueueLoad(VoidCallback load, {bool priority = false}) {
 
 void _processQueue() {
   if (_loadQueue.isEmpty) { _queueRunning = false; return; }
+  
   _queueRunning = true;
   final next = _loadQueue.removeAt(0);
   next();
-  // على iOS: تأخير 500ms، على الباقي: فوري
-  final delay = _isIOS() ? 500 : 0;
+  
+  // على iOS: تأخير 800ms، على الباقي: فوري
+  final delay = _isIOS() ? 800 : 0;
   Future.delayed(Duration(milliseconds: delay), _processQueue);
 }
 
@@ -95,6 +96,8 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
   bool _visible = false;
   bool _queued = false;
   final _key = GlobalKey();
+  Timer? _visibilityChecker;
+  Timer? _disposeChecker; // للتحقق من الـ visibility وحذف الـ iframe إذا خرج من الشاشة
 
   // public method للاستدعاء من الخارج
   // ignore: library_private_types_in_public_api
@@ -110,7 +113,7 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
   void initState() {
     super.initState();
     
-    // إذا كان priority (مثل Stock Ticker)، حمّل بعد تأخير بسيط لإظهار الـ loading
+    // إذا كان priority (مثل Stock Ticker)، حمّل بعد تأخير بسيط
     if (widget.priority) {
       _queued = true;
       Future.delayed(const Duration(milliseconds: 600), () {
@@ -121,15 +124,14 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
       return;
     }
     
-    // على iOS: كل الويدجتات lazy load (ما في تحميل مسبق)
+    // على iOS: كل الويدجتات lazy load + إعادة تدوير (dispose عند الخروج من الشاشة)
     // على الباقي: حمّل أول 4 شاشات
     if (_isIOS()) {
-      // على iOS، كل شي lazy load
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _checkVisibility();
+        _startVisibilityCheck();
+        _startDisposeCheck(); // ابدأ فحص الـ disposal
       });
     } else {
-      // على Desktop/Android، حمّل أول 4 شاشات
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final ctx = _key.currentContext;
         if (ctx == null) return;
@@ -151,6 +153,50 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
       });
     }
   }
+  
+  void _startVisibilityCheck() {
+    _checkVisibility();
+    _visibilityChecker = Timer.periodic(const Duration(milliseconds: 800), (_) {
+      if (!_queued && !_visible) {
+        _checkVisibility();
+      }
+    });
+  }
+  
+  void _startDisposeCheck() {
+    // على iOS: فحص كل ثانية إذا الويدجت خارج الشاشة
+    _disposeChecker = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (_visible && mounted) {
+        _checkIfShouldDispose();
+      }
+    });
+  }
+  
+  void _checkIfShouldDispose() {
+    final ctx = _key.currentContext;
+    if (ctx == null) return;
+    
+    final box = ctx.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) return;
+    
+    final pos = box.localToGlobal(Offset.zero);
+    final screenH = MediaQuery.of(ctx).size.height;
+    
+    // إذا الويدجت خارج الشاشة بأكثر من شاشة واحدة، احذفه
+    if (pos.dy < -screenH || pos.dy > screenH * 2) {
+      setState(() {
+        _visible = false;
+        _queued = false;
+      });
+    }
+  }
+  
+  @override
+  void dispose() {
+    _visibilityChecker?.cancel();
+    _disposeChecker?.cancel();
+    super.dispose();
+  }
 
   void _checkVisibility() {
     if (!mounted || _queued) return;
@@ -168,8 +214,8 @@ class _LazyExternalScriptWidgetState extends State<LazyExternalScriptWidget> imp
     final screenH = MediaQuery.of(ctx).size.height;
     
     // على iOS: شاشة واحدة فقط، على الباقي: 2.5 شاشة
-    final multiplier = _isIOS() ? 1.0 : 2.5;
-    if (pos.dy >= 0 && pos.dy < screenH * multiplier) {
+    final multiplier = _isIOS() ? 1.2 : 2.5;
+    if (pos.dy >= -screenH * 0.5 && pos.dy < screenH * multiplier) {
       _queued = true;
       _enqueueLoad(() {
         if (mounted) setState(() => _visible = true);
