@@ -28,14 +28,14 @@ class _StockTickerWidgetState extends State<StockTickerWidget> {
   @override
   Widget build(BuildContext context) {
     final lang = localeProvider.isArabic ? 'ar' : 'en';
-    // على iOS: استخدم lazy loading، على Desktop/Android: تحميل مباشر
-    return LazyExternalScriptWidget(
+    // Stock Ticker يتحمل مباشرة على كل المنصات (مهم ولازم يبقى ظاهر)
+    return ExternalScriptWidget(
       key: ValueKey('stock-ticker-$lang'),
       viewId: 'stock-ticker-view-$lang',
       widgetType: 'stock-ticker',
       fallbackHeight: 46,
       lang: lang,
-      priority: true, // على Desktop/Android يحمل فوراً، على iOS يحمل lazy
+      priority: true,
       showBorder: false, // بدون بوردر
     );
   }
