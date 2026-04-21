@@ -1,3 +1,6 @@
+{{flutter_js}}
+{{flutter_build_config}}
+
 _flutter.loader.load({
   serviceWorkerSettings: {
     serviceWorkerVersion: {{flutter_service_worker_version}},
@@ -5,7 +8,6 @@ _flutter.loader.load({
   onEntrypointLoaded: async function(engineInitializer) {
     const appRunner = await engineInitializer.initializeEngine({
       renderer: "html",
-      canvasKitBaseUrl: "", // يمنع تحميل CanvasKit
     });
     await appRunner.runApp();
   }
