@@ -43,12 +43,6 @@
     window._iframesManuallyDisabled = false;
   </script>
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(r) { r.forEach(function(x){x.unregister();}); });
-      caches.keys().then(function(k) { k.forEach(function(x){caches.delete(x);}); });
-    }
-  </script>
-  <script>
     // بعد ما يخسر الـ window الـ focus للـ iframe، ارجعه
     window.addEventListener('blur', function() {
       setTimeout(function() { window.focus(); }, 50);
